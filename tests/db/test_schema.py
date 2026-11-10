@@ -22,7 +22,7 @@ def seed(conn):
 
 
 # A valid stats row (synthetic): pts = 2*fgm + fg3m + ftm = 2*20+5+10 = 55; plus_minus = 55-50
-VALID = dict(n_source_rows=1, gp=10, seconds=1200, poss=50, opp_poss_implied=50,
+VALID = dict(n_source_rows=1, gp=10, seconds=1200, poss=50, opp_poss_implied=50, opp_poss=50, opp_poss_method="pace",
              fgm=20, fga=40, fg3m=5, fg3a=12, ftm=10, fta=12, oreb=3, dreb=10, ast=12, tov=6, pts=55,
              opp_fgm=20, opp_fga=45, opp_fg3m=4, opp_fg3a=14, opp_ftm=6, opp_fta=8, opp_oreb=4, opp_dreb=9,
              opp_tov=7, opp_pts=50, plus_minus=5)

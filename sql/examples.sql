@@ -4,7 +4,9 @@
 -- 1) JOIN + filter + ORDER BY: best pre-break lineups with a meaningful sample (>= 300 possessions).
 --    Ratings come from the view, which applies the denominator contract (ORtg/own poss, DRtg/opp poss).
 \echo '--- 1. Top pre-break lineups, 2023-24 (>= 300 poss)'
-SELECT abbreviation AS team, poss, off_rating, def_rating, net_rating
+-- Ratings in the view are exact; round only when displaying.
+SELECT abbreviation AS team, poss, opp_poss, round(off_rating, 1) AS ortg, round(def_rating, 1) AS drtg,
+       round(net_rating, 1) AS net
 FROM v_lineup_window_ratings
 WHERE season_id = '2023-24' AND window_type = 'pre_asb' AND poss >= 300
 ORDER BY net_rating DESC
@@ -17,7 +19,7 @@ WITH top_player AS (
     FROM lineup_window_stats s JOIN lineup_players lp USING (lineup_id)
     WHERE s.season_id = '2023-24' AND s.window_type = 'pre_asb'
     GROUP BY lp.player_id ORDER BY sum(s.poss) DESC LIMIT 1)
-SELECT r.abbreviation AS team, r.poss, r.net_rating,
+SELECT r.abbreviation AS team, r.poss, round(r.net_rating, 1) AS net,
        string_agg(p.player_name, ', ' ORDER BY p.player_name) AS players
 FROM v_lineup_window_ratings r
 JOIN lineup_players lp ON lp.lineup_id = r.lineup_id
@@ -71,3 +73,24 @@ FROM lineup_window_stats pre
 LEFT JOIN lineup_window_stats post ON post.lineup_id = pre.lineup_id AND post.window_type = 'post_asb'
 WHERE pre.window_type = 'pre_asb' AND pre.poss >= 50
 GROUP BY pre.season_id ORDER BY pre.season_id;
+
+-- 6) Reusable SQL function + aggregate-then-divide: team ratings from lineup totals (Phase 3 view).
+\echo '--- 6. Best pre-break team net ratings from lineup totals, 2023-24'
+SELECT abbreviation AS team, poss, opp_poss,
+       round(off_rating, 1) AS ortg, round(def_rating, 1) AS drtg, round(net_rating, 1) AS net
+FROM v_team_window_ratings
+WHERE season_id = '2023-24' AND window_type = 'pre_asb'
+ORDER BY net_rating DESC LIMIT 5;
+
+-- 7) Player on-court ratings per team (bridge table + aggregation), with a minimum sample.
+\echo '--- 7. Top pre-break on-court net ratings, 2023-24 (>= 1500 possessions)'
+SELECT p.player_name, t.abbreviation AS team, o.poss, round(o.net_rating, 1) AS on_court_net
+FROM v_player_window_on_court o
+JOIN players p USING (player_id) JOIN teams t USING (team_id)
+WHERE o.season_id = '2023-24' AND o.window_type = 'pre_asb' AND o.poss >= 1500
+ORDER BY o.net_rating DESC LIMIT 5;
+
+-- 8) The FILTER clause: why DRtg must restrict numerator and denominator to the same rows.
+\echo '--- 8. Rows with unknown opponent possessions (all zero-second appearances), all seasons'
+SELECT count(*) AS rows_unknown_opp_poss, sum(opp_pts) AS opp_pts_in_those_rows, sum(seconds) AS seconds
+FROM lineup_window_stats WHERE opp_poss IS NULL;

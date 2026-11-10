@@ -97,7 +97,9 @@ CREATE TABLE IF NOT EXISTS lineup_window_stats (
     gp             SMALLINT NOT NULL CHECK (gp >= 0),      -- summed across merged rows (upper bound)
     seconds        NUMERIC(10,1) NOT NULL CHECK (seconds >= 0),  -- SUM_TIME_PLAYED / 50 (exact)
     poss           INT NOT NULL CHECK (poss >= 0),         -- own (offensive) possessions
-    opp_poss_implied NUMERIC(9,2) CHECK (opp_poss_implied >= 0),  -- 100*OPP_PTS/DEF_RATING per source row; NULL if undefined
+    opp_poss_implied NUMERIC(9,2) CHECK (opp_poss_implied >= 0),  -- route A (100*OPP_PTS/DEF_RATING), validation only
+    opp_poss       INT CHECK (opp_poss >= 0),              -- CANONICAL opponent possessions (exact integer; Phase 3)
+    opp_poss_method TEXT CHECK (opp_poss_method IN ('pace', 'def_rating', 'mixed')),
     fgm  INT NOT NULL CHECK (fgm  >= 0), fga  INT NOT NULL CHECK (fga  >= 0),
     fg3m INT NOT NULL CHECK (fg3m >= 0), fg3a INT NOT NULL CHECK (fg3a >= 0),
     ftm  INT NOT NULL CHECK (ftm  >= 0), fta  INT NOT NULL CHECK (fta  >= 0),
@@ -123,9 +125,14 @@ CREATE TABLE IF NOT EXISTS lineup_window_stats (
     CHECK (pts = 2 * fgm + fg3m + ftm),
     CHECK (opp_pts = 2 * opp_fgm + opp_fg3m + opp_ftm),
     CHECK (plus_minus = pts - opp_pts),
-    CHECK (n_source_rows = 1 OR (nba_off_rating IS NULL AND nba_def_rating IS NULL))
+    CHECK (n_source_rows = 1 OR (nba_off_rating IS NULL AND nba_def_rating IS NULL)),
+    CHECK ((opp_poss IS NULL) = (opp_poss_method IS NULL))
 );
 CREATE INDEX IF NOT EXISTS ix_lws_season_window ON lineup_window_stats (season_id, window_type);
+-- Migration (Phase 3): canonical opponent possessions for databases created in Phase 2.
+ALTER TABLE lineup_window_stats
+    ADD COLUMN IF NOT EXISTS opp_poss INT CHECK (opp_poss >= 0),
+    ADD COLUMN IF NOT EXISTS opp_poss_method TEXT CHECK (opp_poss_method IN ('pace', 'def_rating', 'mixed'));
 
 -- Grain: one player in one window. NOTE: the API combines a traded player's teams into one row,
 -- labelled with the latest team, so per-team player features must come from lineup data.
@@ -197,16 +204,75 @@ CREATE TABLE IF NOT EXISTS etl_runs (
 
 -- ---------------------------------------------------------------- views (derived, never stored)
 
--- Ratings per lineup-window. Contract: ORtg divides by OWN possessions, DRtg by OPPONENT possessions.
--- NULLIF avoids division by zero: 0-possession lineups get NULL ratings, not errors or infinities.
-CREATE OR REPLACE VIEW v_lineup_window_ratings AS
+-- per100: the single SQL definition of a per-100-possession rate (mirrors nba_lineups.metrics.per100).
+-- NULL (undefined) when possessions are 0 or unknown. NBA's API reports 0.0 there, which would bias averages.
+-- IMMUTABLE lets the planner inline and cache it; it has no side effects.
+CREATE OR REPLACE FUNCTION per100(num NUMERIC, poss NUMERIC) RETURNS NUMERIC
+    LANGUAGE sql IMMUTABLE PARALLEL SAFE
+    RETURN CASE WHEN poss > 0 THEN 100.0 * num / poss END;
+
+-- Views are dropped and recreated because CREATE OR REPLACE VIEW cannot remove or rename columns.
+DROP VIEW IF EXISTS v_player_window_on_court, v_team_window_ratings, v_lineup_season_ratings,
+                    v_lineup_window_ratings CASCADE;
+
+-- Grain: one lineup in one window. Ratings are EXACT (unrounded); round only for display.
+-- Contract: ORtg = per100(pts, OWN poss); DRtg = per100(opp_pts, OPPONENT poss).
+CREATE VIEW v_lineup_window_ratings AS
 SELECT s.lineup_id, l.season_id, l.team_id, t.abbreviation, l.player_key, s.window_type,
-       s.gp, round(s.seconds / 60.0, 2) AS minutes, s.poss, s.opp_poss_implied,
-       s.pts, s.opp_pts, s.plus_minus,
-       round(100.0 * s.pts / NULLIF(s.poss, 0), 2)                 AS off_rating,
-       round(100.0 * s.opp_pts / NULLIF(s.opp_poss_implied, 0), 2) AS def_rating,
-       round(100.0 * s.pts / NULLIF(s.poss, 0)
-           - 100.0 * s.opp_pts / NULLIF(s.opp_poss_implied, 0), 2) AS net_rating
+       s.n_source_rows, s.gp, s.seconds / 60.0 AS minutes,
+       s.poss, s.opp_poss, s.opp_poss_method, s.pts, s.opp_pts, s.plus_minus,
+       per100(s.pts, s.poss)                                    AS off_rating,
+       per100(s.opp_pts, s.opp_poss)                            AS def_rating,
+       per100(s.pts, s.poss) - per100(s.opp_pts, s.opp_poss)    AS net_rating,
+       CASE WHEN s.seconds > 0 THEN 48 * (s.poss + s.opp_poss) / 2.0 / (s.seconds / 60.0) END AS pace,
+       s.nba_off_rating, s.nba_def_rating, s.nba_net_rating
 FROM lineup_window_stats s
 JOIN lineups l USING (lineup_id, season_id)
 JOIN teams   t USING (team_id);
+
+-- AGGREGATE-THEN-DIVIDE pattern used by every aggregated view below:
+--   off: per100(sum(pts), sum(poss))
+--   def: per100(sum(opp_pts) FILTER (WHERE opp_poss IS NOT NULL), sum(opp_poss))
+-- SUM() silently skips NULLs, so a row with unknown opp_poss would otherwise add its points to the
+-- numerator but nothing to the denominator (an inflated DRtg). FILTER keeps numerator and denominator
+-- on the same rows. Unknown opp_poss occurs only for zero-second rows (see docs/metrics.md).
+
+-- Grain: one lineup in one season (both windows combined).
+CREATE VIEW v_lineup_season_ratings AS
+SELECT l.lineup_id, l.season_id, l.team_id, l.player_key,
+       sum(s.seconds) / 60.0 AS minutes, sum(s.poss) AS poss, sum(s.opp_poss) AS opp_poss,
+       sum(s.pts) AS pts, sum(s.opp_pts) AS opp_pts,
+       per100(sum(s.pts), sum(s.poss)) AS off_rating,
+       per100(sum(s.opp_pts) FILTER (WHERE s.opp_poss IS NOT NULL), sum(s.opp_poss)) AS def_rating,
+       per100(sum(s.pts), sum(s.poss))
+         - per100(sum(s.opp_pts) FILTER (WHERE s.opp_poss IS NOT NULL), sum(s.opp_poss)) AS net_rating
+FROM lineup_window_stats s JOIN lineups l USING (lineup_id, season_id)
+GROUP BY l.lineup_id, l.season_id, l.team_id, l.player_key;
+
+-- Grain: one team in one window, built from LINEUP totals (same possession definition as lineups;
+-- the team endpoint counts ~3-4% fewer possessions, see docs/database.md).
+CREATE VIEW v_team_window_ratings AS
+SELECT l.season_id, s.window_type, l.team_id, t.abbreviation,
+       sum(s.seconds) / 60.0 AS lineup_minutes, sum(s.poss) AS poss, sum(s.opp_poss) AS opp_poss,
+       sum(s.pts) AS pts, sum(s.opp_pts) AS opp_pts,
+       per100(sum(s.pts), sum(s.poss)) AS off_rating,
+       per100(sum(s.opp_pts) FILTER (WHERE s.opp_poss IS NOT NULL), sum(s.opp_poss)) AS def_rating,
+       per100(sum(s.pts), sum(s.poss))
+         - per100(sum(s.opp_pts) FILTER (WHERE s.opp_poss IS NOT NULL), sum(s.opp_poss)) AS net_rating
+FROM lineup_window_stats s JOIN lineups l USING (lineup_id, season_id) JOIN teams t USING (team_id)
+GROUP BY l.season_id, s.window_type, l.team_id, t.abbreviation;
+
+-- Grain: one player, for one team, in one window: on-court totals pooled over every lineup they were in.
+-- (Per team, unlike the player endpoint, which merges a traded player's teams.)
+CREATE VIEW v_player_window_on_court AS
+SELECT l.season_id, s.window_type, l.team_id, lp.player_id,
+       count(*) AS n_lineups, sum(s.seconds) / 60.0 AS minutes,
+       sum(s.poss) AS poss, sum(s.opp_poss) AS opp_poss, sum(s.pts) AS pts, sum(s.opp_pts) AS opp_pts,
+       per100(sum(s.pts), sum(s.poss)) AS off_rating,
+       per100(sum(s.opp_pts) FILTER (WHERE s.opp_poss IS NOT NULL), sum(s.opp_poss)) AS def_rating,
+       per100(sum(s.pts), sum(s.poss))
+         - per100(sum(s.opp_pts) FILTER (WHERE s.opp_poss IS NOT NULL), sum(s.opp_poss)) AS net_rating
+FROM lineup_window_stats s
+JOIN lineups l USING (lineup_id, season_id)
+JOIN lineup_players lp USING (lineup_id)
+GROUP BY l.season_id, s.window_type, l.team_id, lp.player_id;

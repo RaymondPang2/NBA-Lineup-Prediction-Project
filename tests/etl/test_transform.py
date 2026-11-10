@@ -17,7 +17,7 @@ def measures(rows):
         key = {"TEAM_ID": 1, "GROUP_ID": r.get("GROUP_ID", GID), "GROUP_NAME": r["GROUP_NAME"]}
         common = key | {"SUM_TIME_PLAYED": r["STP"], "GP": r["GP"]}
         adv.append(common | {"POSS": r["POSS"], "OFF_RATING": 100.0, "DEF_RATING": r["DEF_RATING"],
-                             "NET_RATING": 0.0, "PACE": 99.0})
+                             "NET_RATING": 0.0, "PACE": r.get("PACE", 99.0)})
         b = {c: 0 for c in BASE_ADDITIVE} | {"PTS": r["PTS"], "FGM": r["FGM"], "FGA": r["FGM"] + 5,
                                              "FG3M": r["FG3M"], "FG3A": r["FG3M"], "FTM": r["FTM"],
                                              "FTA": r["FTM"], "PLUS_MINUS": r["PTS"] - r["OPP_PTS"]}
@@ -72,3 +72,37 @@ def test_time_mismatch_between_measures_fails():
     base.loc[0, "SUM_TIME_PLAYED"] += 1
     with pytest.raises(TransformError, match="time played"):
         join_measures(adv, base, opp)
+
+
+def pace_for(stp, poss, opp_poss):
+    """The PACE NBA would publish (2 decimals) for given time and possessions."""
+    minutes = stp / 3000
+    return round(48 * (poss + opp_poss) / 2 / minutes, 2)
+
+
+def test_canonical_opp_poss_recovered_from_pace():
+    row = ROW_A | {"PACE": pace_for(60000, 50, 47)}            # 47 opponent possessions
+    r = collapse_name_variants(join_measures(*measures([row]))).iloc[0]
+    assert r.OPP_POSS == 47 and r.OPP_POSS_METHOD == "pace"
+
+
+def test_zero_time_row_falls_back_to_def_rating():
+    row = ROW_B | {"STP": 0, "PACE": 0.0, "OPP_PTS": 2, "DEF_RATING": 200.0, "PTS": 0, "FGM": 0}
+    r = collapse_name_variants(join_measures(*measures([row]))).iloc[0]
+    assert r.OPP_POSS == 1 and r.OPP_POSS_METHOD == "def_rating"
+
+
+def test_zero_time_zero_points_is_unknown_and_poisons_merge():
+    a = ROW_A | {"PACE": pace_for(60000, 50, 50)}
+    unknown = ROW_B | {"STP": 0, "PACE": 0.0, "OPP_PTS": 0, "DEF_RATING": 0.0, "PTS": 0, "FGM": 0}
+    r = collapse_name_variants(join_measures(*measures([a, unknown]))).iloc[0]
+    assert math.isnan(r.OPP_POSS) and r.OPP_POSS_METHOD is None   # unknown, not silently 50
+
+
+def test_merged_rows_sum_exact_integers_like_real_det_2018_19():
+    # Real case shape: one partial row allowed 0 points (route A undefined) but has playing time.
+    big = ROW_A | {"PACE": pace_for(60000, 50, 49)}
+    tiny = ROW_B | {"STP": 3075, "POSS": 3, "PACE": pace_for(3075, 3, 2), "OPP_PTS": 0, "DEF_RATING": 0.0}
+    r = collapse_name_variants(join_measures(*measures([big, tiny]))).iloc[0]
+    assert r.OPP_POSS == 49 + 2 and r.OPP_POSS_METHOD == "pace"
+    assert math.isnan(r.OPP_POSS_IMPLIED)                          # route A alone could not do this

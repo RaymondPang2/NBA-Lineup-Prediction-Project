@@ -49,7 +49,7 @@ def apply_schema(conn: psycopg.Connection) -> None:
 
 def reset_schema(conn: psycopg.Connection) -> None:
     """Drop and recreate every project table. Destroys loaded data (bronze files are untouched)."""
-    conn.execute("DROP VIEW IF EXISTS v_lineup_window_ratings")
+    conn.execute("DROP VIEW IF EXISTS v_player_window_on_court, v_team_window_ratings, v_lineup_season_ratings, v_lineup_window_ratings CASCADE")
     for table in TABLES:
         conn.execute(f"DROP TABLE IF EXISTS {table} CASCADE")
     apply_schema(conn)

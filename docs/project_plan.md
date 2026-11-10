@@ -33,8 +33,8 @@ Post-All-Star-break lineup net rating (per 100 possessions). Features come from 
 |---|---|---|
 | 0 | Setup + data spike | Done (approved 2026-11-10) |
 | 1 | Ingestion (cached, resumable, per team, row-cap guard, `ingestion_runs`) | Done (approved 2026-11-10) |
-| 2 | PostgreSQL schema, cleaning, validation, loading | Done, awaiting review |
-| 3 | Metric recomputation and checks | |
+| 2 | PostgreSQL schema, cleaning, validation, loading | Done (approved 2026-11-10) |
+| 3 | Metric recomputation and checks | Done, awaiting review |
 | 4 | EDA, reliability and selection analysis (Matplotlib) | |
 | 5 | Features + baselines + chronological splits | |
 | 6 | Linear / Ridge / Random Forest, evaluation, model card | |
@@ -71,6 +71,9 @@ Gate checks at the ≥ 25 threshold:
 2. Held-out effective n ≥ 347: **not met by either single season.** It is met only if 2024-25 and 2025-26 are pooled (506). With 230 observations, the final test can detect r ≥ 0.18 at 80% power. Phase 0's player-feature signal was r ≈ 0.24.
 3. Possession threshold: ≥ 50 roughly halves effective n. **≥ 25 with possession weights** stays the primary design.
 
-**Decision needed before Phase 5** (user's call):
-- (A) Select models with expanding-window cross-validation inside 2018-19 to 2023-24, and report the final test on 2024-25 + 2025-26 pooled (eff. n 506), *plus* 2025-26 alone. 2025-26 is never used for training.
-- (B) Keep the three-way split and report bootstrap confidence intervals on a 2025-26-only test (eff. n 230).
+**Evaluation design (decided 2026-11-10, Modified Option A):**
+- **Model selection:** expanding-window cross-validation inside 2018-19 to 2023-24 only. For example, train ≤ 2019-20 → validate 2020-21, train ≤ 2020-21 → validate 2021-22, and so on.
+- **Held out during all development:** 2024-25 and 2025-26. They're never used for training, tuning, feature selection or threshold choices. **2025-26 is never used for training or tuning, even after selection.**
+- **Final evaluation** of the selected model: reported separately on 2024-25 and on 2025-26, and on both pooled.
+- **Metrics:** MAE, RMSE and R², each unweighted and possession-weighted, with every baseline alongside, and with bootstrap confidence intervals (resampling lineups) for each metric and for model-minus-baseline differences.
+- **Sensitivity:** the whole procedure is repeated with and without the irregular 2019-20 and 2020-21 seasons.

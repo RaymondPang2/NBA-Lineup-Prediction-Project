@@ -48,11 +48,15 @@ def test_failed_quality_gate_rolls_back_everything(conn):
 
 
 def test_tiny_discrepancy_is_tolerated_but_reported(conn):
-    # Like the real BKN @ DET case: the box score is consistent, but one lineup's total is off by a point.
+    # Like the real BKN @ DET case (game 0022500704): the box score credits a team with 1 point that no
+    # lineup has. Both game rows stay consistent: team +1 pts and +1 margin, opponent -1 margin.
     s = transform_season(read_season(RAW, SEASON))
-    lws = s.tables["lineup_window_stats"]
-    for col in ("ftm", "fta", "pts", "plus_minus"):        # one extra made free throw keeps pts = 2*fgm+fg3m+ftm
-        lws.loc[0, col] += 1
+    tg = s.tables["team_games"]
+    game = tg.loc[0, "game_id"]
+    opp_row = tg.index[(tg.game_id == game) & (tg.index != 0)][0]
+    tg.loc[0, ["pts", "plus_minus"]] += 1
+    tg.loc[opp_row, "plus_minus"] -= 1
     _, dq = load_season(conn, s)
     by = {r.name: r for r in dq}
-    assert by["points_reconcile"].passed and not by["points_exact"].passed
+    assert by["points_reconcile"].passed and by["game_rows_consistent"].passed
+    assert not by["points_exact"].passed and not by["plus_minus_exact"].passed

@@ -112,10 +112,25 @@ CHECKS: tuple[Check, ...] = (
             SELECT 1 FROM player_window_stats p
             WHERE p.player_id = lp.player_id AND p.season_id = s.season_id AND p.window_type = s.window_type)"""),
     Check("opp_poss_close_to_poss", WARNING,
-          "for lineups with >=100 possessions, implied opponent possessions within 15% of own", """
-        SELECT lineup_id, window_type, poss, opp_poss_implied FROM lineup_window_stats
+          "for lineups with >=100 possessions, opponent possessions within 15% of own (real exceptions exist)", """
+        SELECT lineup_id, window_type, poss, opp_poss FROM lineup_window_stats
         WHERE season_id = %(season)s AND poss >= 100
-          AND (opp_poss_implied IS NULL OR abs(opp_poss_implied - poss) > 0.15 * poss)"""),
+          AND (opp_poss IS NULL OR abs(opp_poss - poss) > 0.15 * poss)"""),
+    # ---- Phase 3: metric validation
+    Check("opp_poss_known_when_time_played", ERROR,
+          "canonical opponent possessions are known for every lineup-window with playing time", """
+        SELECT lineup_id, window_type, seconds FROM lineup_window_stats
+        WHERE season_id = %(season)s AND seconds > 0 AND opp_poss IS NULL"""),
+    Check("ratings_match_nba", ERROR,
+          "our exact ORtg/DRtg/Net, rounded half-up to 0.1, equal NBA's published values (un-merged lineups)", """
+        SELECT lineup_id, window_type,
+               round(per100(pts, poss), 1) AS our_off, nba_off_rating,
+               round(per100(opp_pts, opp_poss), 1) AS our_def, nba_def_rating, nba_net_rating
+        FROM lineup_window_stats
+        WHERE season_id = %(season)s AND n_source_rows = 1 AND poss > 0 AND opp_poss > 0
+          AND (round(per100(pts, poss), 1) <> nba_off_rating
+               OR round(per100(opp_pts, opp_poss), 1) <> nba_def_rating
+               OR round(per100(pts, poss) - per100(opp_pts, opp_poss), 1) <> nba_net_rating)"""),
 )
 
 

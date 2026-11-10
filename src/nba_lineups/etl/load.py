@@ -27,7 +27,7 @@ from .transform import SilverSeason
 
 log = logging.getLogger(__name__)
 
-LWS_COLUMNS = ["n_source_rows", "gp", "seconds", "poss", "opp_poss_implied",
+LWS_COLUMNS = ["n_source_rows", "gp", "seconds", "poss", "opp_poss_implied", "opp_poss", "opp_poss_method",
                "fgm", "fga", "fg3m", "fg3a", "ftm", "fta", "oreb", "dreb", "ast", "tov", "pts",
                "opp_fgm", "opp_fga", "opp_fg3m", "opp_fg3a", "opp_ftm", "opp_fta", "opp_oreb", "opp_dreb",
                "opp_tov", "opp_pts", "plus_minus", "nba_off_rating", "nba_def_rating", "nba_net_rating", "nba_pace"]

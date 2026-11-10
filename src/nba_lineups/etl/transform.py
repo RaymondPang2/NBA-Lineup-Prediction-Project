@@ -19,6 +19,7 @@ from dataclasses import dataclass
 import numpy as np
 import pandas as pd
 
+from .. import metrics
 from ..config import IRREGULAR_SEASONS
 from ..ingest.validate import parse_group_id
 from .extract import BronzeSeason
@@ -57,9 +58,15 @@ def join_measures(adv: pd.DataFrame, base: pd.DataFrame, opp: pd.DataFrame) -> p
         raise TransformError("time played or GP differs between measures for the same lineup")
     if not (m.PTS - m.OPP_PTS == m.PLUS_MINUS).all():
         raise TransformError("PTS - OPP_PTS != PLUS_MINUS")
-    # Opponent possessions per source row, backed out of NBA's DEF_RATING = 100 * OPP_PTS / OPP_POSS.
-    # Undefined (NaN) when DEF_RATING is 0, which happens only when the opponent scored 0 points.
+    # Opponent possessions per source row (Phase 3, see docs/metrics.md):
+    #   route A: 100 * OPP_PTS / DEF_RATING (unrounded; kept for validation; NaN if DEF_RATING is 0)
+    #   route B: integer recovered from PACE; exact for every row with playing time
+    #   canonical OPP_POSS = route B, else rounded route A (zero-time rows), else NaN (unknown)
     m["OPP_POSS_IMPLIED"] = np.where(m.DEF_RATING > 0, 100 * m.OPP_PTS / m.DEF_RATING.where(m.DEF_RATING > 0), np.nan)
+    via_pace = metrics.opp_poss_from_pace(m.PACE, m.SUM_TIME_PLAYED / 3000, m.POSS)
+    via_def = metrics.opp_poss_from_def_rating(m.OPP_PTS, m.DEF_RATING)
+    m["OPP_POSS"] = via_pace.fillna(via_def)
+    m["OPP_POSS_METHOD"] = np.select([via_pace.notna(), via_def.notna()], ["pace", "def_rating"], default=None)
     return m.drop(columns=["STP_BASE", "STP_OPP", "GP_BASE", "_ab", "_abo"])
 
 
@@ -72,6 +79,10 @@ def collapse_name_variants(rows: pd.DataFrame) -> pd.DataFrame:
     # min_count=... makes the sum NaN if ANY partial row is undefined (an honest "unknown").
     out["OPP_POSS_IMPLIED"] = g.OPP_POSS_IMPLIED.sum(min_count=1).values
     out.loc[g.OPP_POSS_IMPLIED.apply(lambda s: s.isna().any()).values, "OPP_POSS_IMPLIED"] = np.nan
+    # Canonical opponent possessions: a sum of exact integers, unknown if any partial row is unknown.
+    out["OPP_POSS"] = g.OPP_POSS.agg(lambda s: s.sum() if s.notna().all() else np.nan).values
+    methods = g.OPP_POSS_METHOD.agg(lambda s: None if s.isna().any() else (s.iloc[0] if s.nunique() == 1 else "mixed"))
+    out["OPP_POSS_METHOD"] = methods.values
     single = out.N_SOURCE_ROWS == 1
     firsts = g[["OFF_RATING", "DEF_RATING", "NET_RATING", "PACE"]].first().reset_index(drop=True)
     for col in firsts.columns:
@@ -103,10 +114,12 @@ def _lineup_window_frame(bronze: BronzeSeason, window: str) -> pd.DataFrame:
     lw["seconds"] = lw.SUM_TIME_PLAYED / 50   # 5 players x deciseconds -> lineup seconds
     rename = {c: c.lower() for c in BASE_ADDITIVE + OPP_ADDITIVE + ["GP", "POSS"]}
     rename |= {"TEAM_ID": "team_id", "N_SOURCE_ROWS": "n_source_rows", "OPP_POSS_IMPLIED": "opp_poss_implied",
+               "OPP_POSS": "opp_poss", "OPP_POSS_METHOD": "opp_poss_method",
                "OFF_RATING": "nba_off_rating", "DEF_RATING": "nba_def_rating", "NET_RATING": "nba_net_rating",
                "PACE": "nba_pace"}
     out = lw.rename(columns=rename).drop(columns=["GROUP_ID", "SUM_TIME_PLAYED"])
     counts = ["n_source_rows", "gp", "poss", "plus_minus"] + [c.lower() for c in BASE_ADDITIVE + OPP_ADDITIVE]
+    out["opp_poss"] = out.opp_poss.astype("Int64")   # nullable integer: NaN -> <NA> -> SQL NULL
     return as_int(out, counts, f"lineup_window_stats[{window}]")
 
 
