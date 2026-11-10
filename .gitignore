@@ -1,0 +1,20 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# Data: NBA.com data is for personal, non-commercial use. Never commit raw or processed data.
+data/
+
+# Secrets / local config
+.env
+
+# OS / editor
+.DS_Store
+.vscode/
+
+# Node (web/ added in Phase 8)
+node_modules/
+dist/
