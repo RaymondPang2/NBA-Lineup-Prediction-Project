@@ -7,14 +7,31 @@ Approved 2026-11-09. Changes since approval are marked **(Phase 0 update)**.
 - Start with 2022-23 and 2023-24 only, and expand once the pipeline is tested.
 - Data: `nba_api` → `LeagueDashLineups` (per team, `pre_asb`/`post_asb` date windows), plus player and team dashboards. pbpstats is a stretch goal.
 
-## Prediction target **(Phase 0 update, pending approval)**
-Post-All-Star-break lineup net rating (per 100 possessions) for lineups that coaches play after the break. Features come only from the pre-break window, mainly player-level and team-level ratings. Observations are weighted by post-break possessions. Validation is chronological by season. See `docs/phase0_data_report.md` §5.
+## Prediction target (approved 2026-11-10)
+Post-All-Star-break lineup net rating (per 100 possessions). Features come from the pre-break window: **player-level and team-level** features are primary, and the lineup's own history is optional and shrunk toward the mean. Observations are weighted by post-break possessions. Validation is chronological by season. See `docs/phase0_data_report.md` §5.
+
+## Analytical contract (binding for all later phases)
+1. **The target is conditional.** It's defined only for lineups that appear after the All-Star break. The estimand is: *"Given that a coach plays this lineup after the break, what will its net rating be?"* It is **not** a prediction for every possible lineup. The model card, API docs and dashboard must all say so.
+2. **No post-break information in any input feature.** This is enforced in three places:
+   (a) the date windows are disjoint (`pre_asb.date_to < post_asb.date_from`, unit-tested);
+   (b) ingestion rejects any response whose echoed `DateFrom`/`DateTo` don't match the request;
+   (c) the Phase 5 feature builder will read only `window = 'pre_asb'` rows and will include a test asserting that.
+   "Lineup appears after the break" defines the *sample*. It must never become a *feature*.
+3. **Possession denominators.**
+   - ORtg = 100 × SUM(PTS) / SUM(**own** POSS).
+   - DRtg = 100 × SUM(OPP_PTS) / SUM(**opponent** POSS).
+   - Net = ORtg − DRtg.
+   - Opponent possessions are stored as their own column (`opp_poss`, derived in Phase 3 and checked against `DEF_RATING`/`PACE`). They are never assumed equal to own possessions.
+   - Aggregation always sums totals first and then divides. Ratings are never averaged.
+   - The same rule applies to SQL views and Power BI DAX, e.g. `DIVIDE(SUM(opp_pts), SUM(opp_poss)) * 100`.
+4. **Models:** Linear Regression, Ridge Regression and Random Forest in Phase 6, compared against the baselines.
+5. **Sample-size gate before Phase 6.** Model development starts only after the training data has been confirmed sufficient. See `docs/ingestion.md` for the current measured coverage and the gate thresholds.
 
 ## Phases (each needs approval before it starts)
 | # | Phase | Status |
 |---|---|---|
-| 0 | Setup + data spike | Done, awaiting review |
-| 1 | Ingestion (cached, resumable, per team, row-cap guard, `ingestion_runs`) | |
+| 0 | Setup + data spike | Done (approved 2026-11-10) |
+| 1 | Ingestion (cached, resumable, per team, row-cap guard, `ingestion_runs`) | Done, awaiting review |
 | 2 | PostgreSQL schema, cleaning, validation, loading | |
 | 3 | Metric recomputation and checks | |
 | 4 | EDA, reliability and selection analysis (Matplotlib) | |

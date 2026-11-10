@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nba-lineups"
+version = "0.1.0"
+description = "NBA lineup analytics and post-All-Star-break net rating prediction"
+requires-python = ">=3.12"
+dependencies = [
+    "nba_api==1.12.0",
+    "pandas==3.1.1",
+    "numpy==2.5.4",
+    "requests==2.34.2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest==8.4.2"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
