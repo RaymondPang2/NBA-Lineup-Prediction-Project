@@ -77,6 +77,15 @@ def test_duplicate_lineup_and_wrong_team(lineup):
     assert any("duplicate" in e for e in errors) and any("other than" in e for e in errors)
 
 
+def test_name_variant_split_is_a_warning(lineup):
+    # Same 5 player ids, different display name (seen for real: 'L. Doncic' vs 'L. Dončić', 2018-19)
+    spec, p = lineup
+    rows(p)[1] = list(rows(p)[0])
+    rows(p)[1][col(p, "GROUP_NAME")] = rows(p)[0][col(p, "GROUP_NAME")] + " Sr."
+    report = validate_payload(spec, p)
+    assert report.ok and any("name variants" in w for w in report.warnings)
+
+
 def test_missing_column_and_malformed(lineup):
     spec, p = lineup
     p["resultSets"][0]["headers"][col(p, "POSS")] = "POSSESSIONS"

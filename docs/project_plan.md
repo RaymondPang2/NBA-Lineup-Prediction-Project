@@ -23,6 +23,7 @@ Post-All-Star-break lineup net rating (per 100 possessions). Features come from 
    - Net = ORtg − DRtg.
    - Opponent possessions are stored as their own column (`opp_poss`, derived in Phase 3 and checked against `DEF_RATING`/`PACE`). They are never assumed equal to own possessions.
    - Aggregation always sums totals first and then divides. Ratings are never averaged.
+   - **(Phase 2)** The lineup feed and the team endpoint count possessions differently: lineup sums are about 3–4% higher. Team-level features and benchmarks must be built from summed **lineup** totals, so every rating in a model shares one possession definition. See `docs/database.md`.
    - The same rule applies to SQL views and Power BI DAX, e.g. `DIVIDE(SUM(opp_pts), SUM(opp_poss)) * 100`.
 4. **Models:** Linear Regression, Ridge Regression and Random Forest in Phase 6, compared against the baselines.
 5. **Sample-size gate before Phase 6.** Model development starts only after the training data has been confirmed sufficient. See `docs/ingestion.md` for the current measured coverage and the gate thresholds.
@@ -31,8 +32,8 @@ Post-All-Star-break lineup net rating (per 100 possessions). Features come from 
 | # | Phase | Status |
 |---|---|---|
 | 0 | Setup + data spike | Done (approved 2026-11-10) |
-| 1 | Ingestion (cached, resumable, per team, row-cap guard, `ingestion_runs`) | Done, awaiting review |
-| 2 | PostgreSQL schema, cleaning, validation, loading | |
+| 1 | Ingestion (cached, resumable, per team, row-cap guard, `ingestion_runs`) | Done (approved 2026-11-10) |
+| 2 | PostgreSQL schema, cleaning, validation, loading | Done, awaiting review |
 | 3 | Metric recomputation and checks | |
 | 4 | EDA, reliability and selection analysis (Matplotlib) | |
 | 5 | Features + baselines + chronological splits | |
@@ -53,3 +54,23 @@ The authoring environment is still to be decided: Power BI Service in the browse
 - **Matplotlib:** static figures for analysis and reports.
 - **Recharts:** interactive charts in the product.
 - **Power BI:** BI modeling and self-serve reporting.
+
+## Sample-size gate status (measured 2026-11-10, after Phase 2)
+Post-break lineups whose 5 players all have pre-break possessions for the same team. Effective n uses Kish's formula with possession weights (`scripts/phase2/sample_size_report.py`).
+
+| Split | Seasons | n (≥ 25 poss) | eff. n (≥ 25) | eff. n (≥ 50) |
+|---|---|---|---|---|
+| Train | 2018-19 to 2023-24 | 3,029 | **1,251** | 668 |
+| Train, excluding irregular seasons | 2018-19, 2021-22 to 2023-24 | 2,126 | 867 | 464 |
+| Validation | 2024-25 | 600 | 276 | 136 |
+| Final test (never used for training) | 2025-26 | 563 | 230 | 92 |
+| *Validation + test pooled* | 2024-25 + 2025-26 | 1,163 | *506* | *227* |
+
+Gate checks at the ≥ 25 threshold:
+1. Train effective n ≥ 1,000: **met** with all seasons (1,251). **Not met** without the irregular seasons (867), so the sensitivity analysis that excludes them will be less precise.
+2. Held-out effective n ≥ 347: **not met by either single season.** It is met only if 2024-25 and 2025-26 are pooled (506). With 230 observations, the final test can detect r ≥ 0.18 at 80% power. Phase 0's player-feature signal was r ≈ 0.24.
+3. Possession threshold: ≥ 50 roughly halves effective n. **≥ 25 with possession weights** stays the primary design.
+
+**Decision needed before Phase 5** (user's call):
+- (A) Select models with expanding-window cross-validation inside 2018-19 to 2023-24, and report the final test on 2024-25 + 2025-26 pooled (eff. n 506), *plus* 2025-26 alone. 2025-26 is never used for training.
+- (B) Keep the three-way split and report bootstrap confidence intervals on a 2025-26-only test (eff. n 230).

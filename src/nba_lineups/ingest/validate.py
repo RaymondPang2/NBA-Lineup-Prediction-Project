@@ -124,8 +124,18 @@ def _check_lineups(spec: RequestSpec, df: pd.DataFrame, report: ValidationReport
         report.errors.append("GROUP_ID with a repeated player")
     if not ids.map(lambda xs: xs == sorted(xs)).all():
         report.errors.append("GROUP_ID player ids not in numeric order (lineup keys would be unstable)")
-    if df.GROUP_ID.duplicated().any():
-        report.errors.append(f"{int(df.GROUP_ID.duplicated().sum())} duplicate GROUP_IDs")
+    dup = df[df.GROUP_ID.duplicated(keep=False)]
+    if not dup.empty:
+        # Phase 2 finding: the API splits one lineup into several rows when a player's display
+        # name changed (e.g. 'L. Doncic' / 'L. Dončić', 'E. Kanter' / 'E. Freedom'). Those rows are
+        # partial totals over different games and are summed in the transform step. A repeated
+        # (GROUP_ID, GROUP_NAME) pair, however, is a true duplicate and is rejected.
+        if dup.duplicated(["GROUP_ID", "GROUP_NAME"]).any():
+            report.errors.append(f"{int(dup.duplicated(['GROUP_ID', 'GROUP_NAME']).sum())} duplicate "
+                                 "(GROUP_ID, GROUP_NAME) rows")
+        else:
+            report.warnings.append(f"{dup.GROUP_ID.nunique()} GROUP_IDs split across player-name variants "
+                                   "(partial totals; summed during transform)")
     if spec.team_id is not None and (df.TEAM_ID != spec.team_id).any():
         report.errors.append(f"rows for a team other than {spec.team_id}")
 
