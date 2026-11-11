@@ -94,3 +94,18 @@ ORDER BY o.net_rating DESC LIMIT 5;
 \echo '--- 8. Rows with unknown opponent possessions (all zero-second appearances), all seasons'
 SELECT count(*) AS rows_unknown_opp_poss, sum(opp_pts) AS opp_pts_in_those_rows, sum(seconds) AS seconds
 FROM lineup_window_stats WHERE opp_poss IS NULL;
+
+-- 9) Split-half reliability in pure SQL (Phase 4): correlate each lineup's HOME and ROAD net ratings.
+--    Disjoint games -> independent sampling errors, so corr() measures signal, not shared noise.
+--    Self-join on the split table + corr() aggregate + Spearman-Brown step-up to the full window.
+\echo '--- 9. Home vs road net rating, pre-break lineups with >= 50 poss per half (development seasons)'
+WITH h AS (SELECT lineup_id, per100(pts, poss) - per100(opp_pts, opp_poss) AS net, poss, opp_poss
+           FROM lineup_split_stats WHERE split = 'home'),
+     r AS (SELECT lineup_id, per100(pts, poss) - per100(opp_pts, opp_poss) AS net, poss, opp_poss
+           FROM lineup_split_stats WHERE split = 'road')
+SELECT count(*) AS lineups,
+       round(corr(h.net, r.net)::numeric, 3)                                  AS split_half_r,
+       round((2 * corr(h.net, r.net) / (1 + corr(h.net, r.net)))::numeric, 3) AS spearman_brown,
+       round(avg(h.net - r.net), 2)                                           AS home_minus_road
+FROM h JOIN r USING (lineup_id)
+WHERE least(h.poss, h.opp_poss, r.poss, r.opp_poss) >= 50;

@@ -13,6 +13,8 @@ dependencies = [
     "numpy==2.5.4",
     "requests==2.34.2",
     "psycopg[binary]==3.3.8",
+    "matplotlib==3.11.2",      # Phase 4: static EDA figures
+    "scikit-learn==1.9.1",     # Phase 4: continuation model; Phase 6: prediction models
 ]
 
 [project.optional-dependencies]

@@ -16,6 +16,12 @@ ALL_SEASONS: tuple[str, ...] = (
 IRREGULAR_SEASONS = frozenset({"2019-20", "2020-21"})
 PHASE1_SEASONS: tuple[str, ...] = ("2022-23", "2023-24")
 
+# Evaluation design (Modified Option A, decided 2026-11-10). Exploratory analysis, hyperparameter
+# estimation and model selection may use ONLY the development seasons. The held-out seasons are
+# touched once, for final evaluation (2025-26 is never used for training or tuning).
+DEV_SEASONS: tuple[str, ...] = ALL_SEASONS[:6]          # 2018-19 .. 2023-24
+HELDOUT_SEASONS: tuple[str, ...] = ALL_SEASONS[6:]      # 2024-25 (validation), 2025-26 (final test)
+
 # Phase 0 finding: stats.nba.com dashboard endpoints silently truncate at
 # 2,000 rows. A response of this size must be treated as incomplete.
 ROW_CAP = 2000

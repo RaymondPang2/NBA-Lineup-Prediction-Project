@@ -32,6 +32,7 @@ class RequestSpec:
     window: str | None = None
     measure: str | None = None
     team_id: int | None = None
+    split: str | None = None   # e.g. 'home'/'road' for location-split requests (Phase 4); None = no split
 
     @classmethod
     def make(cls, endpoint: str, season: str, params: Mapping[str, Any], **meta: Any) -> RequestSpec:
@@ -48,6 +49,8 @@ class RequestSpec:
         parts = [self.season, self.endpoint]
         if self.window:
             parts.append(self.window)
+        if self.split:
+            parts.append(self.split)
         if self.measure:
             parts.append(self.measure.lower())
         parts.append(f"team_{self.team_id}" if self.team_id else "league")
@@ -85,6 +88,25 @@ def lineup_specs(season: str, windows: Mapping[str, DateWindow], team_ids: Itera
             for tid in team_ids:
                 params = _dashboard_params(season, window, measure) | {"group_quantity": 5, "team_id_nullable": tid}
                 specs.append(RequestSpec.make(LINEUPS, season, params, window=window.name, measure=measure, team_id=tid))
+    return specs
+
+
+# Phase 4: lineup totals split by game location. Home and road games are interleaved through
+# the season, so the two halves are disjoint sets of games with no time trend between them.
+# They give a genuine split-half reliability check for lineup ratings (docs/eda_reliability.md).
+LOCATIONS = ("Home", "Road")
+
+
+def location_split_specs(season: str, window: DateWindow, team_ids: Iterable[int]) -> list[RequestSpec]:
+    """One request per (location, measure, team) within a single window."""
+    specs = []
+    for loc in LOCATIONS:
+        for measure in LINEUP_MEASURES:
+            for tid in sorted(team_ids):
+                params = _dashboard_params(season, window, measure) | {
+                    "group_quantity": 5, "team_id_nullable": tid, "location_nullable": loc}
+                specs.append(RequestSpec.make(LINEUPS, season, params, window=window.name, measure=measure,
+                                              team_id=tid, split=loc.lower()))
     return specs
 
 

@@ -124,3 +124,12 @@ def test_gamelog_needs_two_rows_per_game():
     p = synthetic_payload(spec)
     p["resultSets"][0]["rowSet"].pop()
     assert any("exactly 2 team rows" in e for e in validate_payload(spec, p).errors)
+
+
+def test_wrong_echoed_location_is_rejected():
+    from nba_lineups.ingest.specs import location_split_specs
+    spec = location_split_specs("2023-24", DateWindow(PRE, date(2023, 10, 24), date(2024, 2, 15)), TEAM_IDS)[0]
+    payload = synthetic_payload(spec)
+    assert validate_payload(spec, payload).ok
+    payload["parameters"]["Location"] = "Road"   # server ignored our Home filter
+    assert any("Location" in e for e in validate_payload(spec, payload).errors)

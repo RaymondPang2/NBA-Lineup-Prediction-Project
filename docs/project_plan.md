@@ -34,8 +34,8 @@ Post-All-Star-break lineup net rating (per 100 possessions). Features come from 
 | 0 | Setup + data spike | Done (approved 2026-11-10) |
 | 1 | Ingestion (cached, resumable, per team, row-cap guard, `ingestion_runs`) | Done (approved 2026-11-10) |
 | 2 | PostgreSQL schema, cleaning, validation, loading | Done (approved 2026-11-10) |
-| 3 | Metric recomputation and checks | Done, awaiting review |
-| 4 | EDA, reliability and selection analysis (Matplotlib) | |
+| 3 | Metric recomputation and checks | Done (approved 2026-11-11) |
+| 4 | EDA, reliability and selection analysis (Matplotlib) | Done, awaiting review |
 | 5 | Features + baselines + chronological splits | |
 | 6 | Linear / Ridge / Random Forest, evaluation, model card | |
 | 7 | FastAPI | |

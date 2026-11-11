@@ -87,3 +87,6 @@ Power (α = 0.05, 80%): detecting r = 0.15 needs n ≥ 347, r = 0.20 needs ≥ 1
 3. Irregular seasons (2019-20, 2020-21) are reported separately, as well as pooled.
 
 **Current status: NOT MET.** Two seasons give about 500 effective observations in total, which can't support both a training set and a test set. The remaining six seasons must be ingested first. If later seasons look like these two (an assumption to verify, not a measurement), 2018-19 to 2023-24 for training and 2024-25 to 2025-26 for testing would meet the gate.
+
+## Phase 4: home/road location splits
+`python -m nba_lineups.ingest --location-splits --seasons <dev seasons>` re-requests the pre-break lineup dashboards per team with `Location=Home` and `Location=Road` (3 measures × 30 teams × 2 locations = 180 requests per season). The cached season's game log and `windows.json` are reused. The server's echoed `Location` is validated like `DateFrom`/`DateTo`, and the files are cached at `data/raw/<season>/leaguedashlineups/pre_asb/{home,road}/...`. Run 2026-11-11 for 2018-19 to 2023-24: **1,080 requests fetched, 0 failed, 0 invalid.** The held-out seasons were not requested.

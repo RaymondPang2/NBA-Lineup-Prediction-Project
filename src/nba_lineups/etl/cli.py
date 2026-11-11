@@ -3,6 +3,9 @@
     python -m nba_lineups.etl                    # every season that has been ingested
     python -m nba_lineups.etl --seasons 2023-24
     python -m nba_lineups.etl --reset            # drop & recreate tables first (raw files untouched)
+
+Seasons whose home/road location splits have been ingested (Phase 4) also get
+lineup_split_stats, loaded after the season (reloading a season cascades its splits away).
 """
 from __future__ import annotations
 
@@ -16,6 +19,7 @@ from ..config import ALL_SEASONS, DEFAULT_DATA_DIR
 from ..db.connection import apply_schema, connect, reset_schema
 from .extract import ExtractError, read_season
 from .load import DataQualityError, load_ingestion_log, load_season
+from .splits import SplitReconciliationError, has_location_splits, load_location_splits, transform_location_splits
 from .transform import TransformError, transform_season
 
 log = logging.getLogger("nba_lineups.etl")
@@ -50,6 +54,12 @@ def main(argv: list[str] | None = None) -> int:
                 log.error("%s", exc)
                 failed.append(season)
                 continue
+            if has_location_splits(raw_dir, season):
+                try:
+                    counts |= load_location_splits(conn, season, transform_location_splits(raw_dir, season))
+                except (ExtractError, TransformError, SplitReconciliationError) as exc:
+                    log.error("%s", exc)
+                    failed.append(season)
             all_counts[season] = counts
             all_dq[season] = [r.__dict__ for r in dq]
             warn = [f"{r.name}={r.violations}" for r in dq if not r.passed]

@@ -26,7 +26,7 @@ import pandas as pd
 from ..config import IngestSettings
 from .client import FetchFailed, RateLimiter, Transport, fetch_with_retries
 from .manifest import FAILED, INVALID, SUCCESS, IngestionRecord, Manifest
-from .specs import RequestSpec, gamelog_spec, season_specs
+from .specs import RequestSpec, gamelog_spec, location_split_specs, season_specs
 from .storage import atomic_write_json, read_json, result_set
 from .validate import validate_payload
 from .windows import DateWindow, build_windows
@@ -129,6 +129,22 @@ class Ingestor:
                 log.info("%s: %d/%d requests processed (cached=%d fetched=%d failed=%d invalid=%d)",
                          season, i, len(specs), summary.cached, summary.fetched, summary.failed, summary.invalid)
 
+    def ingest_location_splits(self, season: str, summary: RunSummary, window: str = "pre_asb",
+                               force: bool = False) -> None:
+        """Phase 4: home/road lineup splits for one window. Needs the season's game log and windows.json."""
+        gamelog = self.ingest_one(gamelog_spec(season), summary, force=False)
+        windows = read_windows(self.raw_dir, season)
+        if gamelog is None or windows is None:
+            summary.problems.append(f"{season}: ingest the season before its location splits")
+            return
+        _, team_ids = gamelog_dates_and_teams(gamelog)
+        specs = location_split_specs(season, windows[window], team_ids)
+        for i, spec in enumerate(specs, 1):
+            self.ingest_one(spec, summary, force)
+            if i % 25 == 0 or i == len(specs):
+                log.info("%s location splits: %d/%d (cached=%d fetched=%d failed=%d invalid=%d)",
+                         season, i, len(specs), summary.cached, summary.fetched, summary.failed, summary.invalid)
+
     def ingest_seasons(self, seasons: Iterable[str], force: bool = False) -> RunSummary:
         summary = RunSummary(self.run_id)
         for season in seasons:
@@ -137,6 +153,14 @@ class Ingestor:
 
     def _write_windows(self, season: str, windows: dict[str, DateWindow]) -> None:
         atomic_write_json(self.raw_dir / season / "windows.json", {k: w.to_dict() for k, w in windows.items()})
+
+
+def read_windows(raw_dir: Path, season: str) -> dict[str, DateWindow] | None:
+    payload = read_json(raw_dir / season / "windows.json")
+    if payload is None:
+        return None
+    return {k: DateWindow(v["name"], date.fromisoformat(v["date_from"]), date.fromisoformat(v["date_to"]))
+            for k, v in payload.items()}
 
 
 def gamelog_dates_and_teams(payload: dict[str, Any]) -> tuple[list[date], list[int]]:

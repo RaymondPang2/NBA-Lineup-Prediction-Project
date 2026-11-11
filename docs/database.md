@@ -24,6 +24,7 @@ seasons 1──* stat_windows 1──* lineup_window_stats *──1 lineups *─
    │                     └──* team_window_stats  *──1 teams       │
    └──* team_games *──1 teams                    lineups 1──* lineup_players (bridge)
 ingestion_log, etl_runs: lineage / audit (no FKs)
+lineup_window_stats 1──* lineup_split_stats   (Phase 4: home / road halves of the pre-break window)
 ```
 `lineup_window_stats` has two composite foreign keys:
 - `(lineup_id, season_id) → lineups` means a stats row's season must equal its lineup's season.
@@ -46,6 +47,16 @@ ingestion_log, etl_runs: lineage / audit (no FKs)
 4. **Count columns are cast to integers only if the cast is lossless.** The API sends some counts as floats, such as `3.0`.
 5. **Silver doesn't drop small samples.** 0-possession lineups and extreme ratios (one real lineup has an NBA pace of 28,794) are kept as facts. Analysis queries exclude them explicitly.
 6. **Each season loads in one transaction:** upsert dimensions, replace facts using `COPY` into staging tables, run DQ checks, then commit. Any error-level DQ failure rolls back the entire season.
+
+## Phase 4 addition: `lineup_split_stats` (home / road)
+Grain: one lineup × pre-break window × game location, development seasons only. The data comes from the same per-team `LeagueDashLineups` requests with `Location=Home|Road` (the server's echoed `Location` is validated), and it reuses the main transform, so opponent possessions and name-variant merging follow identical rules. It's loaded by `etl/splits.py` in one transaction per season, and the main ETL loads it automatically when the split files exist. Error-level checks:
+- home + road equal the window total for **every** lineup (poss, opp_poss, pts, opp_pts, seconds). No neutral-site games exist in 2018-19 to 2023-24; seasons with neutral games are refused.
+- every un-merged split row reproduces NBA's published split ORtg/DRtg/net (half-up rounding).
+
+Reloading a season deletes its split rows by cascade, and they're reloaded right after.
+
+## Phase 4 finding: `player_window_stats.last_team_id` leaks post-break information
+The player endpoint fills `TEAM_ID` with the player's **latest** team even when the request has a pre-break date filter. Nikola Vučević (2020-21) played every pre-break game for ORL, yet his pre-break row says CHI, because he was traded on 25 Mar 2021, after that season's break. Between 21 and 72 players per season have a pre-break `last_team_id` that matches none of their pre-break lineups. Rule: **never use `last_team_id` as a feature.** Derive a player's team(s) from lineup data (`v_player_window_on_court`). `analysis.continuation.build_features` raises `LeakageError` if the column is passed in.
 
 ## Data-quality checks (`src/nba_lineups/etl/dq.py`)
 | Check | Severity |

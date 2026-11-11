@@ -3,6 +3,7 @@
     python -m nba_lineups.ingest                         # Phase 1 seasons (2022-23, 2023-24)
     python -m nba_lineups.ingest --seasons 2021-22       # specific seasons
     python -m nba_lineups.ingest --force                 # ignore the cache and refetch everything
+    python -m nba_lineups.ingest --location-splits --seasons 2018-19 ...   # Phase 4 home/road pre-break splits
 
 Must run from a non-cloud IP: stats.nba.com blocks many datacenter ranges.
 """
@@ -15,7 +16,7 @@ from pathlib import Path
 
 from ..config import ALL_SEASONS, DEFAULT_DATA_DIR, PHASE1_SEASONS, IngestSettings
 from .client import NbaApiTransport
-from .pipeline import Ingestor
+from .pipeline import Ingestor, RunSummary
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -27,6 +28,8 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     p.add_argument("--force", action="store_true", help="refetch even if a valid cached file exists")
     p.add_argument("--min-interval", type=float, default=IngestSettings.min_interval_s,
                    help="minimum seconds between requests")
+    p.add_argument("--location-splits", action="store_true",
+                   help="fetch home/road pre-break lineup splits (the seasons must already be ingested)")
     p.add_argument("-v", "--verbose", action="store_true")
     return p.parse_args(argv)
 
@@ -39,7 +42,12 @@ def main(argv: list[str] | None = None) -> int:
 
     settings = IngestSettings(min_interval_s=args.min_interval)
     ingestor = Ingestor(NbaApiTransport(settings.timeout_s), args.data_dir, settings)
-    summary = ingestor.ingest_seasons(args.seasons, force=args.force)
+    if args.location_splits:
+        summary = RunSummary(ingestor.run_id)
+        for season in args.seasons:
+            ingestor.ingest_location_splits(season, summary, force=args.force)
+    else:
+        summary = ingestor.ingest_seasons(args.seasons, force=args.force)
 
     print(f"\nrun {summary.run_id}: planned={summary.planned} cached={summary.cached} fetched={summary.fetched} "
           f"refetched_corrupt={summary.refetched_corrupt} failed={summary.failed} invalid={summary.invalid}")

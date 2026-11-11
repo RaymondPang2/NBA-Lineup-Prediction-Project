@@ -35,6 +35,7 @@ _ECHO_NAMES = {
     "season": "Season", "season_type_all_star": "SeasonType", "measure_type_detailed_defense": "MeasureType",
     "per_mode_detailed": "PerMode", "date_from_nullable": "DateFrom", "date_to_nullable": "DateTo",
     "team_id_nullable": "TeamID", "group_quantity": "GroupQuantity", "player_or_team_abbreviation": "PlayerOrTeam",
+    "location_nullable": "Location",
 }
 
 

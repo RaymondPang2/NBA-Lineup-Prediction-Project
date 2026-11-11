@@ -53,7 +53,7 @@ Canonical `opp_poss` = B, falling back to rounded A for zero-second rows, otherw
 | 100–299 | 1,474 | 15.7% | 15.8 | 0.3% |
 | 300+ | 332 | 12.3% | 9.4 | 0.0% |
 
-Most possessions are played by lineups too small to rate reliably. That supports building features from **pooled player-level** data. Phase 4 will turn this into an explicit reliability model (standard errors, split-half reliability, shrinkage), using only 2018-19 to 2023-24.
+Most possessions are played by lineups too small to rate reliably. That supports building features from **pooled player-level** data. Phase 4 turned this into an explicit reliability model (standard errors, split-half reliability, shrinkage) using only 2018-19 to 2023-24. See `eda_reliability.md`.
 
 ## Known NBA data limitations (cumulative)
 - No opponent possessions in the API; recovered exactly via PACE (above).

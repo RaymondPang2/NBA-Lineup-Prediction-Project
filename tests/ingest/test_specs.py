@@ -36,3 +36,16 @@ def test_param_order_does_not_change_identity():
 
 def test_cache_path():
     assert gamelog_spec("2022-23").cache_path(Path("raw")) == Path("raw/2022-23/leaguegamelog/league.json")
+
+
+def test_location_split_specs_are_disjoint_from_the_season_plan():
+    from nba_lineups.ingest.specs import location_split_specs
+    splits = location_split_specs("2023-24", WINDOWS[PRE], TEAM_IDS)
+    assert len(splits) == 2 * 3 * 30                     # location x measure x team
+    assert {s.kwargs["location_nullable"] for s in splits} == {"Home", "Road"}
+    assert all(s.window == PRE and s.kwargs["date_to_nullable"] == "02/15/2024" for s in splits)
+    keys = {s.key for s in splits}
+    assert len(keys) == len(splits)
+    assert not keys & {s.key for s in season_specs("2023-24", WINDOWS, TEAM_IDS)}   # existing cache untouched
+    home = next(s for s in splits if s.split == "home" and s.measure == "Base")
+    assert home.key == f"2023-24/leaguedashlineups/pre_asb/home/base/team_{home.team_id}"

@@ -14,7 +14,7 @@ import psycopg
 from ..config import PROJECT_ROOT
 
 # Dropped in dependency order (children before parents) by reset_schema().
-TABLES = ("lineup_window_stats", "player_window_stats", "team_window_stats", "lineup_players", "lineups",
+TABLES = ("lineup_split_stats", "lineup_window_stats", "player_window_stats", "team_window_stats", "lineup_players", "lineups",
           "team_games", "stat_windows", "players", "teams", "seasons", "ingestion_log", "etl_runs")
 
 

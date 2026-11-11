@@ -83,3 +83,23 @@ def test_requests_respect_rate_limit(tmp_path, clock, fast_settings):
     make(FakeTransport(), tmp_path, clock, fast_settings).ingest_seasons([SEASON])
     # FakeClock only advances via sleep, so every call after the first waits the full interval
     assert len(clock.sleeps) == PER_SEASON - 1 and all(x == pytest.approx(1.0) for x in clock.sleeps)
+
+
+def test_location_splits_reuse_cached_season_and_fetch_only_splits(tmp_path, clock, fast_settings):
+    from nba_lineups.ingest.pipeline import RunSummary
+    t = FakeTransport()
+    ing = make(t, tmp_path, clock, fast_settings)
+    ing.ingest_seasons([SEASON])
+    n_before = len(t.calls)
+    s = RunSummary("test")
+    ing.ingest_location_splits(SEASON, s)
+    assert s.ok and s.cached == 1 and s.fetched == 180            # game log from cache; 2 x 3 x 30 split requests
+    assert len(t.calls) - n_before == 180
+    assert (tmp_path / "raw" / SEASON / "leaguedashlineups" / "pre_asb" / "home" / "base").is_dir()
+
+
+def test_location_splits_require_an_ingested_season(tmp_path, clock, fast_settings):
+    from nba_lineups.ingest.pipeline import RunSummary
+    s = RunSummary("test")
+    make(FakeTransport(), tmp_path, clock, fast_settings).ingest_location_splits(SEASON, s)
+    assert not s.ok and "ingest the season" in s.problems[0]

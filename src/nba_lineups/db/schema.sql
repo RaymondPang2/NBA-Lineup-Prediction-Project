@@ -134,13 +134,45 @@ ALTER TABLE lineup_window_stats
     ADD COLUMN IF NOT EXISTS opp_poss INT CHECK (opp_poss >= 0),
     ADD COLUMN IF NOT EXISTS opp_poss_method TEXT CHECK (opp_poss_method IN ('pace', 'def_rating', 'mixed'));
 
+-- Grain: one lineup, one window, one game location (Phase 4). Home and road games are disjoint,
+-- interleaved through the season, so the two rows of a lineup are independent half-samples: the
+-- basis of the split-half reliability analysis. Only loaded for the pre-break window of development
+-- seasons. Home + road reconcile exactly with lineup_window_stats (checked in etl/splits.py).
+CREATE TABLE IF NOT EXISTS lineup_split_stats (
+    lineup_id      BIGINT NOT NULL,
+    season_id      TEXT   NOT NULL,
+    window_type    TEXT   NOT NULL,
+    split          TEXT   NOT NULL CHECK (split IN ('home', 'road')),
+    n_source_rows  SMALLINT NOT NULL CHECK (n_source_rows >= 1),
+    gp             SMALLINT NOT NULL CHECK (gp >= 0),
+    seconds        NUMERIC(10,1) NOT NULL CHECK (seconds >= 0),
+    poss           INT NOT NULL CHECK (poss >= 0),
+    opp_poss       INT CHECK (opp_poss >= 0),
+    opp_poss_method TEXT CHECK (opp_poss_method IN ('pace', 'def_rating', 'mixed')),
+    pts            INT NOT NULL CHECK (pts >= 0),
+    opp_pts        INT NOT NULL CHECK (opp_pts >= 0),
+    plus_minus     INT NOT NULL,
+    nba_off_rating NUMERIC(6,1), nba_def_rating NUMERIC(6,1), nba_net_rating NUMERIC(6,1),
+    PRIMARY KEY (lineup_id, window_type, split),
+    -- A split row can only exist for a lineup-window that exists in the full-window table.
+    FOREIGN KEY (lineup_id, window_type) REFERENCES lineup_window_stats (lineup_id, window_type) ON DELETE CASCADE,
+    FOREIGN KEY (lineup_id, season_id) REFERENCES lineups (lineup_id, season_id) ON DELETE CASCADE,
+    CHECK (plus_minus = pts - opp_pts),
+    CHECK ((opp_poss IS NULL) = (opp_poss_method IS NULL))
+);
+CREATE INDEX IF NOT EXISTS ix_lss_season ON lineup_split_stats (season_id, window_type);
+
 -- Grain: one player in one window. NOTE: the API combines a traded player's teams into one row,
 -- labelled with the latest team, so per-team player features must come from lineup data.
 CREATE TABLE IF NOT EXISTS player_window_stats (
     player_id    INT  NOT NULL REFERENCES players,
     season_id    TEXT NOT NULL,
     window_type  TEXT NOT NULL,
-    last_team_id INT  REFERENCES teams,  -- NULL if the API reports team 0 (no current team)
+    -- LEAKAGE WARNING (Phase 4): the API fills TEAM_ID with the player's LATEST team even under a date
+    -- filter, so a pre_asb row can name a team the player only joined after the break (e.g. Vucevic
+    -- 2020-21: every pre-break game for ORL, row says CHI). Never use it as a feature; derive teams
+    -- from lineup data (v_player_window_on_court). NULL if the API reports team 0.
+    last_team_id INT  REFERENCES teams,
     gp           SMALLINT NOT NULL CHECK (gp >= 0),
     minutes      NUMERIC(8,2) NOT NULL CHECK (minutes >= 0),
     poss         INT NOT NULL CHECK (poss >= 0),
