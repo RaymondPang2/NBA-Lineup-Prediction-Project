@@ -56,7 +56,10 @@ Grain: one lineup × pre-break window × game location, development seasons only
 Reloading a season deletes its split rows by cascade, and they're reloaded right after.
 
 ## Phase 4 finding: `player_window_stats.last_team_id` leaks post-break information
-The player endpoint fills `TEAM_ID` with the player's **latest** team even when the request has a pre-break date filter. Nikola Vučević (2020-21) played every pre-break game for ORL, yet his pre-break row says CHI, because he was traded on 25 Mar 2021, after that season's break. Between 21 and 72 players per season have a pre-break `last_team_id` that matches none of their pre-break lineups. Rule: **never use `last_team_id` as a feature.** Derive a player's team(s) from lineup data (`v_player_window_on_court`). `analysis.continuation.build_features` raises `LeakageError` if the column is passed in.
+The player endpoint fills `TEAM_ID` with the player's **latest** team even when the request has a pre-break date filter. Nikola Vučević (2020-21) played every pre-break game for ORL, yet his pre-break row says CHI, because he was traded on 25 Mar 2021, after that season's break. Between 21 and 72 players per season have a pre-break `last_team_id` that matches none of their pre-break lineups. Rule: **never use `last_team_id` as a feature.** Derive a player's team(s) from lineup data (`v_player_window_on_court`). `analysis.continuation.build_features` and the Phase 5 feature tables (`modeling.raw.PreBreakTables.validate`) raise `LeakageError` if the column is passed in.
+
+## Phase 5 addition: `v_player_window_on_off`
+Grain: one player, for one team, in one window. On-court totals are pooled over the player's lineups; off-court totals = team total − on-court; plus on-, off- and on-off net rating. Unknown opponent possessions (zero-second rows only) count as 0 possessions **and** 0 points, so numerator and denominator always cover the same rows. It mirrors `modeling.raw.derive_player_team`, the Python derivation the features use; `tests/db/test_features_real.py` asserts the two are identical on real 2023-24 data. Example queries 10–13 in `sql/examples.sql` show the other Phase 5 inputs (leave-lineup-out team prior, pair familiarity, the modeling sample).
 
 ## Data-quality checks (`src/nba_lineups/etl/dq.py`)
 | Check | Severity |

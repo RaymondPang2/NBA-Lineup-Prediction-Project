@@ -175,6 +175,8 @@ A first draft of the selection model used this field. That draft looked too good
 - **Leakage through metadata.** A "pre-break" request isn't guaranteed to return pre-break-only fields. Validate the semantics of every column. A result that is too good is a signal to look for leaks.
 
 ## Implications for Phase 5 (features and baselines)
+*Implemented in Phase 5; see `features_baselines.md`. On the full modeling sample (which includes lineups with no pre-break history), the bar is the team prior's weighted RMSE of 21.81 against a noise floor of 21.04.*
+
 1. **Primary features:** player-level pre-break ratings, shrunk with this phase's player-level analogue of the model, plus team-level pre-break ratings. **Lineup-level history:** optional, EB-shrunk only, with a "has history" indicator, because 44% of the target has none.
 2. **Baselines must include** the league mean, the team prior and EB → team prior. The bar to clear is RMSE 17.2 on the comparable population, against a noise floor of 16.3.
 3. **Every metric** should be reported alongside the R² ceiling. Possession weighting stays the primary design.

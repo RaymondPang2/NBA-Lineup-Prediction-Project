@@ -109,3 +109,56 @@ SELECT count(*) AS lineups,
        round(avg(h.net - r.net), 2)                                           AS home_minus_road
 FROM h JOIN r USING (lineup_id)
 WHERE least(h.poss, h.opp_poss, r.poss, r.opp_poss) >= 50;
+
+-- ===================================================================== Phase 5: feature inputs
+-- Every feature query reads window_type = 'pre_asb' only: features must exist at the All-Star break.
+
+-- 10) Team prior with leave-lineup-out: team net from all OTHER lineups (window function + subtraction).
+--     Removing the lineup's own possessions keeps "team context" and "lineup history" separate.
+\echo '--- 10. Team prior excluding the lineup itself, biggest pre-break lineups, 2023-24'
+WITH lw AS (SELECT l.season_id, l.team_id, s.lineup_id, s.poss, coalesce(s.opp_poss, 0) AS opp_poss, s.pts,
+                   CASE WHEN s.opp_poss IS NULL THEN 0 ELSE s.opp_pts END AS opp_pts
+            FROM lineup_window_stats s JOIN lineups l USING (lineup_id, season_id)
+            WHERE s.window_type = 'pre_asb' AND s.season_id = '2023-24'),
+     t AS (SELECT *, sum(poss) OVER w AS t_poss, sum(opp_poss) OVER w AS t_opp_poss,
+                     sum(pts) OVER w AS t_pts, sum(opp_pts) OVER w AS t_opp_pts
+           FROM lw WINDOW w AS (PARTITION BY season_id, team_id))
+SELECT tm.abbreviation AS team, t.lineup_id, t.poss,
+       round(per100(t.pts, t.poss) - per100(t.opp_pts, t.opp_poss), 1) AS lineup_net,
+       round(per100(t_pts - t.pts, t_poss - t.poss) - per100(t_opp_pts - t.opp_pts, t_opp_poss - t.opp_poss), 1)
+         AS team_net_without_lineup
+FROM t JOIN teams tm USING (team_id)
+ORDER BY t.poss DESC LIMIT 5;
+
+-- 11) Player on-off from lineup data (view v_player_window_on_off). Off-court = team total - on-court.
+\echo '--- 11. Largest pre-break on-off net ratings, 2023-24 (>= 1500 on-court possessions)'
+SELECT p.player_name, tm.abbreviation AS team, o.on_poss, o.off_poss,
+       round(o.on_net_rating, 1) AS on_net, round(o.off_net_rating, 1) AS off_net, round(o.on_off_net, 1) AS on_off
+FROM v_player_window_on_off o JOIN players p USING (player_id) JOIN teams tm USING (team_id)
+WHERE o.season_id = '2023-24' AND o.window_type = 'pre_asb' AND o.on_poss >= 1500
+ORDER BY o.on_off_net DESC LIMIT 5;
+
+-- 12) Pair familiarity: possessions two teammates shared before the break (self-join on the bridge table).
+\echo '--- 12. Most-used pre-break player pairs, 2023-24'
+SELECT tm.abbreviation AS team, pa.player_name AS player_a, pb.player_name AS player_b, sum(s.poss) AS shared_poss
+FROM lineup_window_stats s
+JOIN lineups l USING (lineup_id, season_id)
+JOIN lineup_players a ON a.lineup_id = s.lineup_id
+JOIN lineup_players b ON b.lineup_id = s.lineup_id AND a.player_id < b.player_id
+JOIN players pa ON pa.player_id = a.player_id JOIN players pb ON pb.player_id = b.player_id
+JOIN teams tm ON tm.team_id = l.team_id
+WHERE s.window_type = 'pre_asb' AND s.season_id = '2023-24'
+GROUP BY tm.abbreviation, pa.player_name, pb.player_name
+ORDER BY shared_poss DESC LIMIT 5;
+
+-- 13) The modeling sample and its "no history" share: LEFT JOIN + coalesce (see query 5 for why).
+\echo '--- 13. Post-break lineups (>= 25 poss each end) and how many had no pre-break possessions'
+SELECT post.season_id, count(*) AS lineups,
+       round(avg((coalesce(pre.poss, 0) = 0 OR coalesce(pre.opp_poss, 0) = 0)::int), 3) AS share_no_history,
+       round(sum(post.poss) FILTER (WHERE coalesce(pre.poss, 0) = 0 OR coalesce(pre.opp_poss, 0) = 0)::numeric
+             / sum(post.poss), 3) AS poss_share_no_history
+FROM lineup_window_stats post
+LEFT JOIN lineup_window_stats pre ON pre.lineup_id = post.lineup_id AND pre.window_type = 'pre_asb'
+WHERE post.window_type = 'post_asb' AND post.poss >= 25 AND post.opp_poss >= 25
+  AND post.season_id IN ('2018-19', '2019-20', '2020-21', '2021-22', '2022-23', '2023-24')
+GROUP BY post.season_id ORDER BY post.season_id;

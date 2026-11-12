@@ -244,7 +244,7 @@ CREATE OR REPLACE FUNCTION per100(num NUMERIC, poss NUMERIC) RETURNS NUMERIC
     RETURN CASE WHEN poss > 0 THEN 100.0 * num / poss END;
 
 -- Views are dropped and recreated because CREATE OR REPLACE VIEW cannot remove or rename columns.
-DROP VIEW IF EXISTS v_player_window_on_court, v_team_window_ratings, v_lineup_season_ratings,
+DROP VIEW IF EXISTS v_player_window_on_off, v_player_window_on_court, v_team_window_ratings, v_lineup_season_ratings,
                     v_lineup_window_ratings CASCADE;
 
 -- Grain: one lineup in one window. Ratings are EXACT (unrounded); round only for display.
@@ -308,3 +308,33 @@ FROM lineup_window_stats s
 JOIN lineups l USING (lineup_id, season_id)
 JOIN lineup_players lp USING (lineup_id)
 GROUP BY l.season_id, s.window_type, l.team_id, lp.player_id;
+
+-- Grain: one player, for one team, in one window: ON-court totals pooled over the player's lineups and
+-- OFF-court totals (team total minus on-court), with on-off net rating (Phase 5 feature input).
+-- Unknown opponent possessions (zero-second rows only) count as 0 possessions AND 0 points on every
+-- side, so numerators and denominators always cover the same rows. Mirrors modeling.raw.derive_player_team.
+CREATE VIEW v_player_window_on_off AS
+WITH lw AS (
+    SELECT l.season_id, s.window_type, l.team_id, s.lineup_id, s.poss, coalesce(s.opp_poss, 0) AS opp_poss,
+           s.pts, CASE WHEN s.opp_poss IS NULL THEN 0 ELSE s.opp_pts END AS opp_pts
+    FROM lineup_window_stats s JOIN lineups l USING (lineup_id, season_id)),
+team AS (
+    SELECT season_id, window_type, team_id,
+           sum(poss) AS poss, sum(opp_poss) AS opp_poss, sum(pts) AS pts, sum(opp_pts) AS opp_pts
+    FROM lw GROUP BY season_id, window_type, team_id),
+oncourt AS (
+    SELECT lw.season_id, lw.window_type, lw.team_id, lp.player_id,
+           sum(lw.poss) AS poss, sum(lw.opp_poss) AS opp_poss, sum(lw.pts) AS pts, sum(lw.opp_pts) AS opp_pts
+    FROM lw JOIN lineup_players lp USING (lineup_id)
+    GROUP BY lw.season_id, lw.window_type, lw.team_id, lp.player_id)
+SELECT o.season_id, o.window_type, o.team_id, o.player_id,
+       o.poss AS on_poss, o.opp_poss AS on_opp_poss, o.pts AS on_pts, o.opp_pts AS on_opp_pts,
+       t.poss - o.poss AS off_poss, t.opp_poss - o.opp_poss AS off_opp_poss,
+       t.pts - o.pts AS off_pts, t.opp_pts - o.opp_pts AS off_opp_pts,
+       per100(o.pts, o.poss) - per100(o.opp_pts, nullif(o.opp_poss, 0)) AS on_net_rating,
+       per100(t.pts - o.pts, t.poss - o.poss)
+         - per100(t.opp_pts - o.opp_pts, nullif(t.opp_poss - o.opp_poss, 0)) AS off_net_rating,
+       (per100(o.pts, o.poss) - per100(o.opp_pts, nullif(o.opp_poss, 0)))
+         - (per100(t.pts - o.pts, t.poss - o.poss)
+            - per100(t.opp_pts - o.opp_pts, nullif(t.opp_poss - o.opp_poss, 0))) AS on_off_net
+FROM oncourt o JOIN team t USING (season_id, window_type, team_id);
