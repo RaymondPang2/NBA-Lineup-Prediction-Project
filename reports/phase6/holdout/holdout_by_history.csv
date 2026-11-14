@@ -1,0 +1,385 @@
+predictor,weighting,metric,estimate,lo,hi,group,n
+league_mean,weighted,mae,21.39826,19.80791,22.99328,no pre-break history,776
+league_mean,weighted,rmse,27.74329,25.91135,29.52147,no pre-break history,776
+league_mean,weighted,r2,-0.00227,-0.02656,-0.0,no pre-break history,776
+league_mean,weighted,rmse_gain_lm,0.0,0.0,0.0,no pre-break history,776
+league_mean,weighted,mae_gain_lm,0.0,0.0,0.0,no pre-break history,776
+league_mean,weighted,skill_lm,0.0,0.0,0.0,no pre-break history,776
+league_mean,weighted,rmse_gain_tp,-1.03385,-1.66917,-0.427,no pre-break history,776
+league_mean,weighted,mae_gain_tp,-0.86794,-1.41161,-0.33646,no pre-break history,776
+league_mean,weighted,skill_tp,-0.07891,-0.12922,-0.03292,no pre-break history,776
+team_prior,weighted,mae,20.53032,19.18193,21.95876,no pre-break history,776
+team_prior,weighted,rmse,26.70944,25.10118,28.35601,no pre-break history,776
+team_prior,weighted,r2,0.07104,0.02662,0.1072,no pre-break history,776
+team_prior,weighted,rmse_gain_lm,1.03385,0.427,1.66917,no pre-break history,776
+team_prior,weighted,mae_gain_lm,0.86794,0.33646,1.41161,no pre-break history,776
+team_prior,weighted,skill_lm,0.07314,0.03187,0.11443,no pre-break history,776
+team_prior,weighted,rmse_gain_tp,0.0,0.0,0.0,no pre-break history,776
+team_prior,weighted,mae_gain_tp,0.0,0.0,0.0,no pre-break history,776
+team_prior,weighted,skill_tp,0.0,0.0,0.0,no pre-break history,776
+team_prior_calibrated,weighted,mae,20.56748,19.20709,22.00526,no pre-break history,776
+team_prior_calibrated,weighted,rmse,26.76751,25.11933,28.41088,no pre-break history,776
+team_prior_calibrated,weighted,r2,0.067,0.02626,0.10014,no pre-break history,776
+team_prior_calibrated,weighted,rmse_gain_lm,0.97578,0.42475,1.56522,no pre-break history,776
+team_prior_calibrated,weighted,mae_gain_lm,0.83078,0.35397,1.32216,no pre-break history,776
+team_prior_calibrated,weighted,skill_lm,0.06911,0.03121,0.10682,no pre-break history,776
+team_prior_calibrated,weighted,rmse_gain_tp,-0.05807,-0.11682,-0.00131,no pre-break history,776
+team_prior_calibrated,weighted,mae_gain_tp,-0.03716,-0.09251,0.01872,no pre-break history,776
+team_prior_calibrated,weighted,skill_tp,-0.00435,-0.00862,-0.0001,no pre-break history,776
+eb_lineup_team,weighted,mae,20.53195,19.19159,21.96442,no pre-break history,776
+eb_lineup_team,weighted,rmse,26.71138,25.12256,28.34768,no pre-break history,776
+eb_lineup_team,weighted,r2,0.0709,0.02626,0.10739,no pre-break history,776
+eb_lineup_team,weighted,rmse_gain_lm,1.03191,0.41899,1.67255,no pre-break history,776
+eb_lineup_team,weighted,mae_gain_lm,0.86631,0.33098,1.41622,no pre-break history,776
+eb_lineup_team,weighted,skill_lm,0.07301,0.03099,0.11443,no pre-break history,776
+eb_lineup_team,weighted,rmse_gain_tp,-0.00194,-0.02126,0.01744,no pre-break history,776
+eb_lineup_team,weighted,mae_gain_tp,-0.00163,-0.02313,0.01895,no pre-break history,776
+eb_lineup_team,weighted,skill_tp,-0.00015,-0.00161,0.00127,no pre-break history,776
+player_composite,weighted,mae,20.70849,19.39943,22.09808,no pre-break history,776
+player_composite,weighted,rmse,26.856,25.27313,28.46647,no pre-break history,776
+player_composite,weighted,r2,0.06082,0.02649,0.08457,no pre-break history,776
+player_composite,weighted,rmse_gain_lm,0.88729,0.37959,1.38818,no pre-break history,776
+player_composite,weighted,mae_gain_lm,0.68977,0.22791,1.12504,no pre-break history,776
+player_composite,weighted,skill_lm,0.06294,0.02834,0.09389,no pre-break history,776
+player_composite,weighted,rmse_gain_tp,-0.14656,-0.50178,0.24349,no pre-break history,776
+player_composite,weighted,mae_gain_tp,-0.17817,-0.44588,0.10943,no pre-break history,776
+player_composite,weighted,skill_tp,-0.011,-0.03835,0.01807,no pre-break history,776
+linear,weighted,mae,20.49974,19.09818,21.99979,no pre-break history,776
+linear,weighted,rmse,26.66423,24.99142,28.3439,no pre-break history,776
+linear,weighted,r2,0.07418,0.03389,0.10391,no pre-break history,776
+linear,weighted,rmse_gain_lm,1.07906,0.51229,1.62851,no pre-break history,776
+linear,weighted,mae_gain_lm,0.89851,0.36684,1.40136,no pre-break history,776
+linear,weighted,skill_lm,0.07628,0.03752,0.11267,no pre-break history,776
+linear,weighted,rmse_gain_tp,0.04521,-0.23414,0.34109,no pre-break history,776
+linear,weighted,mae_gain_tp,0.03057,-0.22251,0.30268,no pre-break history,776
+linear,weighted,skill_tp,0.00338,-0.01749,0.0253,no pre-break history,776
+noise_floor,weighted,rmse_floor,24.63685,23.81835,25.43864,no pre-break history,776
+noise_floor,weighted,mae_floor,18.90781,18.12923,19.70817,no pre-break history,776
+noise_floor,weighted,r2_ceiling,0.20962,0.10934,0.28651,no pre-break history,776
+league_mean,unweighted,mae,24.04925,22.55962,25.54116,no pre-break history,776
+league_mean,unweighted,rmse,30.7063,28.95992,32.47851,no pre-break history,776
+league_mean,unweighted,r2,-0.00266,-0.02351,-1e-05,no pre-break history,776
+league_mean,unweighted,rmse_gain_lm,0.0,0.0,0.0,no pre-break history,776
+league_mean,unweighted,mae_gain_lm,0.0,0.0,0.0,no pre-break history,776
+league_mean,unweighted,skill_lm,0.0,0.0,0.0,no pre-break history,776
+league_mean,unweighted,rmse_gain_tp,-0.97103,-1.60776,-0.41145,no pre-break history,776
+league_mean,unweighted,mae_gain_tp,-0.79832,-1.33423,-0.30924,no pre-break history,776
+league_mean,unweighted,skill_tp,-0.06638,-0.11184,-0.02796,no pre-break history,776
+team_prior,unweighted,mae,23.25093,21.90561,24.65705,no pre-break history,776
+team_prior,unweighted,rmse,29.73527,28.07544,31.43646,no pre-break history,776
+team_prior,unweighted,r2,0.05976,0.02427,0.09521,no pre-break history,776
+team_prior,unweighted,rmse_gain_lm,0.97103,0.41145,1.60776,no pre-break history,776
+team_prior,unweighted,mae_gain_lm,0.79832,0.30924,1.33423,no pre-break history,776
+team_prior,unweighted,skill_lm,0.06225,0.0272,0.10059,no pre-break history,776
+team_prior,unweighted,rmse_gain_tp,0.0,0.0,0.0,no pre-break history,776
+team_prior,unweighted,mae_gain_tp,0.0,0.0,0.0,no pre-break history,776
+team_prior,unweighted,skill_tp,0.0,0.0,0.0,no pre-break history,776
+team_prior_calibrated,unweighted,mae,23.28252,21.93236,24.70365,no pre-break history,776
+team_prior_calibrated,unweighted,rmse,29.78983,28.13562,31.47512,no pre-break history,776
+team_prior_calibrated,unweighted,r2,0.0563,0.02357,0.08845,no pre-break history,776
+team_prior_calibrated,unweighted,rmse_gain_lm,0.91647,0.40569,1.49451,no pre-break history,776
+team_prior_calibrated,unweighted,mae_gain_lm,0.76673,0.32676,1.25237,no pre-break history,776
+team_prior_calibrated,unweighted,skill_lm,0.0588,0.0268,0.09366,no pre-break history,776
+team_prior_calibrated,unweighted,rmse_gain_tp,-0.05456,-0.11389,-0.00141,no pre-break history,776
+team_prior_calibrated,unweighted,mae_gain_tp,-0.03159,-0.0844,0.02072,no pre-break history,776
+team_prior_calibrated,unweighted,skill_tp,-0.00367,-0.00772,-0.0001,no pre-break history,776
+eb_lineup_team,unweighted,mae,23.24931,21.90902,24.65967,no pre-break history,776
+eb_lineup_team,unweighted,rmse,29.73595,28.07411,31.42902,no pre-break history,776
+eb_lineup_team,unweighted,r2,0.05971,0.02393,0.09547,no pre-break history,776
+eb_lineup_team,unweighted,rmse_gain_lm,0.97035,0.40899,1.60986,no pre-break history,776
+eb_lineup_team,unweighted,mae_gain_lm,0.79994,0.3058,1.33747,no pre-break history,776
+eb_lineup_team,unweighted,skill_lm,0.0622,0.02687,0.10109,no pre-break history,776
+eb_lineup_team,unweighted,rmse_gain_tp,-0.00068,-0.01743,0.01549,no pre-break history,776
+eb_lineup_team,unweighted,mae_gain_tp,0.00161,-0.01337,0.01482,no pre-break history,776
+eb_lineup_team,unweighted,skill_tp,-5e-05,-0.00118,0.00105,no pre-break history,776
+player_composite,unweighted,mae,23.4317,22.10102,24.80916,no pre-break history,776
+player_composite,unweighted,rmse,29.94642,28.30226,31.60493,no pre-break history,776
+player_composite,unweighted,r2,0.04636,0.01832,0.06842,no pre-break history,776
+player_composite,unweighted,rmse_gain_lm,0.75988,0.30011,1.21513,no pre-break history,776
+player_composite,unweighted,mae_gain_lm,0.61755,0.23588,0.99527,no pre-break history,776
+player_composite,unweighted,skill_lm,0.04888,0.02029,0.07534,no pre-break history,776
+player_composite,unweighted,rmse_gain_tp,-0.21115,-0.5486,0.12213,no pre-break history,776
+player_composite,unweighted,mae_gain_tp,-0.18078,-0.4403,0.08498,no pre-break history,776
+player_composite,unweighted,skill_tp,-0.01425,-0.03739,0.00784,no pre-break history,776
+linear,unweighted,mae,23.25681,21.89323,24.69535,no pre-break history,776
+linear,unweighted,rmse,29.76338,28.04339,31.49391,no pre-break history,776
+linear,unweighted,r2,0.05798,0.02405,0.08854,no pre-break history,776
+linear,unweighted,rmse_gain_lm,0.94292,0.39107,1.52127,no pre-break history,776
+linear,unweighted,mae_gain_lm,0.79244,0.3141,1.27918,no pre-break history,776
+linear,unweighted,skill_lm,0.06047,0.02555,0.09514,no pre-break history,776
+linear,unweighted,rmse_gain_tp,-0.02812,-0.31398,0.25589,no pre-break history,776
+linear,unweighted,mae_gain_tp,-0.00588,-0.23041,0.22264,no pre-break history,776
+linear,unweighted,skill_tp,-0.00189,-0.02102,0.0171,no pre-break history,776
+noise_floor,unweighted,rmse_floor,27.55806,27.1596,27.91941,no pre-break history,776
+noise_floor,unweighted,mae_floor,21.56938,21.21555,21.9094,no pre-break history,776
+noise_floor,unweighted,r2_ceiling,0.1924,0.09397,0.27513,no pre-break history,776
+linear,weighted,rmse_minus_team_prior,-0.04521,-0.34109,0.23414,no pre-break history,776
+linear,weighted,mae_minus_team_prior,-0.03057,-0.30268,0.22251,no pre-break history,776
+linear,weighted,r2_minus_team_prior,0.00314,-0.01577,0.02423,no pre-break history,776
+linear,weighted,rmse_minus_league_mean,-1.07906,-1.62851,-0.51229,no pre-break history,776
+linear,weighted,mae_minus_league_mean,-0.89851,-1.40136,-0.36684,no pre-break history,776
+linear,weighted,r2_minus_league_mean,0.07645,0.0377,0.11419,no pre-break history,776
+linear,weighted,calibration_slope,1.51112,1.11287,1.94148,no pre-break history,776
+linear,unweighted,rmse_minus_team_prior,0.02812,-0.25589,0.31398,no pre-break history,776
+linear,unweighted,mae_minus_team_prior,0.00588,-0.22264,0.23041,no pre-break history,776
+linear,unweighted,r2_minus_team_prior,-0.00178,-0.01925,0.01637,no pre-break history,776
+linear,unweighted,rmse_minus_league_mean,-0.94292,-1.52127,-0.39107,no pre-break history,776
+linear,unweighted,mae_minus_league_mean,-0.79244,-1.27918,-0.3141,no pre-break history,776
+linear,unweighted,r2_minus_league_mean,0.06063,0.02555,0.09609,no pre-break history,776
+linear,unweighted,calibration_slope,1.51482,1.05427,1.96958,no pre-break history,776
+league_mean,weighted,mae,18.66603,16.92155,20.47051,history < 100 poss,495
+league_mean,weighted,rmse,25.00302,23.02037,26.94119,history < 100 poss,495
+league_mean,weighted,r2,-0.00968,-0.03633,-0.00011,history < 100 poss,495
+league_mean,weighted,rmse_gain_lm,0.0,0.0,0.0,history < 100 poss,495
+league_mean,weighted,mae_gain_lm,0.0,0.0,0.0,history < 100 poss,495
+league_mean,weighted,skill_lm,0.0,0.0,0.0,history < 100 poss,495
+league_mean,weighted,rmse_gain_tp,-0.62722,-1.0869,-0.1783,history < 100 poss,495
+league_mean,weighted,mae_gain_tp,-0.387,-0.92088,0.1223,history < 100 poss,495
+league_mean,weighted,skill_tp,-0.05212,-0.09226,-0.01497,history < 100 poss,495
+team_prior,weighted,mae,18.27903,16.66276,19.96908,history < 100 poss,495
+team_prior,weighted,rmse,24.37579,22.53529,26.24484,history < 100 poss,495
+team_prior,weighted,r2,0.04034,-0.00169,0.07703,history < 100 poss,495
+team_prior,weighted,rmse_gain_lm,0.62722,0.1783,1.0869,history < 100 poss,495
+team_prior,weighted,mae_gain_lm,0.387,-0.1223,0.92088,history < 100 poss,495
+team_prior,weighted,skill_lm,0.04954,0.01475,0.08447,history < 100 poss,495
+team_prior,weighted,rmse_gain_tp,0.0,0.0,0.0,history < 100 poss,495
+team_prior,weighted,mae_gain_tp,0.0,0.0,0.0,history < 100 poss,495
+team_prior,weighted,skill_tp,0.0,0.0,0.0,history < 100 poss,495
+team_prior_calibrated,weighted,mae,18.25344,16.6339,19.96463,history < 100 poss,495
+team_prior_calibrated,weighted,rmse,24.39173,22.54766,26.2793,history < 100 poss,495
+team_prior_calibrated,weighted,r2,0.03909,7e-05,0.07263,history < 100 poss,495
+team_prior_calibrated,weighted,rmse_gain_lm,0.61128,0.21489,1.02676,history < 100 poss,495
+team_prior_calibrated,weighted,mae_gain_lm,0.41259,-0.04035,0.90698,history < 100 poss,495
+team_prior_calibrated,weighted,skill_lm,0.0483,0.01769,0.07955,history < 100 poss,495
+team_prior_calibrated,weighted,rmse_gain_tp,-0.01594,-0.06712,0.04287,history < 100 poss,495
+team_prior_calibrated,weighted,mae_gain_tp,0.02559,-0.05001,0.11211,history < 100 poss,495
+team_prior_calibrated,weighted,skill_tp,-0.00131,-0.00554,0.00355,history < 100 poss,495
+eb_lineup_team,weighted,mae,18.33426,16.73164,19.99955,history < 100 poss,495
+eb_lineup_team,weighted,rmse,24.38154,22.55931,26.25961,history < 100 poss,495
+eb_lineup_team,weighted,r2,0.03989,-0.00273,0.07822,history < 100 poss,495
+eb_lineup_team,weighted,rmse_gain_lm,0.62148,0.16573,1.08923,history < 100 poss,495
+eb_lineup_team,weighted,mae_gain_lm,0.33177,-0.1927,0.8839,history < 100 poss,495
+eb_lineup_team,weighted,skill_lm,0.04909,0.01327,0.08454,history < 100 poss,495
+eb_lineup_team,weighted,rmse_gain_tp,-0.00575,-0.05337,0.03851,history < 100 poss,495
+eb_lineup_team,weighted,mae_gain_tp,-0.05524,-0.12112,0.00709,history < 100 poss,495
+eb_lineup_team,weighted,skill_tp,-0.00047,-0.00443,0.00313,history < 100 poss,495
+player_composite,weighted,mae,18.16085,16.55725,19.88873,history < 100 poss,495
+player_composite,weighted,rmse,24.32254,22.48344,26.22206,history < 100 poss,495
+player_composite,weighted,r2,0.04453,0.01128,0.07259,history < 100 poss,495
+player_composite,weighted,rmse_gain_lm,0.68047,0.32918,1.0424,history < 100 poss,495
+player_composite,weighted,mae_gain_lm,0.50518,0.09262,0.93592,history < 100 poss,495
+player_composite,weighted,skill_lm,0.05369,0.02622,0.08073,history < 100 poss,495
+player_composite,weighted,rmse_gain_tp,0.05325,-0.12418,0.24556,history < 100 poss,495
+player_composite,weighted,mae_gain_tp,0.11818,-0.10083,0.35119,history < 100 poss,495
+player_composite,weighted,skill_tp,0.00436,-0.01031,0.02038,history < 100 poss,495
+linear,weighted,mae,18.11557,16.43699,19.93867,history < 100 poss,495
+linear,weighted,rmse,24.32001,22.46132,26.26158,history < 100 poss,495
+linear,weighted,r2,0.04473,0.00156,0.08172,history < 100 poss,495
+linear,weighted,rmse_gain_lm,0.683,0.11352,1.21015,history < 100 poss,495
+linear,weighted,mae_gain_lm,0.55046,0.01016,1.09734,history < 100 poss,495
+linear,weighted,skill_lm,0.05389,0.00928,0.09346,history < 100 poss,495
+linear,weighted,rmse_gain_tp,0.05578,-0.21023,0.34064,history < 100 poss,495
+linear,weighted,mae_gain_tp,0.16345,-0.1935,0.52492,history < 100 poss,495
+linear,weighted,skill_tp,0.00457,-0.0176,0.02847,history < 100 poss,495
+noise_floor,weighted,rmse_floor,22.16314,21.16092,23.1738,history < 100 poss,495
+noise_floor,weighted,mae_floor,16.50195,15.55718,17.47305,history < 100 poss,495
+noise_floor,weighted,r2_ceiling,0.20666,0.11288,0.27889,history < 100 poss,495
+league_mean,unweighted,mae,23.40178,21.96214,24.87279,history < 100 poss,495
+league_mean,unweighted,rmse,30.16461,28.2638,31.92226,history < 100 poss,495
+league_mean,unweighted,r2,-0.00279,-0.02248,-1e-05,history < 100 poss,495
+league_mean,unweighted,rmse_gain_lm,0.0,0.0,0.0,history < 100 poss,495
+league_mean,unweighted,mae_gain_lm,0.0,0.0,0.0,history < 100 poss,495
+league_mean,unweighted,skill_lm,0.0,0.0,0.0,history < 100 poss,495
+league_mean,unweighted,rmse_gain_tp,-0.59892,-1.1085,-0.07181,history < 100 poss,495
+league_mean,unweighted,mae_gain_tp,-0.41547,-1.05328,0.24009,history < 100 poss,495
+league_mean,unweighted,skill_tp,-0.04092,-0.07773,-0.005,history < 100 poss,495
+team_prior,unweighted,mae,22.98631,21.39161,24.52399,history < 100 poss,495
+team_prior,unweighted,rmse,29.56569,27.73853,31.34425,history < 100 poss,495
+team_prior,unweighted,r2,0.03664,-0.0016,0.06867,history < 100 poss,495
+team_prior,unweighted,rmse_gain_lm,0.59892,0.07181,1.1085,history < 100 poss,495
+team_prior,unweighted,mae_gain_lm,0.41547,-0.24009,1.05328,history < 100 poss,495
+team_prior,unweighted,skill_lm,0.03932,0.00497,0.07212,history < 100 poss,495
+team_prior,unweighted,rmse_gain_tp,0.0,0.0,0.0,history < 100 poss,495
+team_prior,unweighted,mae_gain_tp,0.0,0.0,0.0,history < 100 poss,495
+team_prior,unweighted,skill_tp,0.0,0.0,0.0,history < 100 poss,495
+team_prior_calibrated,unweighted,mae,22.98977,21.41438,24.51046,history < 100 poss,495
+team_prior_calibrated,unweighted,rmse,29.5845,27.73849,31.34445,history < 100 poss,495
+team_prior_calibrated,unweighted,r2,0.03541,0.0006,0.06417,history < 100 poss,495
+team_prior_calibrated,unweighted,rmse_gain_lm,0.5801,0.11111,1.0346,history < 100 poss,495
+team_prior_calibrated,unweighted,mae_gain_lm,0.41201,-0.16959,0.97281,history < 100 poss,495
+team_prior_calibrated,unweighted,skill_lm,0.03809,0.00746,0.06777,history < 100 poss,495
+team_prior_calibrated,unweighted,rmse_gain_tp,-0.01881,-0.07761,0.04867,history < 100 poss,495
+team_prior_calibrated,unweighted,mae_gain_tp,-0.00346,-0.07646,0.07885,history < 100 poss,495
+team_prior_calibrated,unweighted,skill_tp,-0.00127,-0.00537,0.0034,history < 100 poss,495
+eb_lineup_team,unweighted,mae,23.0013,21.4224,24.53626,history < 100 poss,495
+eb_lineup_team,unweighted,rmse,29.55666,27.73282,31.35152,history < 100 poss,495
+eb_lineup_team,unweighted,r2,0.03723,-0.00166,0.07042,history < 100 poss,495
+eb_lineup_team,unweighted,rmse_gain_lm,0.60795,0.0781,1.12646,history < 100 poss,495
+eb_lineup_team,unweighted,mae_gain_lm,0.40049,-0.2488,1.03835,history < 100 poss,495
+eb_lineup_team,unweighted,skill_lm,0.0399,0.00523,0.07335,history < 100 poss,495
+eb_lineup_team,unweighted,rmse_gain_tp,0.00903,-0.04222,0.05785,history < 100 poss,495
+eb_lineup_team,unweighted,mae_gain_tp,-0.01498,-0.05669,0.02268,history < 100 poss,495
+eb_lineup_team,unweighted,skill_tp,0.00061,-0.00285,0.00393,history < 100 poss,495
+player_composite,unweighted,mae,22.95789,21.42162,24.46331,history < 100 poss,495
+player_composite,unweighted,rmse,29.53897,27.68232,31.31808,history < 100 poss,495
+player_composite,unweighted,r2,0.03838,0.01003,0.06242,history < 100 poss,495
+player_composite,unweighted,rmse_gain_lm,0.62564,0.23645,0.99866,history < 100 poss,495
+player_composite,unweighted,mae_gain_lm,0.44389,0.00998,0.87647,history < 100 poss,495
+player_composite,unweighted,skill_lm,0.04105,0.01557,0.06537,history < 100 poss,495
+player_composite,unweighted,rmse_gain_tp,0.02672,-0.17497,0.23781,history < 100 poss,495
+player_composite,unweighted,mae_gain_tp,0.02842,-0.20079,0.28468,history < 100 poss,495
+player_composite,unweighted,skill_tp,0.00181,-0.01184,0.01623,history < 100 poss,495
+linear,unweighted,mae,23.10172,21.52539,24.67305,history < 100 poss,495
+linear,unweighted,rmse,29.58698,27.75905,31.31423,history < 100 poss,495
+linear,unweighted,r2,0.03525,-0.00741,0.07028,history < 100 poss,495
+linear,unweighted,rmse_gain_lm,0.57763,-0.07198,1.15994,history < 100 poss,495
+linear,unweighted,mae_gain_lm,0.30007,-0.40208,0.91246,history < 100 poss,495
+linear,unweighted,skill_lm,0.03793,-0.00484,0.07472,history < 100 poss,495
+linear,unweighted,rmse_gain_tp,-0.02129,-0.29422,0.2642,history < 100 poss,495
+linear,unweighted,mae_gain_tp,-0.1154,-0.40431,0.17263,history < 100 poss,495
+linear,unweighted,skill_tp,-0.00144,-0.02014,0.01729,history < 100 poss,495
+noise_floor,unweighted,rmse_floor,26.74269,26.23156,27.21465,history < 100 poss,495
+noise_floor,unweighted,mae_floor,20.7318,20.27473,21.1516,history < 100 poss,495
+noise_floor,unweighted,r2_ceiling,0.21182,0.10713,0.28908,history < 100 poss,495
+linear,weighted,rmse_minus_team_prior,-0.05578,-0.34064,0.21023,history < 100 poss,495
+linear,weighted,mae_minus_team_prior,-0.16345,-0.52492,0.1935,history < 100 poss,495
+linear,weighted,r2_minus_team_prior,0.00439,-0.01648,0.02776,history < 100 poss,495
+linear,weighted,rmse_minus_league_mean,-0.683,-1.21015,-0.11352,history < 100 poss,495
+linear,weighted,mae_minus_league_mean,-0.55046,-1.09734,-0.01016,history < 100 poss,495
+linear,weighted,r2_minus_league_mean,0.05441,0.00941,0.09506,history < 100 poss,495
+linear,weighted,calibration_slope,1.04077,0.54417,1.60454,history < 100 poss,495
+linear,unweighted,rmse_minus_team_prior,0.02129,-0.2642,0.29422,history < 100 poss,495
+linear,unweighted,mae_minus_team_prior,0.1154,-0.17263,0.40431,history < 100 poss,495
+linear,unweighted,r2_minus_team_prior,-0.00139,-0.01937,0.01686,history < 100 poss,495
+linear,unweighted,rmse_minus_league_mean,-0.57763,-1.15994,0.07198,history < 100 poss,495
+linear,unweighted,mae_minus_league_mean,-0.30007,-0.91246,0.40208,history < 100 poss,495
+linear,unweighted,r2_minus_league_mean,0.03804,-0.00485,0.07534,history < 100 poss,495
+linear,unweighted,calibration_slope,1.12639,0.48464,1.82683,history < 100 poss,495
+league_mean,weighted,mae,13.3612,11.30479,15.54083,history >= 100 poss,98
+league_mean,weighted,rmse,16.66195,14.50818,18.8883,history >= 100 poss,98
+league_mean,weighted,r2,-0.06361,-0.23662,-0.00063,history >= 100 poss,98
+league_mean,weighted,rmse_gain_lm,0.0,0.0,0.0,history >= 100 poss,98
+league_mean,weighted,mae_gain_lm,0.0,0.0,0.0,history >= 100 poss,98
+league_mean,weighted,skill_lm,0.0,0.0,0.0,history >= 100 poss,98
+league_mean,weighted,rmse_gain_tp,-0.73051,-1.78774,0.2241,history >= 100 poss,98
+league_mean,weighted,mae_gain_tp,-0.56858,-1.73749,0.5355,history >= 100 poss,98
+league_mean,weighted,skill_tp,-0.09381,-0.23573,0.02873,history >= 100 poss,98
+team_prior,weighted,mae,12.79262,11.10288,14.78445,history >= 100 poss,98
+team_prior,weighted,rmse,15.93144,14.21967,17.73766,history >= 100 poss,98
+team_prior,weighted,r2,0.02761,-0.1449,0.14609,history >= 100 poss,98
+team_prior,weighted,rmse_gain_lm,0.73051,-0.2241,1.78774,history >= 100 poss,98
+team_prior,weighted,mae_gain_lm,0.56858,-0.5355,1.73749,history >= 100 poss,98
+team_prior,weighted,skill_lm,0.08576,-0.02958,0.19076,history >= 100 poss,98
+team_prior,weighted,rmse_gain_tp,0.0,0.0,0.0,history >= 100 poss,98
+team_prior,weighted,mae_gain_tp,0.0,0.0,0.0,history >= 100 poss,98
+team_prior,weighted,skill_tp,0.0,0.0,0.0,history >= 100 poss,98
+team_prior_calibrated,weighted,mae,12.82713,11.13347,14.79824,history >= 100 poss,98
+team_prior_calibrated,weighted,rmse,15.95039,14.20988,17.75943,history >= 100 poss,98
+team_prior_calibrated,weighted,r2,0.0253,-0.14505,0.134,history >= 100 poss,98
+team_prior_calibrated,weighted,rmse_gain_lm,0.71156,-0.14479,1.65138,history >= 100 poss,98
+team_prior_calibrated,weighted,mae_gain_lm,0.53407,-0.44059,1.58719,history >= 100 poss,98
+team_prior_calibrated,weighted,skill_lm,0.08359,-0.01886,0.17746,history >= 100 poss,98
+team_prior_calibrated,weighted,rmse_gain_tp,-0.01895,-0.13455,0.09106,history >= 100 poss,98
+team_prior_calibrated,weighted,mae_gain_tp,-0.03451,-0.16656,0.09925,history >= 100 poss,98
+team_prior_calibrated,weighted,skill_tp,-0.00238,-0.01651,0.01167,history >= 100 poss,98
+eb_lineup_team,weighted,mae,12.26629,10.73174,13.89037,history >= 100 poss,98
+eb_lineup_team,weighted,rmse,15.32711,13.85786,16.93416,history >= 100 poss,98
+eb_lineup_team,weighted,r2,0.09998,-0.04925,0.20292,history >= 100 poss,98
+eb_lineup_team,weighted,rmse_gain_lm,1.33484,0.20254,2.49452,history >= 100 poss,98
+eb_lineup_team,weighted,mae_gain_lm,1.09491,-0.17808,2.42239,history >= 100 poss,98
+eb_lineup_team,weighted,skill_lm,0.15381,0.0264,0.26082,history >= 100 poss,98
+eb_lineup_team,weighted,rmse_gain_tp,0.60433,-0.00855,1.38331,history >= 100 poss,98
+eb_lineup_team,weighted,mae_gain_tp,0.52633,-0.06256,1.25938,history >= 100 poss,98
+eb_lineup_team,weighted,skill_tp,0.07443,-0.00113,0.15561,history >= 100 poss,98
+player_composite,weighted,mae,12.51733,10.82428,14.43562,history >= 100 poss,98
+player_composite,weighted,rmse,15.77544,14.15457,17.51366,history >= 100 poss,98
+player_composite,weighted,r2,0.04656,-0.08839,0.13114,history >= 100 poss,98
+player_composite,weighted,rmse_gain_lm,0.8865,0.01412,1.80092,history >= 100 poss,98
+player_composite,weighted,mae_gain_lm,0.84387,-0.22303,1.88969,history >= 100 poss,98
+player_composite,weighted,skill_lm,0.10358,0.00194,0.19269,history >= 100 poss,98
+player_composite,weighted,rmse_gain_tp,0.156,-0.27407,0.59616,history >= 100 poss,98
+player_composite,weighted,mae_gain_tp,0.27529,-0.16293,0.69814,history >= 100 poss,98
+player_composite,weighted,skill_tp,0.01949,-0.03496,0.07073,history >= 100 poss,98
+linear,weighted,mae,12.44353,10.73156,14.28126,history >= 100 poss,98
+linear,weighted,rmse,15.64449,14.09668,17.27363,history >= 100 poss,98
+linear,weighted,r2,0.06232,-0.0874,0.16551,history >= 100 poss,98
+linear,weighted,rmse_gain_lm,1.01746,-0.04376,2.21338,history >= 100 poss,98
+linear,weighted,mae_gain_lm,0.91767,-0.32136,2.2876,history >= 100 poss,98
+linear,weighted,skill_lm,0.1184,-0.00567,0.23054,history >= 100 poss,98
+linear,weighted,rmse_gain_tp,0.28695,-0.17317,0.72883,history >= 100 poss,98
+linear,weighted,mae_gain_tp,0.34909,-0.16289,0.89734,history >= 100 poss,98
+linear,weighted,skill_tp,0.0357,-0.02422,0.08487,history >= 100 poss,98
+noise_floor,weighted,rmse_floor,14.40468,13.32538,15.49126,history >= 100 poss,98
+noise_floor,weighted,mae_floor,10.3692,9.46692,11.33549,history >= 100 poss,98
+noise_floor,weighted,r2_ceiling,0.20505,-0.02547,0.36064,history >= 100 poss,98
+league_mean,unweighted,mae,17.53046,15.19468,20.52019,history >= 100 poss,98
+league_mean,unweighted,rmse,22.44929,19.03563,26.30962,history >= 100 poss,98
+league_mean,unweighted,r2,-0.02892,-0.14357,-0.00013,history >= 100 poss,98
+league_mean,unweighted,rmse_gain_lm,0.0,0.0,0.0,history >= 100 poss,98
+league_mean,unweighted,mae_gain_lm,0.0,0.0,0.0,history >= 100 poss,98
+league_mean,unweighted,skill_lm,0.0,0.0,0.0,history >= 100 poss,98
+league_mean,unweighted,rmse_gain_tp,-1.50422,-2.87828,-0.34518,history >= 100 poss,98
+league_mean,unweighted,mae_gain_tp,-1.28379,-2.55845,-0.21321,history >= 100 poss,98
+league_mean,unweighted,skill_tp,-0.14879,-0.28633,-0.03554,history >= 100 poss,98
+team_prior,unweighted,mae,16.24667,14.44954,18.69402,history >= 100 poss,98
+team_prior,unweighted,rmse,20.94507,18.02949,24.25213,history >= 100 poss,98
+team_prior,unweighted,r2,0.10434,0.00277,0.17712,history >= 100 poss,98
+team_prior,unweighted,rmse_gain_lm,1.50422,0.34518,2.87828,history >= 100 poss,98
+team_prior,unweighted,mae_gain_lm,1.28379,0.21321,2.55845,history >= 100 poss,98
+team_prior,unweighted,skill_lm,0.12952,0.03432,0.22259,history >= 100 poss,98
+team_prior,unweighted,rmse_gain_tp,0.0,0.0,0.0,history >= 100 poss,98
+team_prior,unweighted,mae_gain_tp,0.0,0.0,0.0,history >= 100 poss,98
+team_prior,unweighted,skill_tp,0.0,0.0,0.0,history >= 100 poss,98
+team_prior_calibrated,unweighted,mae,16.35774,14.51346,18.7958,history >= 100 poss,98
+team_prior_calibrated,unweighted,rmse,21.06185,18.12429,24.38987,history >= 100 poss,98
+team_prior_calibrated,unweighted,r2,0.09433,-0.00052,0.16042,history >= 100 poss,98
+team_prior_calibrated,unweighted,rmse_gain_lm,1.38744,0.35817,2.60991,history >= 100 poss,98
+team_prior_calibrated,unweighted,mae_gain_lm,1.17272,0.22538,2.30446,history >= 100 poss,98
+team_prior_calibrated,unweighted,skill_lm,0.11979,0.0342,0.20389,history >= 100 poss,98
+team_prior_calibrated,unweighted,rmse_gain_tp,-0.11679,-0.25976,0.00452,history >= 100 poss,98
+team_prior_calibrated,unweighted,mae_gain_tp,-0.11107,-0.25479,0.0171,history >= 100 poss,98
+team_prior_calibrated,unweighted,skill_tp,-0.01118,-0.02407,0.00047,history >= 100 poss,98
+eb_lineup_team,unweighted,mae,15.92153,14.13447,18.16863,history >= 100 poss,98
+eb_lineup_team,unweighted,rmse,20.64833,17.81741,23.77012,history >= 100 poss,98
+eb_lineup_team,unweighted,r2,0.12954,0.02955,0.20476,history >= 100 poss,98
+eb_lineup_team,unweighted,rmse_gain_lm,1.80096,0.62339,3.2004,history >= 100 poss,98
+eb_lineup_team,unweighted,mae_gain_lm,1.60893,0.54036,2.94892,history >= 100 poss,98
+eb_lineup_team,unweighted,skill_lm,0.15401,0.0617,0.24408,history >= 100 poss,98
+eb_lineup_team,unweighted,rmse_gain_tp,0.29674,-0.04559,0.67015,history >= 100 poss,98
+eb_lineup_team,unweighted,mae_gain_tp,0.32514,-0.00784,0.71206,history >= 100 poss,98
+eb_lineup_team,unweighted,skill_tp,0.02813,-0.00487,0.05982,history >= 100 poss,98
+player_composite,unweighted,mae,16.36148,14.50255,18.76004,history >= 100 poss,98
+player_composite,unweighted,rmse,21.18762,18.2308,24.4862,history >= 100 poss,98
+player_composite,unweighted,r2,0.08348,0.0005,0.1382,history >= 100 poss,98
+player_composite,unweighted,rmse_gain_lm,1.26166,0.34573,2.34663,history >= 100 poss,98
+player_composite,unweighted,mae_gain_lm,1.16899,0.34379,2.15076,history >= 100 poss,98
+player_composite,unweighted,skill_lm,0.10924,0.0342,0.17937,history >= 100 poss,98
+player_composite,unweighted,rmse_gain_tp,-0.24256,-0.64903,0.15206,history >= 100 poss,98
+player_composite,unweighted,mae_gain_tp,-0.11481,-0.54133,0.29076,history >= 100 poss,98
+player_composite,unweighted,skill_tp,-0.0233,-0.06309,0.01423,history >= 100 poss,98
+linear,unweighted,mae,16.32678,14.61657,18.49387,history >= 100 poss,98
+linear,unweighted,rmse,20.91425,18.17864,24.03408,history >= 100 poss,98
+linear,unweighted,r2,0.10698,0.00745,0.17933,history >= 100 poss,98
+linear,unweighted,rmse_gain_lm,1.53504,0.34901,2.99653,history >= 100 poss,98
+linear,unweighted,mae_gain_lm,1.20368,0.09038,2.57193,history >= 100 poss,98
+linear,unweighted,skill_lm,0.13208,0.03368,0.22833,history >= 100 poss,98
+linear,unweighted,rmse_gain_tp,0.03082,-0.39038,0.43864,history >= 100 poss,98
+linear,unweighted,mae_gain_tp,-0.08011,-0.50459,0.34478,history >= 100 poss,98
+linear,unweighted,skill_tp,0.00294,-0.04064,0.03918,history >= 100 poss,98
+noise_floor,unweighted,rmse_floor,20.34355,19.24157,21.40516,history >= 100 poss,98
+noise_floor,unweighted,mae_floor,15.19061,14.36238,15.99775,history >= 100 poss,98
+noise_floor,unweighted,r2_ceiling,0.15505,-0.16027,0.36955,history >= 100 poss,98
+linear,weighted,rmse_minus_team_prior,-0.28695,-0.72883,0.17317,history >= 100 poss,98
+linear,weighted,mae_minus_team_prior,-0.34909,-0.89734,0.16289,history >= 100 poss,98
+linear,weighted,r2_minus_team_prior,0.03471,-0.02246,0.09008,history >= 100 poss,98
+linear,weighted,rmse_minus_league_mean,-1.01746,-2.21338,0.04376,history >= 100 poss,98
+linear,weighted,mae_minus_league_mean,-0.91767,-2.2876,0.32136,history >= 100 poss,98
+linear,weighted,r2_minus_league_mean,0.12593,-0.00574,0.26197,history >= 100 poss,98
+linear,weighted,calibration_slope,1.13199,0.06681,2.11525,history >= 100 poss,98
+linear,unweighted,rmse_minus_team_prior,-0.03082,-0.43864,0.39038,history >= 100 poss,98
+linear,unweighted,mae_minus_team_prior,0.08011,-0.34478,0.50459,history >= 100 poss,98
+linear,unweighted,r2_minus_team_prior,0.00263,-0.03624,0.03657,history >= 100 poss,98
+linear,unweighted,rmse_minus_league_mean,-1.53504,-2.99653,-0.34901,history >= 100 poss,98
+linear,unweighted,mae_minus_league_mean,-1.20368,-2.57193,-0.09038,history >= 100 poss,98
+linear,unweighted,r2_minus_league_mean,0.1359,0.034,0.25361,history >= 100 poss,98
+linear,unweighted,calibration_slope,2.06556,0.93616,3.07752,history >= 100 poss,98

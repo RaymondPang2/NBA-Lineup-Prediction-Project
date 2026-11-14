@@ -225,6 +225,8 @@ Lineup EB equals the team prior when there's no history, by construction. It hel
 The floors differ slightly because K is estimated from each variant's training data.
 
 ## 9. What this means for Phase 6
+*Phase 6 result (`modeling.md`): no model beat the team prior significantly, in cross-validation or on the held-out seasons.*
+
 - **The bar.** A model is useful only if it beats the **team prior**, not just the league mean, with a paired interval that excludes zero. The most it can gain is about 0.76 weighted RMSE (21.81 → 21.04). Realistically it's much less, because "perfect knowledge of true quality" isn't available from pre-break data.
 - **Collinearity.** For linear regression, use one of {player net} or {player ORtg, DRtg}, not all three; ridge can keep all of them. Expect ridge ≥ linear regression; random forest has little room with an effective n of about 1,300.
 - **Report against the noise floor.** Report skill as a share of the R² ceiling, as well as raw R².

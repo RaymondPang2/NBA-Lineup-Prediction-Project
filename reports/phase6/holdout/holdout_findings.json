@@ -1,0 +1,2387 @@
+{
+ "spec_sha256": "cd4af2e5920fb7e545d30fe24fc95f7002955ccad7a0f6a1e7d19f63ee3df13a",
+ "artifact_sha256": "a15b0c7f4c66de20ef9d708ceca6976e6a072f611979949cfdac40eaab12667f",
+ "model": {
+  "name": "linear",
+  "label": "Linear regression (VIF-pruned)",
+  "params": {},
+  "features_in": [
+   "team_off_rating_loo",
+   "team_def_rating_loo",
+   "p_off_rating_eb_mean",
+   "p_def_rating_eb_mean",
+   "p_net_rating_eb_mean",
+   "p_on_off_eb_mean",
+   "p_usage_eb_mean",
+   "p_usage_eb_max",
+   "p_log_poss_mean",
+   "p_team_share_min",
+   "p_n_new_to_team",
+   "p_n_no_history",
+   "lu_log_poss",
+   "lu_no_history",
+   "lu_net_eb_team",
+   "lu_pair_familiarity"
+  ],
+  "features_used": [
+   "team_off_rating_loo",
+   "team_def_rating_loo",
+   "p_def_rating_eb_mean",
+   "p_on_off_eb_mean",
+   "p_usage_eb_mean",
+   "p_usage_eb_max",
+   "p_team_share_min",
+   "p_n_new_to_team",
+   "p_n_no_history",
+   "lu_log_poss",
+   "lu_no_history"
+  ],
+  "trained_seasons": [
+   "2018-19",
+   "2019-20",
+   "2020-21",
+   "2021-22",
+   "2022-23",
+   "2023-24"
+  ],
+  "sample_weight": "post-break possessions"
+ },
+ "evaluated_at_utc": "2026-11-14T01:35:31+00:00",
+ "n_boot": 2000,
+ "seed": 2025,
+ "evaluations": {
+  "2024-25": {
+   "n": 674,
+   "effective_n": 321.03256493295174,
+   "no_history_share": 0.5771513353115727,
+   "metrics": {
+    "league_mean|weighted|mae": [
+     18.0928,
+     16.8377,
+     19.3654
+    ],
+    "league_mean|weighted|rmse": [
+     23.9879,
+     22.6233,
+     25.3909
+    ],
+    "league_mean|weighted|r2": [
+     -0.0016,
+     -0.0256,
+     -0.0
+    ],
+    "league_mean|weighted|rmse_gain_lm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "league_mean|weighted|mae_gain_lm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "league_mean|weighted|skill_lm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "league_mean|weighted|rmse_gain_tp": [
+     -0.6418,
+     -1.2197,
+     -0.1445
+    ],
+    "league_mean|weighted|mae_gain_tp": [
+     -0.4917,
+     -1.0404,
+     0.0228
+    ],
+    "league_mean|weighted|skill_tp": [
+     -0.0557,
+     -0.1063,
+     -0.0126
+    ],
+    "team_prior|weighted|mae": [
+     17.6011,
+     16.5112,
+     18.6875
+    ],
+    "team_prior|weighted|rmse": [
+     23.3461,
+     22.0855,
+     24.613
+    ],
+    "team_prior|weighted|r2": [
+     0.0513,
+     0.0054,
+     0.0916
+    ],
+    "team_prior|weighted|rmse_gain_lm": [
+     0.6418,
+     0.1445,
+     1.2197
+    ],
+    "team_prior|weighted|mae_gain_lm": [
+     0.4917,
+     -0.0228,
+     1.0404
+    ],
+    "team_prior|weighted|skill_lm": [
+     0.0528,
+     0.0124,
+     0.0961
+    ],
+    "team_prior|weighted|rmse_gain_tp": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "team_prior|weighted|mae_gain_tp": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "team_prior|weighted|skill_tp": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "team_prior_calibrated|weighted|mae": [
+     17.5982,
+     16.5152,
+     18.6704
+    ],
+    "team_prior_calibrated|weighted|rmse": [
+     23.3547,
+     22.0822,
+     24.6159
+    ],
+    "team_prior_calibrated|weighted|r2": [
+     0.0506,
+     0.0074,
+     0.0885
+    ],
+    "team_prior_calibrated|weighted|rmse_gain_lm": [
+     0.6332,
+     0.1777,
+     1.1726
+    ],
+    "team_prior_calibrated|weighted|mae_gain_lm": [
+     0.4947,
+     0.0152,
+     1.0183
+    ],
+    "team_prior_calibrated|weighted|skill_lm": [
+     0.0521,
+     0.015,
+     0.0922
+    ],
+    "team_prior_calibrated|weighted|rmse_gain_tp": [
+     -0.0086,
+     -0.0512,
+     0.0322
+    ],
+    "team_prior_calibrated|weighted|mae_gain_tp": [
+     0.003,
+     -0.0462,
+     0.0499
+    ],
+    "team_prior_calibrated|weighted|skill_tp": [
+     -0.0007,
+     -0.0043,
+     0.0027
+    ],
+    "eb_lineup_team|weighted|mae": [
+     17.6094,
+     16.5112,
+     18.6643
+    ],
+    "eb_lineup_team|weighted|rmse": [
+     23.3468,
+     22.0826,
+     24.6144
+    ],
+    "eb_lineup_team|weighted|r2": [
+     0.0512,
+     0.0046,
+     0.0919
+    ],
+    "eb_lineup_team|weighted|rmse_gain_lm": [
+     0.6411,
+     0.1499,
+     1.2052
+    ],
+    "eb_lineup_team|weighted|mae_gain_lm": [
+     0.4834,
+     -0.0252,
+     1.0478
+    ],
+    "eb_lineup_team|weighted|skill_lm": [
+     0.0527,
+     0.0127,
+     0.0964
+    ],
+    "eb_lineup_team|weighted|rmse_gain_tp": [
+     -0.0007,
+     -0.0749,
+     0.0718
+    ],
+    "eb_lineup_team|weighted|mae_gain_tp": [
+     -0.0083,
+     -0.1368,
+     0.1141
+    ],
+    "eb_lineup_team|weighted|skill_tp": [
+     -0.0001,
+     -0.0065,
+     0.0062
+    ],
+    "player_composite|weighted|mae": [
+     17.6416,
+     16.5846,
+     18.7224
+    ],
+    "player_composite|weighted|rmse": [
+     23.4152,
+     22.148,
+     24.732
+    ],
+    "player_composite|weighted|r2": [
+     0.0456,
+     0.0097,
+     0.0727
+    ],
+    "player_composite|weighted|rmse_gain_lm": [
+     0.5727,
+     0.2216,
+     0.9547
+    ],
+    "player_composite|weighted|mae_gain_lm": [
+     0.4512,
+     0.0427,
+     0.8964
+    ],
+    "player_composite|weighted|skill_lm": [
+     0.0472,
+     0.0191,
+     0.0763
+    ],
+    "player_composite|weighted|rmse_gain_tp": [
+     -0.0691,
+     -0.279,
+     0.1173
+    ],
+    "player_composite|weighted|mae_gain_tp": [
+     -0.0405,
+     -0.2428,
+     0.1404
+    ],
+    "player_composite|weighted|skill_tp": [
+     -0.0059,
+     -0.024,
+     0.0101
+    ],
+    "linear|weighted|mae": [
+     17.4944,
+     16.3234,
+     18.6725
+    ],
+    "linear|weighted|rmse": [
+     23.3081,
+     21.9829,
+     24.6841
+    ],
+    "linear|weighted|r2": [
+     0.0543,
+     0.0098,
+     0.0924
+    ],
+    "linear|weighted|rmse_gain_lm": [
+     0.6798,
+     0.1961,
+     1.1978
+    ],
+    "linear|weighted|mae_gain_lm": [
+     0.5985,
+     0.1052,
+     1.0788
+    ],
+    "linear|weighted|skill_lm": [
+     0.0559,
+     0.0166,
+     0.0961
+    ],
+    "linear|weighted|rmse_gain_tp": [
+     0.038,
+     -0.2289,
+     0.3077
+    ],
+    "linear|weighted|mae_gain_tp": [
+     0.1067,
+     -0.1661,
+     0.3567
+    ],
+    "linear|weighted|skill_tp": [
+     0.0033,
+     -0.0196,
+     0.0263
+    ],
+    "noise_floor|weighted|rmse_floor": [
+     21.7392,
+     20.9463,
+     22.6071
+    ],
+    "noise_floor|weighted|mae_floor": [
+     16.1561,
+     15.4653,
+     16.9631
+    ],
+    "noise_floor|weighted|r2_ceiling": [
+     0.1774,
+     0.0991,
+     0.2399
+    ],
+    "league_mean|unweighted|mae": [
+     22.624,
+     21.2879,
+     23.9551
+    ],
+    "league_mean|unweighted|rmse": [
+     29.0526,
+     27.3959,
+     30.7719
+    ],
+    "league_mean|unweighted|r2": [
+     -0.0,
+     -0.0172,
+     -0.0
+    ],
+    "league_mean|unweighted|rmse_gain_lm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "league_mean|unweighted|mae_gain_lm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "league_mean|unweighted|skill_lm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "league_mean|unweighted|rmse_gain_tp": [
+     -0.7797,
+     -1.3835,
+     -0.2412
+    ],
+    "league_mean|unweighted|mae_gain_tp": [
+     -0.5857,
+     -1.0347,
+     -0.1659
+    ],
+    "league_mean|unweighted|skill_tp": [
+     -0.0559,
+     -0.1008,
+     -0.0168
+    ],
+    "team_prior|unweighted|mae": [
+     22.0382,
+     20.8184,
+     23.275
+    ],
+    "team_prior|unweighted|rmse": [
+     28.2729,
+     26.7138,
+     29.9197
+    ],
+    "team_prior|unweighted|r2": [
+     0.0529,
+     0.0139,
+     0.088
+    ],
+    "team_prior|unweighted|rmse_gain_lm": [
+     0.7797,
+     0.2412,
+     1.3835
+    ],
+    "team_prior|unweighted|mae_gain_lm": [
+     0.5857,
+     0.1659,
+     1.0347
+    ],
+    "team_prior|unweighted|skill_lm": [
+     0.053,
+     0.0165,
+     0.0916
+    ],
+    "team_prior|unweighted|rmse_gain_tp": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "team_prior|unweighted|mae_gain_tp": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "team_prior|unweighted|skill_tp": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "team_prior_calibrated|unweighted|mae": [
+     22.0517,
+     20.8335,
+     23.281
+    ],
+    "team_prior_calibrated|unweighted|rmse": [
+     28.3023,
+     26.7421,
+     29.9482
+    ],
+    "team_prior_calibrated|unweighted|r2": [
+     0.0509,
+     0.0142,
+     0.0832
+    ],
+    "team_prior_calibrated|unweighted|rmse_gain_lm": [
+     0.7502,
+     0.2521,
+     1.3055
+    ],
+    "team_prior_calibrated|unweighted|mae_gain_lm": [
+     0.5722,
+     0.1863,
+     0.9841
+    ],
+    "team_prior_calibrated|unweighted|skill_lm": [
+     0.051,
+     0.0173,
+     0.0869
+    ],
+    "team_prior_calibrated|unweighted|rmse_gain_tp": [
+     -0.0295,
+     -0.0769,
+     0.0157
+    ],
+    "team_prior_calibrated|unweighted|mae_gain_tp": [
+     -0.0135,
+     -0.0522,
+     0.0245
+    ],
+    "team_prior_calibrated|unweighted|skill_tp": [
+     -0.0021,
+     -0.0055,
+     0.0011
+    ],
+    "eb_lineup_team|unweighted|mae": [
+     22.0317,
+     20.8206,
+     23.2587
+    ],
+    "eb_lineup_team|unweighted|rmse": [
+     28.2706,
+     26.7124,
+     29.9388
+    ],
+    "eb_lineup_team|unweighted|r2": [
+     0.0531,
+     0.0131,
+     0.0886
+    ],
+    "eb_lineup_team|unweighted|rmse_gain_lm": [
+     0.782,
+     0.242,
+     1.3924
+    ],
+    "eb_lineup_team|unweighted|mae_gain_lm": [
+     0.5922,
+     0.1715,
+     1.0393
+    ],
+    "eb_lineup_team|unweighted|skill_lm": [
+     0.0531,
+     0.0162,
+     0.092
+    ],
+    "eb_lineup_team|unweighted|rmse_gain_tp": [
+     0.0023,
+     -0.0397,
+     0.042
+    ],
+    "eb_lineup_team|unweighted|mae_gain_tp": [
+     0.0065,
+     -0.0334,
+     0.0494
+    ],
+    "eb_lineup_team|unweighted|skill_tp": [
+     0.0002,
+     -0.0028,
+     0.003
+    ],
+    "player_composite|unweighted|mae": [
+     22.1496,
+     20.8941,
+     23.4046
+    ],
+    "player_composite|unweighted|rmse": [
+     28.4382,
+     26.8512,
+     30.0937
+    ],
+    "player_composite|unweighted|r2": [
+     0.0418,
+     0.0126,
+     0.065
+    ],
+    "player_composite|unweighted|rmse_gain_lm": [
+     0.6144,
+     0.2418,
+     1.0182
+    ],
+    "player_composite|unweighted|mae_gain_lm": [
+     0.4744,
+     0.1789,
+     0.7819
+    ],
+    "player_composite|unweighted|skill_lm": [
+     0.0418,
+     0.0168,
+     0.0676
+    ],
+    "player_composite|unweighted|rmse_gain_tp": [
+     -0.1653,
+     -0.4226,
+     0.0707
+    ],
+    "player_composite|unweighted|mae_gain_tp": [
+     -0.1114,
+     -0.283,
+     0.0461
+    ],
+    "player_composite|unweighted|skill_tp": [
+     -0.0117,
+     -0.0302,
+     0.0049
+    ],
+    "linear|unweighted|mae": [
+     22.1225,
+     20.7754,
+     23.4878
+    ],
+    "linear|unweighted|rmse": [
+     28.3583,
+     26.6979,
+     30.0973
+    ],
+    "linear|unweighted|r2": [
+     0.0472,
+     0.0073,
+     0.0809
+    ],
+    "linear|unweighted|rmse_gain_lm": [
+     0.6942,
+     0.165,
+     1.2557
+    ],
+    "linear|unweighted|mae_gain_lm": [
+     0.5015,
+     0.1045,
+     0.9445
+    ],
+    "linear|unweighted|skill_lm": [
+     0.0472,
+     0.0111,
+     0.0841
+    ],
+    "linear|unweighted|rmse_gain_tp": [
+     -0.0855,
+     -0.3931,
+     0.2229
+    ],
+    "linear|unweighted|mae_gain_tp": [
+     -0.0843,
+     -0.3195,
+     0.1547
+    ],
+    "linear|unweighted|skill_tp": [
+     -0.0061,
+     -0.0273,
+     0.016
+    ],
+    "noise_floor|unweighted|rmse_floor": [
+     26.4244,
+     25.934,
+     26.8857
+    ],
+    "noise_floor|unweighted|mae_floor": [
+     20.4499,
+     20.0192,
+     20.8571
+    ],
+    "noise_floor|unweighted|r2_ceiling": [
+     0.1727,
+     0.0762,
+     0.2495
+    ],
+    "linear|weighted|rmse_minus_league_mean": [
+     -0.6798,
+     -1.1978,
+     -0.1961
+    ],
+    "linear|weighted|mae_minus_league_mean": [
+     -0.5985,
+     -1.0788,
+     -0.1052
+    ],
+    "linear|weighted|r2_minus_league_mean": [
+     0.056,
+     0.0168,
+     0.0964
+    ],
+    "linear|weighted|rmse_minus_team_prior": [
+     -0.038,
+     -0.3077,
+     0.2289
+    ],
+    "linear|weighted|mae_minus_team_prior": [
+     -0.1067,
+     -0.3567,
+     0.1661
+    ],
+    "linear|weighted|r2_minus_team_prior": [
+     0.0031,
+     -0.0182,
+     0.0254
+    ],
+    "linear|weighted|rmse_minus_team_prior_calibrated": [
+     -0.0466,
+     -0.3188,
+     0.2174
+    ],
+    "linear|weighted|mae_minus_team_prior_calibrated": [
+     -0.1038,
+     -0.3578,
+     0.1675
+    ],
+    "linear|weighted|r2_minus_team_prior_calibrated": [
+     0.0038,
+     -0.0174,
+     0.0262
+    ],
+    "linear|weighted|rmse_minus_eb_lineup_team": [
+     -0.0387,
+     -0.3048,
+     0.2264
+    ],
+    "linear|weighted|mae_minus_eb_lineup_team": [
+     -0.115,
+     -0.3743,
+     0.1633
+    ],
+    "linear|weighted|r2_minus_eb_lineup_team": [
+     0.0031,
+     -0.018,
+     0.0259
+    ],
+    "linear|weighted|rmse_minus_player_composite": [
+     -0.1071,
+     -0.3261,
+     0.0807
+    ],
+    "linear|weighted|mae_minus_player_composite": [
+     -0.1473,
+     -0.3886,
+     0.0799
+    ],
+    "linear|weighted|r2_minus_player_composite": [
+     0.0087,
+     -0.0066,
+     0.0262
+    ],
+    "linear|weighted|calibration_slope": [
+     0.9977,
+     0.6594,
+     1.3305
+    ],
+    "linear|unweighted|rmse_minus_league_mean": [
+     -0.6942,
+     -1.2557,
+     -0.165
+    ],
+    "linear|unweighted|mae_minus_league_mean": [
+     -0.5015,
+     -0.9445,
+     -0.1045
+    ],
+    "linear|unweighted|r2_minus_league_mean": [
+     0.0472,
+     0.0111,
+     0.0853
+    ],
+    "linear|unweighted|rmse_minus_team_prior": [
+     0.0855,
+     -0.2229,
+     0.3931
+    ],
+    "linear|unweighted|mae_minus_team_prior": [
+     0.0843,
+     -0.1547,
+     0.3195
+    ],
+    "linear|unweighted|r2_minus_team_prior": [
+     -0.0057,
+     -0.0254,
+     0.0153
+    ],
+    "linear|unweighted|rmse_minus_team_prior_calibrated": [
+     0.056,
+     -0.2546,
+     0.3503
+    ],
+    "linear|unweighted|mae_minus_team_prior_calibrated": [
+     0.0708,
+     -0.1717,
+     0.308
+    ],
+    "linear|unweighted|r2_minus_team_prior_calibrated": [
+     -0.0038,
+     -0.0227,
+     0.0175
+    ],
+    "linear|unweighted|rmse_minus_eb_lineup_team": [
+     0.0878,
+     -0.2236,
+     0.3924
+    ],
+    "linear|unweighted|mae_minus_eb_lineup_team": [
+     0.0907,
+     -0.153,
+     0.3305
+    ],
+    "linear|unweighted|r2_minus_eb_lineup_team": [
+     -0.0059,
+     -0.0257,
+     0.0155
+    ],
+    "linear|unweighted|rmse_minus_player_composite": [
+     -0.0798,
+     -0.3522,
+     0.1434
+    ],
+    "linear|unweighted|mae_minus_player_composite": [
+     -0.0271,
+     -0.2356,
+     0.1619
+    ],
+    "linear|unweighted|r2_minus_player_composite": [
+     0.0054,
+     -0.0098,
+     0.024
+    ],
+    "linear|unweighted|calibration_slope": [
+     1.0698,
+     0.6714,
+     1.4509
+    ]
+   }
+  },
+  "2025-26": {
+   "n": 695,
+   "effective_n": 297.77889841744764,
+   "no_history_share": 0.5568345323741007,
+   "metrics": {
+    "league_mean|weighted|mae": [
+     20.0102,
+     18.2546,
+     21.959
+    ],
+    "league_mean|weighted|rmse": [
+     26.3293,
+     24.3725,
+     28.3558
+    ],
+    "league_mean|weighted|r2": [
+     -0.0015,
+     -0.0322,
+     -0.0
+    ],
+    "league_mean|weighted|rmse_gain_lm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "league_mean|weighted|mae_gain_lm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "league_mean|weighted|skill_lm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "league_mean|weighted|rmse_gain_tp": [
+     -1.0328,
+     -1.631,
+     -0.4816
+    ],
+    "league_mean|weighted|mae_gain_tp": [
+     -0.8003,
+     -1.3613,
+     -0.2653
+    ],
+    "league_mean|weighted|skill_tp": [
+     -0.0833,
+     -0.1308,
+     -0.0386
+    ],
+    "team_prior|weighted|mae": [
+     19.2099,
+     17.705,
+     20.9109
+    ],
+    "team_prior|weighted|rmse": [
+     25.2965,
+     23.5329,
+     27.0876
+    ],
+    "team_prior|weighted|r2": [
+     0.0756,
+     0.0167,
+     0.1103
+    ],
+    "team_prior|weighted|rmse_gain_lm": [
+     1.0328,
+     0.4816,
+     1.631
+    ],
+    "team_prior|weighted|mae_gain_lm": [
+     0.8003,
+     0.2653,
+     1.3613
+    ],
+    "team_prior|weighted|skill_lm": [
+     0.0769,
+     0.0372,
+     0.1157
+    ],
+    "team_prior|weighted|rmse_gain_tp": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "team_prior|weighted|mae_gain_tp": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "team_prior|weighted|skill_tp": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "team_prior_calibrated|weighted|mae": [
+     19.2416,
+     17.7032,
+     20.9838
+    ],
+    "team_prior_calibrated|weighted|rmse": [
+     25.3626,
+     23.592,
+     27.1644
+    ],
+    "team_prior_calibrated|weighted|r2": [
+     0.0707,
+     0.0152,
+     0.1024
+    ],
+    "team_prior_calibrated|weighted|rmse_gain_lm": [
+     0.9667,
+     0.4652,
+     1.5119
+    ],
+    "team_prior_calibrated|weighted|mae_gain_lm": [
+     0.7686,
+     0.283,
+     1.2746
+    ],
+    "team_prior_calibrated|weighted|skill_lm": [
+     0.0721,
+     0.0362,
+     0.1077
+    ],
+    "team_prior_calibrated|weighted|rmse_gain_tp": [
+     -0.0661,
+     -0.1212,
+     -0.0139
+    ],
+    "team_prior_calibrated|weighted|mae_gain_tp": [
+     -0.0317,
+     -0.0882,
+     0.0259
+    ],
+    "team_prior_calibrated|weighted|skill_tp": [
+     -0.0052,
+     -0.0094,
+     -0.0011
+    ],
+    "eb_lineup_team|weighted|mae": [
+     19.0572,
+     17.5757,
+     20.7229
+    ],
+    "eb_lineup_team|weighted|rmse": [
+     25.1689,
+     23.3905,
+     26.9475
+    ],
+    "eb_lineup_team|weighted|r2": [
+     0.0849,
+     0.0295,
+     0.1203
+    ],
+    "eb_lineup_team|weighted|rmse_gain_lm": [
+     1.1604,
+     0.6053,
+     1.7503
+    ],
+    "eb_lineup_team|weighted|mae_gain_lm": [
+     0.9529,
+     0.3705,
+     1.52
+    ],
+    "eb_lineup_team|weighted|skill_lm": [
+     0.0862,
+     0.0463,
+     0.1246
+    ],
+    "eb_lineup_team|weighted|rmse_gain_tp": [
+     0.1276,
+     0.0152,
+     0.2885
+    ],
+    "eb_lineup_team|weighted|mae_gain_tp": [
+     0.1527,
+     -0.0175,
+     0.3733
+    ],
+    "eb_lineup_team|weighted|skill_tp": [
+     0.0101,
+     0.0012,
+     0.0227
+    ],
+    "player_composite|weighted|mae": [
+     19.15,
+     17.6313,
+     20.902
+    ],
+    "player_composite|weighted|rmse": [
+     25.3034,
+     23.6276,
+     27.0747
+    ],
+    "player_composite|weighted|r2": [
+     0.0751,
+     0.0231,
+     0.1063
+    ],
+    "player_composite|weighted|rmse_gain_lm": [
+     1.0259,
+     0.4894,
+     1.5422
+    ],
+    "player_composite|weighted|mae_gain_lm": [
+     0.8602,
+     0.3526,
+     1.3719
+    ],
+    "player_composite|weighted|skill_lm": [
+     0.0764,
+     0.0387,
+     0.1099
+    ],
+    "player_composite|weighted|rmse_gain_tp": [
+     -0.0069,
+     -0.345,
+     0.3571
+    ],
+    "player_composite|weighted|mae_gain_tp": [
+     0.0599,
+     -0.1998,
+     0.3073
+    ],
+    "player_composite|weighted|skill_tp": [
+     -0.0005,
+     -0.0274,
+     0.0274
+    ],
+    "linear|weighted|mae": [
+     19.0471,
+     17.4707,
+     20.8378
+    ],
+    "linear|weighted|rmse": [
+     25.1838,
+     23.4161,
+     27.0373
+    ],
+    "linear|weighted|r2": [
+     0.0838,
+     0.0279,
+     0.1212
+    ],
+    "linear|weighted|rmse_gain_lm": [
+     1.1455,
+     0.5174,
+     1.7554
+    ],
+    "linear|weighted|mae_gain_lm": [
+     0.9631,
+     0.3766,
+     1.5717
+    ],
+    "linear|weighted|skill_lm": [
+     0.0851,
+     0.0402,
+     0.125
+    ],
+    "linear|weighted|rmse_gain_tp": [
+     0.1127,
+     -0.1719,
+     0.4239
+    ],
+    "linear|weighted|mae_gain_tp": [
+     0.1628,
+     -0.1759,
+     0.5089
+    ],
+    "linear|weighted|skill_tp": [
+     0.0089,
+     -0.0134,
+     0.0334
+    ],
+    "noise_floor|weighted|rmse_floor": [
+     22.8284,
+     22.0334,
+     23.6482
+    ],
+    "noise_floor|weighted|mae_floor": [
+     16.9959,
+     16.2289,
+     17.8071
+    ],
+    "noise_floor|weighted|r2_ceiling": [
+     0.2472,
+     0.1347,
+     0.3276
+    ],
+    "league_mean|unweighted|mae": [
+     24.0511,
+     22.4475,
+     25.6883
+    ],
+    "league_mean|unweighted|rmse": [
+     30.8762,
+     29.0155,
+     32.6184
+    ],
+    "league_mean|unweighted|r2": [
+     -0.0001,
+     -0.0197,
+     -0.0
+    ],
+    "league_mean|unweighted|rmse_gain_lm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "league_mean|unweighted|mae_gain_lm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "league_mean|unweighted|skill_lm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "league_mean|unweighted|rmse_gain_tp": [
+     -0.9351,
+     -1.4108,
+     -0.4778
+    ],
+    "league_mean|unweighted|mae_gain_tp": [
+     -0.8003,
+     -1.2721,
+     -0.3234
+    ],
+    "league_mean|unweighted|skill_tp": [
+     -0.0634,
+     -0.0965,
+     -0.0319
+    ],
+    "team_prior|unweighted|mae": [
+     23.2509,
+     21.7042,
+     24.8371
+    ],
+    "team_prior|unweighted|rmse": [
+     29.9412,
+     28.1118,
+     31.6319
+    ],
+    "team_prior|unweighted|r2": [
+     0.0596,
+     0.0248,
+     0.0824
+    ],
+    "team_prior|unweighted|rmse_gain_lm": [
+     0.9351,
+     0.4778,
+     1.4108
+    ],
+    "team_prior|unweighted|mae_gain_lm": [
+     0.8003,
+     0.3234,
+     1.2721
+    ],
+    "team_prior|unweighted|skill_lm": [
+     0.0597,
+     0.0309,
+     0.088
+    ],
+    "team_prior|unweighted|rmse_gain_tp": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "team_prior|unweighted|mae_gain_tp": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "team_prior|unweighted|skill_tp": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "team_prior_calibrated|unweighted|mae": [
+     23.2912,
+     21.7225,
+     24.8841
+    ],
+    "team_prior_calibrated|unweighted|rmse": [
+     29.9995,
+     28.1645,
+     31.6915
+    ],
+    "team_prior_calibrated|unweighted|r2": [
+     0.0559,
+     0.0235,
+     0.0767
+    ],
+    "team_prior_calibrated|unweighted|rmse_gain_lm": [
+     0.8768,
+     0.458,
+     1.3146
+    ],
+    "team_prior_calibrated|unweighted|mae_gain_lm": [
+     0.76,
+     0.3241,
+     1.1944
+    ],
+    "team_prior_calibrated|unweighted|skill_lm": [
+     0.056,
+     0.0295,
+     0.0823
+    ],
+    "team_prior_calibrated|unweighted|rmse_gain_tp": [
+     -0.0583,
+     -0.1029,
+     -0.0139
+    ],
+    "team_prior_calibrated|unweighted|mae_gain_tp": [
+     -0.0403,
+     -0.0822,
+     0.0068
+    ],
+    "team_prior_calibrated|unweighted|skill_tp": [
+     -0.0039,
+     -0.0068,
+     -0.001
+    ],
+    "eb_lineup_team|unweighted|mae": [
+     23.2202,
+     21.6826,
+     24.7951
+    ],
+    "eb_lineup_team|unweighted|rmse": [
+     29.9086,
+     28.0789,
+     31.589
+    ],
+    "eb_lineup_team|unweighted|r2": [
+     0.0616,
+     0.0264,
+     0.0849
+    ],
+    "eb_lineup_team|unweighted|rmse_gain_lm": [
+     0.9676,
+     0.4959,
+     1.4573
+    ],
+    "eb_lineup_team|unweighted|mae_gain_lm": [
+     0.831,
+     0.3434,
+     1.3128
+    ],
+    "eb_lineup_team|unweighted|skill_lm": [
+     0.0617,
+     0.0326,
+     0.0906
+    ],
+    "eb_lineup_team|unweighted|rmse_gain_tp": [
+     0.0325,
+     0.0026,
+     0.0615
+    ],
+    "eb_lineup_team|unweighted|mae_gain_tp": [
+     0.0307,
+     0.0009,
+     0.061
+    ],
+    "eb_lineup_team|unweighted|skill_tp": [
+     0.0022,
+     0.0002,
+     0.0042
+    ],
+    "player_composite|unweighted|mae": [
+     23.3407,
+     21.8098,
+     24.9086
+    ],
+    "player_composite|unweighted|rmse": [
+     30.0295,
+     28.284,
+     31.6752
+    ],
+    "player_composite|unweighted|r2": [
+     0.054,
+     0.0215,
+     0.0754
+    ],
+    "player_composite|unweighted|rmse_gain_lm": [
+     0.8468,
+     0.3989,
+     1.286
+    ],
+    "player_composite|unweighted|mae_gain_lm": [
+     0.7105,
+     0.2814,
+     1.1318
+    ],
+    "player_composite|unweighted|skill_lm": [
+     0.0541,
+     0.0261,
+     0.0808
+    ],
+    "player_composite|unweighted|rmse_gain_tp": [
+     -0.0883,
+     -0.368,
+     0.2156
+    ],
+    "player_composite|unweighted|mae_gain_tp": [
+     -0.0898,
+     -0.3219,
+     0.1475
+    ],
+    "player_composite|unweighted|skill_tp": [
+     -0.0059,
+     -0.0248,
+     0.014
+    ],
+    "linear|unweighted|mae": [
+     23.2692,
+     21.6704,
+     24.933
+    ],
+    "linear|unweighted|rmse": [
+     29.9059,
+     28.1154,
+     31.6184
+    ],
+    "linear|unweighted|r2": [
+     0.0618,
+     0.0261,
+     0.0889
+    ],
+    "linear|unweighted|rmse_gain_lm": [
+     0.9703,
+     0.4353,
+     1.4823
+    ],
+    "linear|unweighted|mae_gain_lm": [
+     0.7819,
+     0.2566,
+     1.2986
+    ],
+    "linear|unweighted|skill_lm": [
+     0.0619,
+     0.0284,
+     0.0935
+    ],
+    "linear|unweighted|rmse_gain_tp": [
+     0.0353,
+     -0.1995,
+     0.305
+    ],
+    "linear|unweighted|mae_gain_tp": [
+     -0.0183,
+     -0.2581,
+     0.2446
+    ],
+    "linear|unweighted|skill_tp": [
+     0.0024,
+     -0.0134,
+     0.0205
+    ],
+    "noise_floor|unweighted|rmse_floor": [
+     27.1759,
+     26.8022,
+     27.5269
+    ],
+    "noise_floor|unweighted|mae_floor": [
+     21.1591,
+     20.8131,
+     21.4823
+    ],
+    "noise_floor|unweighted|r2_ceiling": [
+     0.2253,
+     0.1257,
+     0.2991
+    ],
+    "linear|weighted|rmse_minus_league_mean": [
+     -1.1455,
+     -1.7554,
+     -0.5174
+    ],
+    "linear|weighted|mae_minus_league_mean": [
+     -0.9631,
+     -1.5717,
+     -0.3766
+    ],
+    "linear|weighted|r2_minus_league_mean": [
+     0.0852,
+     0.0405,
+     0.1259
+    ],
+    "linear|weighted|rmse_minus_team_prior": [
+     -0.1127,
+     -0.4239,
+     0.1719
+    ],
+    "linear|weighted|mae_minus_team_prior": [
+     -0.1628,
+     -0.5089,
+     0.1759
+    ],
+    "linear|weighted|r2_minus_team_prior": [
+     0.0082,
+     -0.0124,
+     0.0314
+    ],
+    "linear|weighted|rmse_minus_team_prior_calibrated": [
+     -0.1788,
+     -0.4743,
+     0.1007
+    ],
+    "linear|weighted|mae_minus_team_prior_calibrated": [
+     -0.1945,
+     -0.5521,
+     0.138
+    ],
+    "linear|weighted|r2_minus_team_prior_calibrated": [
+     0.0131,
+     -0.0072,
+     0.0353
+    ],
+    "linear|weighted|rmse_minus_eb_lineup_team": [
+     0.0149,
+     -0.3273,
+     0.3266
+    ],
+    "linear|weighted|mae_minus_eb_lineup_team": [
+     -0.0102,
+     -0.4113,
+     0.3675
+    ],
+    "linear|weighted|r2_minus_eb_lineup_team": [
+     -0.0011,
+     -0.0235,
+     0.0245
+    ],
+    "linear|weighted|rmse_minus_player_composite": [
+     -0.1195,
+     -0.3731,
+     0.1393
+    ],
+    "linear|weighted|mae_minus_player_composite": [
+     -0.1029,
+     -0.3962,
+     0.1919
+    ],
+    "linear|weighted|r2_minus_player_composite": [
+     0.0087,
+     -0.0098,
+     0.0276
+    ],
+    "linear|weighted|calibration_slope": [
+     1.4803,
+     1.0026,
+     1.8557
+    ],
+    "linear|unweighted|rmse_minus_league_mean": [
+     -0.9703,
+     -1.4823,
+     -0.4353
+    ],
+    "linear|unweighted|mae_minus_league_mean": [
+     -0.7819,
+     -1.2986,
+     -0.2566
+    ],
+    "linear|unweighted|r2_minus_league_mean": [
+     0.0619,
+     0.0284,
+     0.0939
+    ],
+    "linear|unweighted|rmse_minus_team_prior": [
+     -0.0353,
+     -0.305,
+     0.1995
+    ],
+    "linear|unweighted|mae_minus_team_prior": [
+     0.0183,
+     -0.2446,
+     0.2581
+    ],
+    "linear|unweighted|r2_minus_team_prior": [
+     0.0022,
+     -0.0126,
+     0.0192
+    ],
+    "linear|unweighted|rmse_minus_team_prior_calibrated": [
+     -0.0936,
+     -0.3596,
+     0.1377
+    ],
+    "linear|unweighted|mae_minus_team_prior_calibrated": [
+     -0.022,
+     -0.286,
+     0.2217
+    ],
+    "linear|unweighted|r2_minus_team_prior_calibrated": [
+     0.0059,
+     -0.0088,
+     0.023
+    ],
+    "linear|unweighted|rmse_minus_eb_lineup_team": [
+     -0.0027,
+     -0.2751,
+     0.2289
+    ],
+    "linear|unweighted|mae_minus_eb_lineup_team": [
+     0.049,
+     -0.2097,
+     0.2881
+    ],
+    "linear|unweighted|r2_minus_eb_lineup_team": [
+     0.0002,
+     -0.0146,
+     0.0173
+    ],
+    "linear|unweighted|rmse_minus_player_composite": [
+     -0.1236,
+     -0.3435,
+     0.1014
+    ],
+    "linear|unweighted|mae_minus_player_composite": [
+     -0.0714,
+     -0.3006,
+     0.1704
+    ],
+    "linear|unweighted|r2_minus_player_composite": [
+     0.0078,
+     -0.0063,
+     0.022
+    ],
+    "linear|unweighted|calibration_slope": [
+     1.4187,
+     1.013,
+     1.7347
+    ]
+   }
+  },
+  "pooled": {
+   "n": 1369,
+   "effective_n": 618.8017369768855,
+   "no_history_share": 0.5668371073776479,
+   "metrics": {
+    "league_mean|weighted|mae": [
+     19.0193,
+     17.9337,
+     20.1359
+    ],
+    "league_mean|weighted|rmse": [
+     25.1465,
+     23.9226,
+     26.3168
+    ],
+    "league_mean|weighted|r2": [
+     -0.0015,
+     -0.0166,
+     -0.0
+    ],
+    "league_mean|weighted|rmse_gain_lm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "league_mean|weighted|mae_gain_lm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "league_mean|weighted|skill_lm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "league_mean|weighted|rmse_gain_tp": [
+     -0.8384,
+     -1.2547,
+     -0.4678
+    ],
+    "league_mean|weighted|mae_gain_tp": [
+     -0.6408,
+     -1.0276,
+     -0.2744
+    ],
+    "league_mean|weighted|skill_tp": [
+     -0.0702,
+     -0.1048,
+     -0.0393
+    ],
+    "team_prior|weighted|mae": [
+     18.3785,
+     17.4511,
+     19.3525
+    ],
+    "team_prior|weighted|rmse": [
+     24.3081,
+     23.225,
+     25.379
+    ],
+    "team_prior|weighted|r2": [
+     0.0641,
+     0.0279,
+     0.0929
+    ],
+    "team_prior|weighted|rmse_gain_lm": [
+     0.8384,
+     0.4678,
+     1.2547
+    ],
+    "team_prior|weighted|mae_gain_lm": [
+     0.6408,
+     0.2744,
+     1.0276
+    ],
+    "team_prior|weighted|skill_lm": [
+     0.0656,
+     0.0378,
+     0.0948
+    ],
+    "team_prior|weighted|rmse_gain_tp": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "team_prior|weighted|mae_gain_tp": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "team_prior|weighted|skill_tp": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "team_prior_calibrated|weighted|mae": [
+     18.3923,
+     17.4538,
+     19.3797
+    ],
+    "team_prior_calibrated|weighted|rmse": [
+     24.3456,
+     23.2368,
+     25.4153
+    ],
+    "team_prior_calibrated|weighted|r2": [
+     0.0612,
+     0.027,
+     0.088
+    ],
+    "team_prior_calibrated|weighted|rmse_gain_lm": [
+     0.8009,
+     0.4605,
+     1.1855
+    ],
+    "team_prior_calibrated|weighted|mae_gain_lm": [
+     0.627,
+     0.2884,
+     0.9912
+    ],
+    "team_prior_calibrated|weighted|skill_lm": [
+     0.0627,
+     0.0371,
+     0.0894
+    ],
+    "team_prior_calibrated|weighted|rmse_gain_tp": [
+     -0.0375,
+     -0.0731,
+     -0.0028
+    ],
+    "team_prior_calibrated|weighted|mae_gain_tp": [
+     -0.0138,
+     -0.0495,
+     0.0232
+    ],
+    "team_prior_calibrated|weighted|skill_tp": [
+     -0.0031,
+     -0.006,
+     -0.0002
+    ],
+    "eb_lineup_team|weighted|mae": [
+     18.309,
+     17.3987,
+     19.2788
+    ],
+    "eb_lineup_team|weighted|rmse": [
+     24.2443,
+     23.1627,
+     25.2813
+    ],
+    "eb_lineup_team|weighted|r2": [
+     0.069,
+     0.033,
+     0.0977
+    ],
+    "eb_lineup_team|weighted|rmse_gain_lm": [
+     0.9021,
+     0.5162,
+     1.3152
+    ],
+    "eb_lineup_team|weighted|mae_gain_lm": [
+     0.7103,
+     0.3237,
+     1.1017
+    ],
+    "eb_lineup_team|weighted|skill_lm": [
+     0.0705,
+     0.0416,
+     0.0995
+    ],
+    "eb_lineup_team|weighted|rmse_gain_tp": [
+     0.0637,
+     -0.0094,
+     0.154
+    ],
+    "eb_lineup_team|weighted|mae_gain_tp": [
+     0.0695,
+     -0.0429,
+     0.1888
+    ],
+    "eb_lineup_team|weighted|skill_tp": [
+     0.0052,
+     -0.0008,
+     0.0126
+    ],
+    "player_composite|weighted|mae": [
+     18.3705,
+     17.4225,
+     19.35
+    ],
+    "player_composite|weighted|rmse": [
+     24.3458,
+     23.2522,
+     25.3936
+    ],
+    "player_composite|weighted|r2": [
+     0.0612,
+     0.03,
+     0.0838
+    ],
+    "player_composite|weighted|rmse_gain_lm": [
+     0.8007,
+     0.4758,
+     1.1405
+    ],
+    "player_composite|weighted|mae_gain_lm": [
+     0.6488,
+     0.3106,
+     0.993
+    ],
+    "player_composite|weighted|skill_lm": [
+     0.0627,
+     0.0382,
+     0.086
+    ],
+    "player_composite|weighted|rmse_gain_tp": [
+     -0.0377,
+     -0.2281,
+     0.1673
+    ],
+    "player_composite|weighted|mae_gain_tp": [
+     0.008,
+     -0.1509,
+     0.1664
+    ],
+    "player_composite|weighted|skill_tp": [
+     -0.0031,
+     -0.0189,
+     0.0136
+    ],
+    "linear|weighted|mae": [
+     18.2446,
+     17.2601,
+     19.2835
+    ],
+    "linear|weighted|rmse": [
+     24.2326,
+     23.0971,
+     25.334
+    ],
+    "linear|weighted|r2": [
+     0.0699,
+     0.0333,
+     0.0978
+    ],
+    "linear|weighted|rmse_gain_lm": [
+     0.9139,
+     0.5358,
+     1.2988
+    ],
+    "linear|weighted|mae_gain_lm": [
+     0.7746,
+     0.3997,
+     1.1611
+    ],
+    "linear|weighted|skill_lm": [
+     0.0714,
+     0.0426,
+     0.0994
+    ],
+    "linear|weighted|rmse_gain_tp": [
+     0.0755,
+     -0.1188,
+     0.2858
+    ],
+    "linear|weighted|mae_gain_tp": [
+     0.1338,
+     -0.088,
+     0.3443
+    ],
+    "linear|weighted|skill_tp": [
+     0.0062,
+     -0.0098,
+     0.0234
+    ],
+    "noise_floor|weighted|rmse_floor": [
+     22.2721,
+     21.6609,
+     22.8749
+    ],
+    "noise_floor|weighted|mae_floor": [
+     16.5619,
+     16.0133,
+     17.1276
+    ],
+    "noise_floor|weighted|r2_ceiling": [
+     0.2143,
+     0.15,
+     0.2666
+    ],
+    "league_mean|unweighted|mae": [
+     23.3485,
+     22.3342,
+     24.3752
+    ],
+    "league_mean|unweighted|rmse": [
+     29.9923,
+     28.7747,
+     31.1605
+    ],
+    "league_mean|unweighted|r2": [
+     -0.0,
+     -0.0094,
+     -0.0
+    ],
+    "league_mean|unweighted|rmse_gain_lm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "league_mean|unweighted|mae_gain_lm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "league_mean|unweighted|skill_lm": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "league_mean|unweighted|rmse_gain_tp": [
+     -0.8605,
+     -1.2539,
+     -0.4973
+    ],
+    "league_mean|unweighted|mae_gain_tp": [
+     -0.6946,
+     -1.0201,
+     -0.3776
+    ],
+    "league_mean|unweighted|skill_tp": [
+     -0.0599,
+     -0.089,
+     -0.0345
+    ],
+    "team_prior|unweighted|mae": [
+     22.6538,
+     21.702,
+     23.6401
+    ],
+    "team_prior|unweighted|rmse": [
+     29.1318,
+     28.0053,
+     30.2808
+    ],
+    "team_prior|unweighted|r2": [
+     0.0566,
+     0.0302,
+     0.0788
+    ],
+    "team_prior|unweighted|rmse_gain_lm": [
+     0.8605,
+     0.4973,
+     1.2539
+    ],
+    "team_prior|unweighted|mae_gain_lm": [
+     0.6946,
+     0.3776,
+     1.0201
+    ],
+    "team_prior|unweighted|skill_lm": [
+     0.0566,
+     0.0334,
+     0.0817
+    ],
+    "team_prior|unweighted|rmse_gain_tp": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "team_prior|unweighted|mae_gain_tp": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "team_prior|unweighted|skill_tp": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "team_prior_calibrated|unweighted|mae": [
+     22.681,
+     21.7235,
+     23.6795
+    ],
+    "team_prior_calibrated|unweighted|rmse": [
+     29.1763,
+     28.0298,
+     30.3256
+    ],
+    "team_prior_calibrated|unweighted|r2": [
+     0.0537,
+     0.0294,
+     0.0741
+    ],
+    "team_prior_calibrated|unweighted|rmse_gain_lm": [
+     0.816,
+     0.4827,
+     1.1795
+    ],
+    "team_prior_calibrated|unweighted|mae_gain_lm": [
+     0.6675,
+     0.3778,
+     0.9702
+    ],
+    "team_prior_calibrated|unweighted|skill_lm": [
+     0.0537,
+     0.0323,
+     0.0771
+    ],
+    "team_prior_calibrated|unweighted|rmse_gain_tp": [
+     -0.0445,
+     -0.0763,
+     -0.0129
+    ],
+    "team_prior_calibrated|unweighted|mae_gain_tp": [
+     -0.0271,
+     -0.0559,
+     0.0041
+    ],
+    "team_prior_calibrated|unweighted|skill_tp": [
+     -0.0031,
+     -0.0052,
+     -0.0009
+    ],
+    "eb_lineup_team|unweighted|mae": [
+     22.6351,
+     21.684,
+     23.6223
+    ],
+    "eb_lineup_team|unweighted|rmse": [
+     29.1137,
+     27.9681,
+     30.2741
+    ],
+    "eb_lineup_team|unweighted|r2": [
+     0.0577,
+     0.0315,
+     0.0797
+    ],
+    "eb_lineup_team|unweighted|rmse_gain_lm": [
+     0.8786,
+     0.5075,
+     1.2748
+    ],
+    "eb_lineup_team|unweighted|mae_gain_lm": [
+     0.7134,
+     0.3928,
+     1.0395
+    ],
+    "eb_lineup_team|unweighted|skill_lm": [
+     0.0577,
+     0.0338,
+     0.0825
+    ],
+    "eb_lineup_team|unweighted|rmse_gain_tp": [
+     0.0181,
+     -0.0069,
+     0.0422
+    ],
+    "eb_lineup_team|unweighted|mae_gain_tp": [
+     0.0188,
+     -0.0062,
+     0.044
+    ],
+    "eb_lineup_team|unweighted|skill_tp": [
+     0.0012,
+     -0.0005,
+     0.0029
+    ],
+    "player_composite|unweighted|mae": [
+     22.7543,
+     21.7949,
+     23.7492
+    ],
+    "player_composite|unweighted|rmse": [
+     29.2568,
+     28.1005,
+     30.3664
+    ],
+    "player_composite|unweighted|r2": [
+     0.0484,
+     0.0262,
+     0.065
+    ],
+    "player_composite|unweighted|rmse_gain_lm": [
+     0.7354,
+     0.4418,
+     1.0311
+    ],
+    "player_composite|unweighted|mae_gain_lm": [
+     0.5942,
+     0.3318,
+     0.8613
+    ],
+    "player_composite|unweighted|skill_lm": [
+     0.0484,
+     0.0293,
+     0.0667
+    ],
+    "player_composite|unweighted|rmse_gain_tp": [
+     -0.1251,
+     -0.3116,
+     0.0644
+    ],
+    "player_composite|unweighted|mae_gain_tp": [
+     -0.1004,
+     -0.2414,
+     0.0462
+    ],
+    "player_composite|unweighted|skill_tp": [
+     -0.0086,
+     -0.0215,
+     0.0045
+    ],
+    "linear|unweighted|mae": [
+     22.7046,
+     21.6932,
+     23.7341
+    ],
+    "linear|unweighted|rmse": [
+     29.1543,
+     27.9596,
+     30.3386
+    ],
+    "linear|unweighted|r2": [
+     0.0551,
+     0.0286,
+     0.0769
+    ],
+    "linear|unweighted|rmse_gain_lm": [
+     0.838,
+     0.4688,
+     1.2159
+    ],
+    "linear|unweighted|mae_gain_lm": [
+     0.6438,
+     0.3189,
+     0.9826
+    ],
+    "linear|unweighted|skill_lm": [
+     0.0551,
+     0.031,
+     0.079
+    ],
+    "linear|unweighted|rmse_gain_tp": [
+     -0.0225,
+     -0.2173,
+     0.17
+    ],
+    "linear|unweighted|mae_gain_tp": [
+     -0.0508,
+     -0.2253,
+     0.1273
+    ],
+    "linear|unweighted|skill_tp": [
+     -0.0015,
+     -0.0148,
+     0.0117
+    ],
+    "noise_floor|unweighted|rmse_floor": [
+     26.8086,
+     26.4817,
+     27.1177
+    ],
+    "noise_floor|unweighted|mae_floor": [
+     20.8099,
+     20.5105,
+     21.0888
+    ],
+    "noise_floor|unweighted|r2_ceiling": [
+     0.201,
+     0.1346,
+     0.2534
+    ],
+    "linear|weighted|rmse_minus_league_mean": [
+     -0.9139,
+     -1.2988,
+     -0.5358
+    ],
+    "linear|weighted|mae_minus_league_mean": [
+     -0.7746,
+     -1.1611,
+     -0.3997
+    ],
+    "linear|weighted|r2_minus_league_mean": [
+     0.0715,
+     0.043,
+     0.0995
+    ],
+    "linear|weighted|rmse_minus_team_prior": [
+     -0.0755,
+     -0.2858,
+     0.1188
+    ],
+    "linear|weighted|mae_minus_team_prior": [
+     -0.1338,
+     -0.3443,
+     0.088
+    ],
+    "linear|weighted|r2_minus_team_prior": [
+     0.0058,
+     -0.0092,
+     0.0223
+    ],
+    "linear|weighted|rmse_minus_team_prior_calibrated": [
+     -0.113,
+     -0.3119,
+     0.0816
+    ],
+    "linear|weighted|mae_minus_team_prior_calibrated": [
+     -0.1476,
+     -0.3628,
+     0.077
+    ],
+    "linear|weighted|r2_minus_team_prior_calibrated": [
+     0.0087,
+     -0.0063,
+     0.0244
+    ],
+    "linear|weighted|rmse_minus_eb_lineup_team": [
+     -0.0118,
+     -0.2297,
+     0.191
+    ],
+    "linear|weighted|mae_minus_eb_lineup_team": [
+     -0.0644,
+     -0.2974,
+     0.1653
+    ],
+    "linear|weighted|r2_minus_eb_lineup_team": [
+     0.0009,
+     -0.0141,
+     0.0179
+    ],
+    "linear|weighted|rmse_minus_player_composite": [
+     -0.1133,
+     -0.2806,
+     0.0513
+    ],
+    "linear|weighted|mae_minus_player_composite": [
+     -0.1258,
+     -0.3297,
+     0.071
+    ],
+    "linear|weighted|r2_minus_player_composite": [
+     0.0087,
+     -0.0039,
+     0.0213
+    ],
+    "linear|weighted|calibration_slope": [
+     1.2185,
+     0.9373,
+     1.4845
+    ],
+    "linear|unweighted|rmse_minus_league_mean": [
+     -0.838,
+     -1.2159,
+     -0.4688
+    ],
+    "linear|unweighted|mae_minus_league_mean": [
+     -0.6438,
+     -0.9826,
+     -0.3189
+    ],
+    "linear|unweighted|r2_minus_league_mean": [
+     0.0551,
+     0.0311,
+     0.079
+    ],
+    "linear|unweighted|rmse_minus_team_prior": [
+     0.0225,
+     -0.17,
+     0.2173
+    ],
+    "linear|unweighted|mae_minus_team_prior": [
+     0.0508,
+     -0.1273,
+     0.2253
+    ],
+    "linear|unweighted|r2_minus_team_prior": [
+     -0.0015,
+     -0.0139,
+     0.0111
+    ],
+    "linear|unweighted|rmse_minus_team_prior_calibrated": [
+     -0.022,
+     -0.2103,
+     0.1695
+    ],
+    "linear|unweighted|mae_minus_team_prior_calibrated": [
+     0.0237,
+     -0.1532,
+     0.1979
+    ],
+    "linear|unweighted|r2_minus_team_prior_calibrated": [
+     0.0014,
+     -0.0109,
+     0.0137
+    ],
+    "linear|unweighted|rmse_minus_eb_lineup_team": [
+     0.0406,
+     -0.1529,
+     0.235
+    ],
+    "linear|unweighted|mae_minus_eb_lineup_team": [
+     0.0696,
+     -0.1089,
+     0.2445
+    ],
+    "linear|unweighted|r2_minus_eb_lineup_team": [
+     -0.0026,
+     -0.0151,
+     0.0102
+    ],
+    "linear|unweighted|rmse_minus_player_composite": [
+     -0.1026,
+     -0.2763,
+     0.0564
+    ],
+    "linear|unweighted|mae_minus_player_composite": [
+     -0.0496,
+     -0.2043,
+     0.1047
+    ],
+    "linear|unweighted|r2_minus_player_composite": [
+     0.0067,
+     -0.0036,
+     0.0181
+    ],
+    "linear|unweighted|calibration_slope": [
+     1.2352,
+     0.9459,
+     1.4889
+    ]
+   }
+  }
+ },
+ "by_history_weighted": {
+  "no pre-break history|league_mean|rmse": [
+   27.7433,
+   25.9113,
+   29.5215
+  ],
+  "no pre-break history|team_prior|rmse": [
+   26.7094,
+   25.1012,
+   28.356
+  ],
+  "no pre-break history|team_prior_calibrated|rmse": [
+   26.7675,
+   25.1193,
+   28.4109
+  ],
+  "no pre-break history|eb_lineup_team|rmse": [
+   26.7114,
+   25.1226,
+   28.3477
+  ],
+  "no pre-break history|player_composite|rmse": [
+   26.856,
+   25.2731,
+   28.4665
+  ],
+  "no pre-break history|linear|rmse": [
+   26.6642,
+   24.9914,
+   28.3439
+  ],
+  "no pre-break history|noise_floor|rmse_floor": [
+   24.6369,
+   23.8183,
+   25.4386
+  ],
+  "no pre-break history|linear|rmse_minus_team_prior": [
+   -0.0452,
+   -0.3411,
+   0.2341
+  ],
+  "history < 100 poss|league_mean|rmse": [
+   25.003,
+   23.0204,
+   26.9412
+  ],
+  "history < 100 poss|team_prior|rmse": [
+   24.3758,
+   22.5353,
+   26.2448
+  ],
+  "history < 100 poss|team_prior_calibrated|rmse": [
+   24.3917,
+   22.5477,
+   26.2793
+  ],
+  "history < 100 poss|eb_lineup_team|rmse": [
+   24.3815,
+   22.5593,
+   26.2596
+  ],
+  "history < 100 poss|player_composite|rmse": [
+   24.3225,
+   22.4834,
+   26.2221
+  ],
+  "history < 100 poss|linear|rmse": [
+   24.32,
+   22.4613,
+   26.2616
+  ],
+  "history < 100 poss|noise_floor|rmse_floor": [
+   22.1631,
+   21.1609,
+   23.1738
+  ],
+  "history < 100 poss|linear|rmse_minus_team_prior": [
+   -0.0558,
+   -0.3406,
+   0.2102
+  ],
+  "history >= 100 poss|league_mean|rmse": [
+   16.6619,
+   14.5082,
+   18.8883
+  ],
+  "history >= 100 poss|team_prior|rmse": [
+   15.9314,
+   14.2197,
+   17.7377
+  ],
+  "history >= 100 poss|team_prior_calibrated|rmse": [
+   15.9504,
+   14.2099,
+   17.7594
+  ],
+  "history >= 100 poss|eb_lineup_team|rmse": [
+   15.3271,
+   13.8579,
+   16.9342
+  ],
+  "history >= 100 poss|player_composite|rmse": [
+   15.7754,
+   14.1546,
+   17.5137
+  ],
+  "history >= 100 poss|linear|rmse": [
+   15.6445,
+   14.0967,
+   17.2736
+  ],
+  "history >= 100 poss|noise_floor|rmse_floor": [
+   14.4047,
+   13.3254,
+   15.4913
+  ],
+  "history >= 100 poss|linear|rmse_minus_team_prior": [
+   -0.2869,
+   -0.7288,
+   0.1732
+  ]
+ }
+}

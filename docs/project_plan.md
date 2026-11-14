@@ -36,8 +36,8 @@ Post-All-Star-break lineup net rating (per 100 possessions). Features come from 
 | 2 | PostgreSQL schema, cleaning, validation, loading | Done (approved 2026-11-10) |
 | 3 | Metric recomputation and checks | Done (approved 2026-11-11) |
 | 4 | EDA, reliability and selection analysis (Matplotlib) | Done (approved 2026-11-12) |
-| 5 | Features + baselines + chronological splits | Done, awaiting review |
-| 6 | Linear / Ridge / Random Forest, evaluation, model card | |
+| 5 | Features + baselines + chronological splits | Done (approved 2026-11-13) |
+| 6 | Linear / Ridge / Random Forest, evaluation, model card | Done, awaiting review |
 | 7 | FastAPI | |
 | 8 | React + TypeScript + Tailwind + Recharts dashboard | |
 | 9 | Power BI datasets + report | |
