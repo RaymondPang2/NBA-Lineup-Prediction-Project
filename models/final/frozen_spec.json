@@ -1,0 +1,283 @@
+{
+ "status": "frozen",
+ "frozen_at_utc": "2026-11-14T01:34:16+00:00",
+ "prediction_target": "post-All-Star-break lineup net rating (per 100 possessions), conditional on the lineup playing >= 25 post-break possessions on each end",
+ "model": {
+  "name": "linear",
+  "label": "Linear regression (VIF-pruned)",
+  "params": {},
+  "features_in": [
+   "team_off_rating_loo",
+   "team_def_rating_loo",
+   "p_off_rating_eb_mean",
+   "p_def_rating_eb_mean",
+   "p_net_rating_eb_mean",
+   "p_on_off_eb_mean",
+   "p_usage_eb_mean",
+   "p_usage_eb_max",
+   "p_log_poss_mean",
+   "p_team_share_min",
+   "p_n_new_to_team",
+   "p_n_no_history",
+   "lu_log_poss",
+   "lu_no_history",
+   "lu_net_eb_team",
+   "lu_pair_familiarity"
+  ],
+  "features_used": [
+   "team_off_rating_loo",
+   "team_def_rating_loo",
+   "p_def_rating_eb_mean",
+   "p_on_off_eb_mean",
+   "p_usage_eb_mean",
+   "p_usage_eb_max",
+   "p_team_share_min",
+   "p_n_new_to_team",
+   "p_n_no_history",
+   "lu_log_poss",
+   "lu_no_history"
+  ],
+  "trained_seasons": [
+   "2018-19",
+   "2019-20",
+   "2020-21",
+   "2021-22",
+   "2022-23",
+   "2023-24"
+  ],
+  "sample_weight": "post-break possessions"
+ },
+ "selection": {
+  "rule": "one-standard-error, simplest first",
+  "rmse_weighted": {
+   "linear": 21.731939834716865,
+   "ridge": 21.813839223415577,
+   "forest": 21.800646181787947
+  },
+  "best": "linear",
+  "se_of_difference_from_best": {
+   "linear": 0.0,
+   "ridge": 0.040554032811862206,
+   "forest": 0.05216835061344918
+  },
+  "chosen": "linear",
+  "rule_text": "SELECTION RULE (pre-registered before any Phase 6 result):\n  1. Candidates: linear regression, ridge, random forest.\n  2. Criterion: pooled possession-weighted RMSE over the out-of-fold predictions of the `all` variant\n     (validation seasons 2019-20 .. 2023-24, nested chronological CV).\n  3. One-standard-error rule: pick the SIMPLEST model (linear < ridge < forest) whose RMSE is within one\n     bootstrap standard error (team-season clusters, paired) of the best model's RMSE.\n  4. Final hyperparameters: chronological CV over all six development seasons (the expanding folds).\n  5. Final fit: FeatureBuilder and model fitted on all development seasons. Baseline parameters are\n     frozen alongside, so the held-out comparison uses baselines fitted on exactly the same data."
+ },
+ "development_cv_summary": {
+  "league_mean|weighted|mae": [
+   16.5939,
+   16.0107,
+   17.2104
+  ],
+  "league_mean|weighted|rmse": [
+   22.2015,
+   21.5512,
+   22.8708
+  ],
+  "league_mean|weighted|r2": [
+   -0.0004,
+   -0.0035,
+   -0.0
+  ],
+  "team_prior|weighted|mae": [
+   16.1686,
+   15.5942,
+   16.7329
+  ],
+  "team_prior|weighted|rmse": [
+   21.806,
+   21.1898,
+   22.4221
+  ],
+  "team_prior|weighted|r2": [
+   0.0349,
+   0.0161,
+   0.0502
+  ],
+  "linear|weighted|mae": [
+   16.0856,
+   15.5594,
+   16.6326
+  ],
+  "linear|weighted|rmse": [
+   21.7319,
+   21.1179,
+   22.3334
+  ],
+  "linear|weighted|r2": [
+   0.0415,
+   0.023,
+   0.058
+  ],
+  "noise_floor|weighted|rmse_floor": [
+   21.0421,
+   20.6828,
+   21.4264
+  ],
+  "noise_floor|weighted|r2_ceiling": [
+   0.1014,
+   0.054,
+   0.1473
+  ],
+  "league_mean|unweighted|mae": [
+   21.1051,
+   20.5119,
+   21.7152
+  ],
+  "league_mean|unweighted|rmse": [
+   27.0733,
+   26.3385,
+   27.8627
+  ],
+  "league_mean|unweighted|r2": [
+   -0.0006,
+   -0.0041,
+   0.0
+  ],
+  "team_prior|unweighted|mae": [
+   20.8053,
+   20.2404,
+   21.3891
+  ],
+  "team_prior|unweighted|rmse": [
+   26.7514,
+   26.0443,
+   27.5035
+  ],
+  "team_prior|unweighted|r2": [
+   0.0231,
+   0.0109,
+   0.0337
+  ],
+  "linear|unweighted|mae": [
+   20.761,
+   20.227,
+   21.3318
+  ],
+  "linear|unweighted|rmse": [
+   26.7095,
+   25.9908,
+   27.4526
+  ],
+  "linear|unweighted|r2": [
+   0.0261,
+   0.013,
+   0.0388
+  ],
+  "noise_floor|unweighted|rmse_floor": [
+   26.2311,
+   26.0216,
+   26.4461
+  ],
+  "noise_floor|unweighted|r2_ceiling": [
+   0.0607,
+   0.0109,
+   0.1095
+  ],
+  "linear|weighted|rmse_minus_team_prior": [
+   -0.0741,
+   -0.2012,
+   0.0466
+  ],
+  "linear|unweighted|rmse_minus_team_prior": [
+   -0.0419,
+   -0.1632,
+   0.0749
+  ]
+ },
+ "feature_builder_parameters": {
+  "train_seasons": [
+   "2018-19",
+   "2019-20",
+   "2020-21",
+   "2021-22",
+   "2022-23",
+   "2023-24"
+  ],
+  "player_off_rating": {
+   "beta0": 83.02413405492695,
+   "beta1_log_poss": 3.1241139750465554,
+   "tau": 4.027351287637155,
+   "k": 13296.223964688203,
+   "n": 3087
+  },
+  "player_def_rating": {
+   "beta0": 99.23983373690446,
+   "beta1_log_poss": 0.9928850877538632,
+   "tau": 3.637533418212896,
+   "k": 13531.80252627497,
+   "n": 3086
+  },
+  "player_net_rating": {
+   "beta0": -16.357071874876365,
+   "beta1_log_poss": 2.1496078709215154,
+   "tau": 4.533803701177062,
+   "k": 13238.893193296864,
+   "n": 3087
+  },
+  "player_on_off": {
+   "beta0": -16.857905905368806,
+   "beta1_log_poss": 2.253639445171703,
+   "tau": 2.9639744794992615,
+   "k": 16431.137547256614,
+   "n": 3085
+  },
+  "player_usage": {
+   "beta0": 9.202732099103956,
+   "beta1_log_poss": 1.2465921873749162,
+   "tau": 5.024052224417064,
+   "k": 677.0600795915553,
+   "n": 3086
+  },
+  "lineup_vs_team_prior": {
+   "mu": 1.7467276925940376,
+   "tau": 4.798739750050963,
+   "k": 14638.943348558345,
+   "n": 21912,
+   "poss_for_reliability_0.5": 1271.4091446875295
+  }
+ },
+ "baseline_parameters": {
+  "league_mean": 2.870395428532597,
+  "team_prior_offset": 2.435591778036974,
+  "eb_lineup_team_offset": 0.4800210117445271,
+  "player_composite_offset": 2.47135702097919,
+  "team_prior_calibrated": {
+   "intercept": 2.483985623911695,
+   "slope": 0.8886995410007328
+  }
+ },
+ "evaluation_plan": {
+  "held_out_seasons": [
+   "2024-25",
+   "2025-26"
+  ],
+  "report": "each held-out season separately, and both pooled",
+  "sample": "lineups with >= 25 post-break possessions on each end",
+  "metrics": [
+   "MAE",
+   "RMSE",
+   "R2"
+  ],
+  "weightings": [
+   "possession-weighted (primary)",
+   "unweighted"
+  ],
+  "comparisons": "model minus each baseline (league mean, team prior, calibrated team prior, EB lineup -> team prior, player composite), paired",
+  "uncertainty": "team-season cluster bootstrap, 2000 resamples, 95% percentile intervals, seed 2025",
+  "noise_floor": "K from the frozen FeatureBuilder (development seasons)",
+  "primary_question": "is the weighted RMSE of the model minus the team prior below 0 (CI excludes 0)?",
+  "no_retuning": "the model and this plan are not changed after the held-out seasons are read"
+ },
+ "artifact": {
+  "file": "model.joblib",
+  "sha256": "a15b0c7f4c66de20ef9d708ceca6976e6a072f611979949cfdac40eaab12667f"
+ },
+ "versions": {
+  "python": "3.12.3",
+  "scikit-learn": "1.9.1",
+  "numpy": "2.5.4",
+  "pandas": "3.1.1",
+  "joblib": "1.6.0"
+ }
+}

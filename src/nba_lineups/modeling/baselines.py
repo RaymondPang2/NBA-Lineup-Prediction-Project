@@ -26,6 +26,8 @@ BASELINES = {
     "raw_lineup": "Raw pre-break lineup net (naive)",
 }
 PRIMARY = ["league_mean", "team_prior", "team_prior_calibrated", "eb_lineup_team", "player_composite"]
+_OFFSET_BASELINES = (("team_prior", "team_net_loo"), ("eb_lineup_team", "lu_net_eb_team"),
+                     ("player_composite", "p_net_rating_eb_mean"))
 
 
 def _offset(train: pd.DataFrame, col: str) -> float:
@@ -38,19 +40,30 @@ def _wls(x, y, w) -> tuple[float, float]:
     return float(ym - b * xm), float(b)
 
 
-def fit_predict(train: pd.DataFrame, val: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
-    """Fit every baseline on `train` (needs y, w and the feature columns), predict `val`."""
-    if set(train.season_id) & set(val.season_id):
-        raise ValueError("training and validation rows share a season")
-    p = pd.DataFrame(index=val.index)
+def fit(train: pd.DataFrame) -> dict:
+    """Baseline parameters from TRAINING rows only (needs y, w, team_net_loo, lu_net_eb_team, p_net_rating_eb_mean)."""
     params = {"league_mean": float(np.average(train.y, weights=train.w))}
-    p["league_mean"] = params["league_mean"]
-    for name, col in (("team_prior", "team_net_loo"), ("eb_lineup_team", "lu_net_eb_team"),
-                      ("player_composite", "p_net_rating_eb_mean")):
+    for name, col in _OFFSET_BASELINES:
         params[f"{name}_offset"] = _offset(train, col)
-        p[name] = val[col] + params[f"{name}_offset"]
     a, b = _wls(train.team_net_loo.to_numpy(float), train.y.to_numpy(float), train.w.to_numpy(float))
     params["team_prior_calibrated"] = {"intercept": a, "slope": b}
-    p["team_prior_calibrated"] = a + b * val.team_net_loo
+    return params
+
+
+def predict(params: dict, val: pd.DataFrame) -> pd.DataFrame:
+    p = pd.DataFrame(index=val.index)
+    p["league_mean"] = params["league_mean"]
+    for name, col in _OFFSET_BASELINES:
+        p[name] = val[col] + params[f"{name}_offset"]
+    c = params["team_prior_calibrated"]
+    p["team_prior_calibrated"] = c["intercept"] + c["slope"] * val.team_net_loo
     p["raw_lineup"] = val.lu_net_raw.fillna(val.team_net_loo)
-    return p, params
+    return p[list(BASELINES)]
+
+
+def fit_predict(train: pd.DataFrame, val: pd.DataFrame) -> tuple[pd.DataFrame, dict]:
+    """Fit every baseline on `train`, predict `val`."""
+    if set(train.season_id) & set(val.season_id):
+        raise ValueError("training and validation rows share a season")
+    params = fit(train)
+    return predict(params, val), params

@@ -1,0 +1,91 @@
+feature,rmse_increase,sd,model,val_season
+team ratings,-0.03576,0.06842,linear,2019-20
+player ratings (ORtg/DRtg/net/on-off),0.11502,0.13418,linear,2019-20
+player usage,0.00364,0.06571,linear,2019-20
+player role / roster,0.00707,0.08886,linear,2019-20
+lineup history,-0.07557,0.11164,linear,2019-20
+familiarity,0.1703,0.0732,linear,2019-20
+team ratings,-0.03461,0.03813,ridge,2019-20
+player ratings (ORtg/DRtg/net/on-off),0.09629,0.11649,ridge,2019-20
+player usage,0.00415,0.05924,ridge,2019-20
+player role / roster,0.16402,0.12554,ridge,2019-20
+lineup history,-0.08211,0.09152,ridge,2019-20
+familiarity,-0.00033,0.0002,ridge,2019-20
+team ratings,-0.0043,0.02985,forest,2019-20
+player ratings (ORtg/DRtg/net/on-off),-0.15141,0.07072,forest,2019-20
+player usage,-0.0244,0.01077,forest,2019-20
+player role / roster,-0.04621,0.02424,forest,2019-20
+lineup history,-0.07253,0.05336,forest,2019-20
+familiarity,-0.03291,0.01907,forest,2019-20
+team ratings,0.34271,0.03794,linear,2020-21
+player ratings (ORtg/DRtg/net/on-off),0.36913,0.06796,linear,2020-21
+player usage,0.21042,0.03329,linear,2020-21
+player role / roster,-0.00041,0.06911,linear,2020-21
+lineup history,0.21923,0.05207,linear,2020-21
+familiarity,-0.0568,0.03504,linear,2020-21
+team ratings,0.03642,0.00344,ridge,2020-21
+player ratings (ORtg/DRtg/net/on-off),0.10248,0.0166,ridge,2020-21
+player usage,0.03845,0.00722,ridge,2020-21
+player role / roster,0.01092,0.00297,ridge,2020-21
+lineup history,0.06091,0.01083,ridge,2020-21
+familiarity,0.00879,0.00317,ridge,2020-21
+team ratings,0.06545,0.01146,forest,2020-21
+player ratings (ORtg/DRtg/net/on-off),0.11963,0.02403,forest,2020-21
+player usage,0.02295,0.00376,forest,2020-21
+player role / roster,0.00544,0.00113,forest,2020-21
+lineup history,0.10907,0.01962,forest,2020-21
+familiarity,0.00871,0.00284,forest,2020-21
+team ratings,0.1779,0.06377,linear,2021-22
+player ratings (ORtg/DRtg/net/on-off),0.39313,0.10575,linear,2021-22
+player usage,0.23371,0.10031,linear,2021-22
+player role / roster,0.01855,0.04339,linear,2021-22
+lineup history,0.05034,0.0208,linear,2021-22
+familiarity,0.0,0.0,linear,2021-22
+team ratings,0.59661,0.09636,ridge,2021-22
+player ratings (ORtg/DRtg/net/on-off),1.95489,0.41871,ridge,2021-22
+player usage,0.26643,0.11697,ridge,2021-22
+player role / roster,1.37114,0.33854,ridge,2021-22
+lineup history,0.05139,0.02108,ridge,2021-22
+familiarity,0.00259,0.00334,ridge,2021-22
+team ratings,0.02469,0.01103,forest,2021-22
+player ratings (ORtg/DRtg/net/on-off),0.50362,0.13841,forest,2021-22
+player usage,0.096,0.0307,forest,2021-22
+player role / roster,0.0021,0.00629,forest,2021-22
+lineup history,0.04667,0.02048,forest,2021-22
+familiarity,0.00202,0.00252,forest,2021-22
+team ratings,0.1327,0.05799,linear,2022-23
+player ratings (ORtg/DRtg/net/on-off),0.43031,0.08931,linear,2022-23
+player usage,0.3116,0.08101,linear,2022-23
+player role / roster,-0.00036,0.08515,linear,2022-23
+lineup history,0.02908,0.07763,linear,2022-23
+familiarity,0.0,0.0,linear,2022-23
+team ratings,0.05142,0.03257,ridge,2022-23
+player ratings (ORtg/DRtg/net/on-off),0.36572,0.06336,ridge,2022-23
+player usage,0.25843,0.06947,ridge,2022-23
+player role / roster,0.01939,0.0764,ridge,2022-23
+lineup history,0.06006,0.07264,ridge,2022-23
+familiarity,0.00506,0.0048,ridge,2022-23
+team ratings,0.00749,0.0122,forest,2022-23
+player ratings (ORtg/DRtg/net/on-off),0.46453,0.06413,forest,2022-23
+player usage,0.08998,0.0305,forest,2022-23
+player role / roster,0.00062,0.00548,forest,2022-23
+lineup history,0.04478,0.0251,forest,2022-23
+familiarity,0.00141,0.0022,forest,2022-23
+team ratings,0.4531,0.08921,linear,2023-24
+player ratings (ORtg/DRtg/net/on-off),0.2802,0.05693,linear,2023-24
+player usage,0.20639,0.05059,linear,2023-24
+player role / roster,0.01545,0.01209,linear,2023-24
+lineup history,0.07374,0.02544,linear,2023-24
+familiarity,0.0,0.0,linear,2023-24
+team ratings,0.19206,0.05355,ridge,2023-24
+player ratings (ORtg/DRtg/net/on-off),0.36219,0.04788,ridge,2023-24
+player usage,0.1749,0.04808,ridge,2023-24
+player role / roster,0.037,0.02168,ridge,2023-24
+lineup history,0.09853,0.02157,ridge,2023-24
+familiarity,-0.00015,0.00334,ridge,2023-24
+team ratings,-0.00257,0.01187,forest,2023-24
+player ratings (ORtg/DRtg/net/on-off),0.76689,0.10167,forest,2023-24
+player usage,0.12341,0.04227,forest,2023-24
+player role / roster,0.01637,0.00542,forest,2023-24
+lineup history,0.09348,0.02604,forest,2023-24
+familiarity,0.00075,0.00238,forest,2023-24

@@ -1,0 +1,16 @@
+val_season,model,params,tuned,train_rmse_w,val_rmse_w,gap
+2019-20,linear,{},False,19.6585,22.4876,2.8291
+2019-20,ridge,{'alpha': 100.0},False,19.6488,22.4798,2.831
+2019-20,forest,"{'max_depth': 5, 'min_samples_leaf': 50, 'max_features': 0.33}",False,19.2513,22.5837,3.3323
+2020-21,linear,{},False,20.6564,21.3898,0.7335
+2020-21,ridge,{'alpha': 10000.0},True,20.8382,21.6373,0.7991
+2020-21,forest,"{'max_depth': 3, 'min_samples_leaf': 200, 'max_features': 0.33}",True,20.7454,21.5883,0.8429
+2021-22,linear,{},False,20.8954,22.3586,1.4631
+2021-22,ridge,{'alpha': 0.1},True,20.8588,22.4071,1.5483
+2021-22,forest,"{'max_depth': 3, 'min_samples_leaf': 100, 'max_features': 0.66}",True,20.7336,22.4086,1.6751
+2022-23,linear,{},False,21.218,21.352,0.134
+2022-23,ridge,{'alpha': 316.2278},True,21.2244,21.3226,0.0982
+2022-23,forest,"{'max_depth': 3, 'min_samples_leaf': 100, 'max_features': 0.66}",True,21.0666,21.3239,0.2573
+2023-24,linear,{},False,21.2328,21.5768,0.3439
+2023-24,ridge,{'alpha': 316.2278},True,21.2356,21.6034,0.3678
+2023-24,forest,"{'max_depth': 3, 'min_samples_leaf': 100, 'max_features': 0.66}",True,21.0775,21.5494,0.4719

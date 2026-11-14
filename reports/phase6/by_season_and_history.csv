@@ -1,0 +1,1393 @@
+group,n,predictor,weighting,metric,estimate,lo,hi
+season 2019-20,389,league_mean,weighted,mae,17.06023,15.37353,18.78064
+season 2019-20,389,league_mean,weighted,rmse,22.29759,20.66492,23.69881
+season 2019-20,389,league_mean,weighted,r2,-0.00596,-0.02547,-2e-05
+season 2019-20,389,league_mean,weighted,rmse_gain_lm,0.0,0.0,0.0
+season 2019-20,389,league_mean,weighted,mae_gain_lm,0.0,0.0,0.0
+season 2019-20,389,league_mean,weighted,skill_lm,0.0,0.0,0.0
+season 2019-20,389,league_mean,weighted,rmse_gain_tp,0.00633,-0.35989,0.42572
+season 2019-20,389,league_mean,weighted,mae_gain_tp,-0.02607,-0.491,0.43698
+season 2019-20,389,league_mean,weighted,skill_tp,0.00057,-0.03316,0.03892
+season 2019-20,389,team_prior,weighted,mae,17.03416,15.56552,18.55157
+season 2019-20,389,team_prior,weighted,rmse,22.30392,20.81281,23.76357
+season 2019-20,389,team_prior,weighted,r2,-0.00653,-0.04704,0.02715
+season 2019-20,389,team_prior,weighted,rmse_gain_lm,-0.00633,-0.42572,0.35989
+season 2019-20,389,team_prior,weighted,mae_gain_lm,0.02607,-0.43698,0.491
+season 2019-20,389,team_prior,weighted,skill_lm,-0.00057,-0.04049,0.03209
+season 2019-20,389,team_prior,weighted,rmse_gain_tp,0.0,0.0,0.0
+season 2019-20,389,team_prior,weighted,mae_gain_tp,0.0,0.0,0.0
+season 2019-20,389,team_prior,weighted,skill_tp,0.0,0.0,0.0
+season 2019-20,389,team_prior_calibrated,weighted,mae,16.979,15.46124,18.53812
+season 2019-20,389,team_prior_calibrated,weighted,rmse,22.20817,20.69355,23.65573
+season 2019-20,389,team_prior_calibrated,weighted,r2,0.00209,-0.02581,0.0266
+season 2019-20,389,team_prior_calibrated,weighted,rmse_gain_lm,0.08941,-0.18768,0.35577
+season 2019-20,389,team_prior_calibrated,weighted,mae_gain_lm,0.08123,-0.21301,0.38795
+season 2019-20,389,team_prior_calibrated,weighted,skill_lm,0.008,-0.01757,0.03079
+season 2019-20,389,team_prior_calibrated,weighted,rmse_gain_tp,0.09574,-0.02984,0.23885
+season 2019-20,389,team_prior_calibrated,weighted,mae_gain_tp,0.05516,-0.11196,0.22238
+season 2019-20,389,team_prior_calibrated,weighted,skill_tp,0.00857,-0.00257,0.02153
+season 2019-20,389,eb_lineup_team,weighted,mae,17.06939,15.65609,18.57971
+season 2019-20,389,eb_lineup_team,weighted,rmse,22.29781,20.81119,23.74131
+season 2019-20,389,eb_lineup_team,weighted,r2,-0.00598,-0.04715,0.02759
+season 2019-20,389,eb_lineup_team,weighted,rmse_gain_lm,-0.00023,-0.43121,0.38232
+season 2019-20,389,eb_lineup_team,weighted,mae_gain_lm,-0.00916,-0.45479,0.45827
+season 2019-20,389,eb_lineup_team,weighted,skill_lm,-2e-05,-0.04002,0.033
+season 2019-20,389,eb_lineup_team,weighted,rmse_gain_tp,0.0061,-0.06581,0.07964
+season 2019-20,389,eb_lineup_team,weighted,mae_gain_tp,-0.03524,-0.14489,0.08316
+season 2019-20,389,eb_lineup_team,weighted,skill_tp,0.00055,-0.00602,0.00673
+season 2019-20,389,player_composite,weighted,mae,17.14068,15.64828,18.74291
+season 2019-20,389,player_composite,weighted,rmse,22.33429,20.78845,23.78397
+season 2019-20,389,player_composite,weighted,r2,-0.00927,-0.04426,0.01992
+season 2019-20,389,player_composite,weighted,rmse_gain_lm,-0.0367,-0.41316,0.33053
+season 2019-20,389,player_composite,weighted,mae_gain_lm,-0.08046,-0.46938,0.33896
+season 2019-20,389,player_composite,weighted,skill_lm,-0.00329,-0.03833,0.02935
+season 2019-20,389,player_composite,weighted,rmse_gain_tp,-0.03038,-0.26936,0.18472
+season 2019-20,389,player_composite,weighted,mae_gain_tp,-0.10653,-0.36822,0.1382
+season 2019-20,389,player_composite,weighted,skill_tp,-0.00273,-0.02417,0.01641
+season 2019-20,389,linear,weighted,mae,17.2965,15.89957,18.71733
+season 2019-20,389,linear,weighted,rmse,22.48758,20.97436,23.80121
+season 2019-20,389,linear,weighted,r2,-0.02317,-0.07321,0.02503
+season 2019-20,389,linear,weighted,rmse_gain_lm,-0.18999,-0.74417,0.39096
+season 2019-20,389,linear,weighted,mae_gain_lm,-0.23627,-0.72961,0.36215
+season 2019-20,389,linear,weighted,skill_lm,-0.01711,-0.06855,0.03531
+season 2019-20,389,linear,weighted,rmse_gain_tp,-0.18366,-0.5545,0.24648
+season 2019-20,389,linear,weighted,mae_gain_tp,-0.26235,-0.62607,0.16883
+season 2019-20,389,linear,weighted,skill_tp,-0.01654,-0.05126,0.02188
+season 2019-20,389,ridge,weighted,mae,17.33687,15.93528,18.76607
+season 2019-20,389,ridge,weighted,rmse,22.4798,20.97774,23.80939
+season 2019-20,389,ridge,weighted,r2,-0.02247,-0.06967,0.02405
+season 2019-20,389,ridge,weighted,rmse_gain_lm,-0.18222,-0.72615,0.3734
+season 2019-20,389,ridge,weighted,mae_gain_lm,-0.27664,-0.7598,0.30862
+season 2019-20,389,ridge,weighted,skill_lm,-0.01641,-0.06657,0.03248
+season 2019-20,389,ridge,weighted,rmse_gain_tp,-0.17589,-0.53273,0.23301
+season 2019-20,389,ridge,weighted,mae_gain_tp,-0.30271,-0.66204,0.10749
+season 2019-20,389,ridge,weighted,skill_tp,-0.01583,-0.04874,0.02023
+season 2019-20,389,forest,weighted,mae,17.45884,15.92697,19.00546
+season 2019-20,389,forest,weighted,rmse,22.58365,21.01738,24.01616
+season 2019-20,389,forest,weighted,r2,-0.03193,-0.06552,0.00187
+season 2019-20,389,forest,weighted,rmse_gain_lm,-0.28607,-0.64213,0.09813
+season 2019-20,389,forest,weighted,mae_gain_lm,-0.39861,-0.83683,0.07249
+season 2019-20,389,forest,weighted,skill_lm,-0.02582,-0.06045,0.00869
+season 2019-20,389,forest,weighted,rmse_gain_tp,-0.27974,-0.58212,0.10127
+season 2019-20,389,forest,weighted,mae_gain_tp,-0.42468,-0.77234,-0.071
+season 2019-20,389,forest,weighted,skill_tp,-0.02524,-0.05194,0.0088
+season 2019-20,389,noise_floor,weighted,rmse_floor,21.95712,21.19514,22.68299
+season 2019-20,389,noise_floor,weighted,mae_floor,16.41646,15.75436,17.09987
+season 2019-20,389,noise_floor,weighted,r2_ceiling,0.02453,-0.12687,0.14469
+season 2019-20,389,league_mean,unweighted,mae,21.07279,19.28867,22.94266
+season 2019-20,389,league_mean,unweighted,rmse,26.78675,24.76745,28.92394
+season 2019-20,389,league_mean,unweighted,r2,-0.00116,-0.01192,-0.0
+season 2019-20,389,league_mean,unweighted,rmse_gain_lm,0.0,0.0,0.0
+season 2019-20,389,league_mean,unweighted,mae_gain_lm,0.0,0.0,0.0
+season 2019-20,389,league_mean,unweighted,skill_lm,0.0,0.0,0.0
+season 2019-20,389,league_mean,unweighted,rmse_gain_tp,0.04072,-0.39266,0.51046
+season 2019-20,389,league_mean,unweighted,mae_gain_tp,-0.08648,-0.55073,0.40999
+season 2019-20,389,league_mean,unweighted,skill_tp,0.00303,-0.02955,0.03832
+season 2019-20,389,team_prior,unweighted,mae,20.98631,19.33749,22.76109
+season 2019-20,389,team_prior,unweighted,rmse,26.82747,24.96935,28.7781
+season 2019-20,389,team_prior,unweighted,r2,-0.00421,-0.04399,0.0276
+season 2019-20,389,team_prior,unweighted,rmse_gain_lm,-0.04072,-0.51046,0.39266
+season 2019-20,389,team_prior,unweighted,mae_gain_lm,0.08648,-0.40999,0.55073
+season 2019-20,389,team_prior,unweighted,skill_lm,-0.00304,-0.03985,0.02871
+season 2019-20,389,team_prior,unweighted,rmse_gain_tp,0.0,0.0,0.0
+season 2019-20,389,team_prior,unweighted,mae_gain_tp,0.0,0.0,0.0
+season 2019-20,389,team_prior,unweighted,skill_tp,0.0,0.0,0.0
+season 2019-20,389,team_prior_calibrated,unweighted,mae,20.96685,19.27495,22.76388
+season 2019-20,389,team_prior_calibrated,unweighted,rmse,26.73026,24.85938,28.68148
+season 2019-20,389,team_prior_calibrated,unweighted,r2,0.00305,-0.02404,0.02474
+season 2019-20,389,team_prior_calibrated,unweighted,rmse_gain_lm,0.05649,-0.2467,0.35446
+season 2019-20,389,team_prior_calibrated,unweighted,mae_gain_lm,0.10595,-0.24205,0.43112
+season 2019-20,389,team_prior_calibrated,unweighted,skill_lm,0.00421,-0.01927,0.0257
+season 2019-20,389,team_prior_calibrated,unweighted,rmse_gain_tp,0.09721,-0.04664,0.26373
+season 2019-20,389,team_prior_calibrated,unweighted,mae_gain_tp,0.01946,-0.12754,0.17733
+season 2019-20,389,team_prior_calibrated,unweighted,skill_tp,0.00723,-0.00353,0.02015
+season 2019-20,389,eb_lineup_team,unweighted,mae,21.00575,19.3642,22.77748
+season 2019-20,389,eb_lineup_team,unweighted,rmse,26.81885,24.96584,28.76658
+season 2019-20,389,eb_lineup_team,unweighted,r2,-0.00357,-0.04473,0.02888
+season 2019-20,389,eb_lineup_team,unweighted,rmse_gain_lm,-0.0321,-0.51578,0.40452
+season 2019-20,389,eb_lineup_team,unweighted,mae_gain_lm,0.06705,-0.4373,0.54435
+season 2019-20,389,eb_lineup_team,unweighted,skill_lm,-0.0024,-0.04043,0.02952
+season 2019-20,389,eb_lineup_team,unweighted,rmse_gain_tp,0.00862,-0.02292,0.04204
+season 2019-20,389,eb_lineup_team,unweighted,mae_gain_tp,-0.01944,-0.06182,0.02284
+season 2019-20,389,eb_lineup_team,unweighted,skill_tp,0.00064,-0.00177,0.00307
+season 2019-20,389,player_composite,unweighted,mae,21.07665,19.34086,22.89348
+season 2019-20,389,player_composite,unweighted,rmse,26.84694,24.9024,28.8078
+season 2019-20,389,player_composite,unweighted,r2,-0.00567,-0.03708,0.0194
+season 2019-20,389,player_composite,unweighted,rmse_gain_lm,-0.06019,-0.42205,0.28596
+season 2019-20,389,player_composite,unweighted,mae_gain_lm,-0.00385,-0.37388,0.38181
+season 2019-20,389,player_composite,unweighted,skill_lm,-0.0045,-0.03253,0.02106
+season 2019-20,389,player_composite,unweighted,rmse_gain_tp,-0.01946,-0.24946,0.21104
+season 2019-20,389,player_composite,unweighted,mae_gain_tp,-0.09034,-0.34525,0.1356
+season 2019-20,389,player_composite,unweighted,skill_tp,-0.00145,-0.01901,0.0159
+season 2019-20,389,linear,unweighted,mae,21.21694,19.569,22.93347
+season 2019-20,389,linear,unweighted,rmse,26.97627,25.21612,28.85426
+season 2019-20,389,linear,unweighted,r2,-0.01538,-0.05876,0.02469
+season 2019-20,389,linear,unweighted,rmse_gain_lm,-0.18952,-0.73156,0.35633
+season 2019-20,389,linear,unweighted,mae_gain_lm,-0.14414,-0.62968,0.40299
+season 2019-20,389,linear,unweighted,skill_lm,-0.0142,-0.05566,0.02598
+season 2019-20,389,linear,unweighted,rmse_gain_tp,-0.14879,-0.55608,0.25409
+season 2019-20,389,linear,unweighted,mae_gain_tp,-0.23063,-0.59237,0.16561
+season 2019-20,389,linear,unweighted,skill_tp,-0.01112,-0.04195,0.01815
+season 2019-20,389,ridge,unweighted,mae,21.2246,19.58284,22.9549
+season 2019-20,389,ridge,unweighted,rmse,26.96369,25.19699,28.86297
+season 2019-20,389,ridge,unweighted,r2,-0.01443,-0.05595,0.02271
+season 2019-20,389,ridge,unweighted,rmse_gain_lm,-0.17694,-0.67797,0.32691
+season 2019-20,389,ridge,unweighted,mae_gain_lm,-0.15181,-0.60909,0.35932
+season 2019-20,389,ridge,unweighted,skill_lm,-0.01325,-0.05149,0.02371
+season 2019-20,389,ridge,unweighted,rmse_gain_tp,-0.13621,-0.47377,0.22507
+season 2019-20,389,ridge,unweighted,mae_gain_tp,-0.23829,-0.59031,0.12945
+season 2019-20,389,ridge,unweighted,skill_tp,-0.01018,-0.03731,0.01647
+season 2019-20,389,forest,unweighted,mae,21.20995,19.52475,23.04242
+season 2019-20,389,forest,unweighted,rmse,26.96867,25.04678,28.87765
+season 2019-20,389,forest,unweighted,r2,-0.01481,-0.04406,0.01442
+season 2019-20,389,forest,unweighted,rmse_gain_lm,-0.18192,-0.52205,0.21824
+season 2019-20,389,forest,unweighted,mae_gain_lm,-0.13715,-0.47079,0.2669
+season 2019-20,389,forest,unweighted,skill_lm,-0.01363,-0.04027,0.01692
+season 2019-20,389,forest,unweighted,rmse_gain_tp,-0.1412,-0.43187,0.23215
+season 2019-20,389,forest,unweighted,mae_gain_tp,-0.22364,-0.54929,0.14417
+season 2019-20,389,forest,unweighted,skill_tp,-0.01055,-0.03259,0.0172
+season 2019-20,389,noise_floor,unweighted,rmse_floor,26.61037,26.12021,27.09172
+season 2019-20,389,noise_floor,unweighted,mae_floor,20.55541,20.14107,20.9799
+season 2019-20,389,noise_floor,unweighted,r2_ceiling,0.01198,-0.1509,0.14004
+season 2019-20,389,linear,weighted,rmse_minus_team_prior,0.18366,-0.24648,0.5545
+season 2019-20,389,linear,weighted,mae_minus_team_prior,0.26235,-0.16883,0.62607
+season 2019-20,389,linear,weighted,r2_minus_team_prior,-0.01664,-0.05209,0.02191
+season 2019-20,389,linear,weighted,calibration_slope,0.26502,-0.34866,0.87223
+season 2019-20,389,ridge,weighted,rmse_minus_team_prior,0.17589,-0.23301,0.53273
+season 2019-20,389,ridge,weighted,mae_minus_team_prior,0.30271,-0.10749,0.66204
+season 2019-20,389,ridge,weighted,r2_minus_team_prior,-0.01594,-0.04955,0.02042
+season 2019-20,389,ridge,weighted,calibration_slope,0.234,-0.41227,0.9148
+season 2019-20,389,forest,weighted,rmse_minus_team_prior,0.27974,-0.10127,0.58212
+season 2019-20,389,forest,weighted,mae_minus_team_prior,0.42468,0.071,0.77234
+season 2019-20,389,forest,weighted,r2_minus_team_prior,-0.02541,-0.05217,0.00896
+season 2019-20,389,forest,weighted,calibration_slope,0.08937,-0.40655,0.67707
+season 2019-20,389,linear,unweighted,rmse_minus_team_prior,0.14879,-0.25409,0.55608
+season 2019-20,389,linear,unweighted,mae_minus_team_prior,0.23063,-0.16561,0.59237
+season 2019-20,389,linear,unweighted,r2_minus_team_prior,-0.01117,-0.0421,0.01814
+season 2019-20,389,linear,unweighted,calibration_slope,0.27311,-0.3632,1.04145
+season 2019-20,389,ridge,unweighted,rmse_minus_team_prior,0.13621,-0.22507,0.47377
+season 2019-20,389,ridge,unweighted,mae_minus_team_prior,0.23829,-0.12945,0.59031
+season 2019-20,389,ridge,unweighted,r2_minus_team_prior,-0.01022,-0.0374,0.0169
+season 2019-20,389,ridge,unweighted,calibration_slope,0.24937,-0.44069,1.06189
+season 2019-20,389,forest,unweighted,rmse_minus_team_prior,0.1412,-0.23215,0.43187
+season 2019-20,389,forest,unweighted,mae_minus_team_prior,0.22364,-0.14417,0.54929
+season 2019-20,389,forest,unweighted,r2_minus_team_prior,-0.0106,-0.03208,0.01753
+season 2019-20,389,forest,unweighted,calibration_slope,0.21633,-0.41992,1.04165
+season 2020-21,935,league_mean,weighted,mae,16.48706,15.26766,17.76743
+season 2020-21,935,league_mean,weighted,rmse,21.88566,20.50865,23.31332
+season 2020-21,935,league_mean,weighted,r2,-2e-05,-0.01532,-0.0
+season 2020-21,935,league_mean,weighted,rmse_gain_lm,0.0,0.0,0.0
+season 2020-21,935,league_mean,weighted,mae_gain_lm,0.0,0.0,0.0
+season 2020-21,935,league_mean,weighted,skill_lm,0.0,0.0,0.0
+season 2020-21,935,league_mean,weighted,rmse_gain_tp,-0.44475,-0.90134,-0.03736
+season 2020-21,935,league_mean,weighted,mae_gain_tp,-0.3681,-0.9912,0.18082
+season 2020-21,935,league_mean,weighted,skill_tp,-0.04192,-0.08491,-0.00356
+season 2020-21,935,team_prior,weighted,mae,16.11897,15.02319,17.29733
+season 2020-21,935,team_prior,weighted,rmse,21.4409,20.22345,22.75306
+season 2020-21,935,team_prior,weighted,r2,0.04021,0.00207,0.07389
+season 2020-21,935,team_prior,weighted,rmse_gain_lm,0.44475,0.03736,0.90134
+season 2020-21,935,team_prior,weighted,mae_gain_lm,0.3681,-0.18082,0.9912
+season 2020-21,935,team_prior,weighted,skill_lm,0.04023,0.00355,0.07826
+season 2020-21,935,team_prior,weighted,rmse_gain_tp,0.0,0.0,0.0
+season 2020-21,935,team_prior,weighted,mae_gain_tp,0.0,0.0,0.0
+season 2020-21,935,team_prior,weighted,skill_tp,0.0,0.0,0.0
+season 2020-21,935,team_prior_calibrated,weighted,mae,16.19124,15.08307,17.37475
+season 2020-21,935,team_prior_calibrated,weighted,rmse,21.50525,20.24044,22.87345
+season 2020-21,935,team_prior_calibrated,weighted,r2,0.03444,0.00831,0.0579
+season 2020-21,935,team_prior_calibrated,weighted,rmse_gain_lm,0.38041,0.10595,0.6906
+season 2020-21,935,team_prior_calibrated,weighted,mae_gain_lm,0.29583,-0.05003,0.68787
+season 2020-21,935,team_prior_calibrated,weighted,skill_lm,0.03446,0.00994,0.06096
+season 2020-21,935,team_prior_calibrated,weighted,rmse_gain_tp,-0.06435,-0.21476,0.07845
+season 2020-21,935,team_prior_calibrated,weighted,mae_gain_tp,-0.07227,-0.29097,0.13425
+season 2020-21,935,team_prior_calibrated,weighted,skill_tp,-0.00601,-0.01957,0.00743
+season 2020-21,935,eb_lineup_team,weighted,mae,16.04001,14.9604,17.19313
+season 2020-21,935,eb_lineup_team,weighted,rmse,21.39502,20.18027,22.68827
+season 2020-21,935,eb_lineup_team,weighted,r2,0.04432,0.00647,0.07797
+season 2020-21,935,eb_lineup_team,weighted,rmse_gain_lm,0.49064,0.08312,0.94407
+season 2020-21,935,eb_lineup_team,weighted,mae_gain_lm,0.44705,-0.06386,0.99558
+season 2020-21,935,eb_lineup_team,weighted,skill_lm,0.04433,0.00781,0.08212
+season 2020-21,935,eb_lineup_team,weighted,rmse_gain_tp,0.04589,0.00956,0.08311
+season 2020-21,935,eb_lineup_team,weighted,mae_gain_tp,0.07895,-0.06768,0.20557
+season 2020-21,935,eb_lineup_team,weighted,skill_tp,0.00428,0.00091,0.00769
+season 2020-21,935,player_composite,weighted,mae,16.02776,14.90306,17.17301
+season 2020-21,935,player_composite,weighted,rmse,21.40784,20.14566,22.69665
+season 2020-21,935,player_composite,weighted,r2,0.04317,0.01478,0.0679
+season 2020-21,935,player_composite,weighted,rmse_gain_lm,0.47781,0.17563,0.83327
+season 2020-21,935,player_composite,weighted,mae_gain_lm,0.45931,0.11136,0.8427
+season 2020-21,935,player_composite,weighted,skill_lm,0.04319,0.01614,0.07214
+season 2020-21,935,player_composite,weighted,rmse_gain_tp,0.03306,-0.13388,0.20677
+season 2020-21,935,player_composite,weighted,mae_gain_tp,0.09121,-0.21714,0.35801
+season 2020-21,935,player_composite,weighted,skill_tp,0.00308,-0.0127,0.01931
+season 2020-21,935,linear,weighted,mae,15.96987,14.89931,17.04709
+season 2020-21,935,linear,weighted,rmse,21.38985,20.11061,22.66945
+season 2020-21,935,linear,weighted,r2,0.04478,0.01239,0.07149
+season 2020-21,935,linear,weighted,rmse_gain_lm,0.49581,0.16298,0.89088
+season 2020-21,935,linear,weighted,mae_gain_lm,0.5172,0.20729,0.86582
+season 2020-21,935,linear,weighted,skill_lm,0.0448,0.01525,0.07577
+season 2020-21,935,linear,weighted,rmse_gain_tp,0.05105,-0.17967,0.2796
+season 2020-21,935,linear,weighted,mae_gain_tp,0.1491,-0.23003,0.50012
+season 2020-21,935,linear,weighted,skill_tp,0.00476,-0.01709,0.02579
+season 2020-21,935,ridge,weighted,mae,16.28799,15.13296,17.48629
+season 2020-21,935,ridge,weighted,rmse,21.63734,20.32167,23.0046
+season 2020-21,935,ridge,weighted,r2,0.02255,0.00458,0.03133
+season 2020-21,935,ridge,weighted,rmse_gain_lm,0.24831,0.11546,0.38834
+season 2020-21,935,ridge,weighted,mae_gain_lm,0.19908,0.07545,0.33138
+season 2020-21,935,ridge,weighted,skill_lm,0.02256,0.01085,0.03376
+season 2020-21,935,ridge,weighted,rmse_gain_tp,-0.19644,-0.51857,0.0997
+season 2020-21,935,ridge,weighted,mae_gain_tp,-0.16902,-0.63879,0.2806
+season 2020-21,935,ridge,weighted,skill_tp,-0.01841,-0.05018,0.00925
+season 2020-21,935,forest,weighted,mae,16.27824,15.16042,17.44081
+season 2020-21,935,forest,weighted,rmse,21.58831,20.3162,22.91828
+season 2020-21,935,forest,weighted,r2,0.02697,0.0053,0.04015
+season 2020-21,935,forest,weighted,rmse_gain_lm,0.29735,0.11222,0.49748
+season 2020-21,935,forest,weighted,mae_gain_lm,0.20882,0.00414,0.41466
+season 2020-21,935,forest,weighted,skill_lm,0.02699,0.01041,0.04282
+season 2020-21,935,forest,weighted,rmse_gain_tp,-0.1474,-0.4295,0.09666
+season 2020-21,935,forest,weighted,mae_gain_tp,-0.15927,-0.59576,0.2366
+season 2020-21,935,forest,weighted,skill_tp,-0.0138,-0.04083,0.0093
+season 2020-21,935,noise_floor,weighted,rmse_floor,20.98581,20.0936,21.80328
+season 2020-21,935,noise_floor,weighted,mae_floor,15.4309,14.60962,16.19736
+season 2020-21,935,noise_floor,weighted,r2_ceiling,0.08052,-0.01916,0.16594
+season 2020-21,935,league_mean,unweighted,mae,20.55939,19.42842,21.60715
+season 2020-21,935,league_mean,unweighted,rmse,26.14361,24.9794,27.27289
+season 2020-21,935,league_mean,unweighted,r2,-0.00213,-0.01391,-1e-05
+season 2020-21,935,league_mean,unweighted,rmse_gain_lm,0.0,0.0,0.0
+season 2020-21,935,league_mean,unweighted,mae_gain_lm,0.0,0.0,0.0
+season 2020-21,935,league_mean,unweighted,skill_lm,0.0,0.0,0.0
+season 2020-21,935,league_mean,unweighted,rmse_gain_tp,-0.32217,-0.62149,-0.04494
+season 2020-21,935,league_mean,unweighted,mae_gain_tp,-0.23067,-0.51021,0.01597
+season 2020-21,935,league_mean,unweighted,skill_tp,-0.02511,-0.04807,-0.00344
+season 2020-21,935,team_prior,unweighted,mae,20.32872,19.29185,21.34388
+season 2020-21,935,team_prior,unweighted,rmse,25.82145,24.65588,26.91151
+season 2020-21,935,team_prior,unweighted,r2,0.02242,0.00069,0.04279
+season 2020-21,935,team_prior,unweighted,rmse_gain_lm,0.32217,0.04494,0.62149
+season 2020-21,935,team_prior,unweighted,mae_gain_lm,0.23067,-0.01597,0.51021
+season 2020-21,935,team_prior,unweighted,skill_lm,0.02449,0.00343,0.04587
+season 2020-21,935,team_prior,unweighted,rmse_gain_tp,0.0,0.0,0.0
+season 2020-21,935,team_prior,unweighted,mae_gain_tp,0.0,0.0,0.0
+season 2020-21,935,team_prior,unweighted,skill_tp,0.0,0.0,0.0
+season 2020-21,935,team_prior_calibrated,unweighted,mae,20.34598,19.26848,21.38443
+season 2020-21,935,team_prior_calibrated,unweighted,rmse,25.86321,24.68696,26.95328
+season 2020-21,935,team_prior_calibrated,unweighted,r2,0.01926,0.0039,0.03295
+season 2020-21,935,team_prior_calibrated,unweighted,rmse_gain_lm,0.28041,0.08368,0.47975
+season 2020-21,935,team_prior_calibrated,unweighted,mae_gain_lm,0.21341,0.04441,0.39633
+season 2020-21,935,team_prior_calibrated,unweighted,skill_lm,0.02134,0.00641,0.03574
+season 2020-21,935,team_prior_calibrated,unweighted,rmse_gain_tp,-0.04176,-0.14342,0.05521
+season 2020-21,935,team_prior_calibrated,unweighted,mae_gain_tp,-0.01726,-0.10954,0.07362
+season 2020-21,935,team_prior_calibrated,unweighted,skill_tp,-0.00324,-0.01106,0.00426
+season 2020-21,935,eb_lineup_team,unweighted,mae,20.30695,19.26036,21.33077
+season 2020-21,935,eb_lineup_team,unweighted,rmse,25.80498,24.63421,26.89208
+season 2020-21,935,eb_lineup_team,unweighted,r2,0.02367,0.00238,0.04387
+season 2020-21,935,eb_lineup_team,unweighted,rmse_gain_lm,0.33863,0.06141,0.63561
+season 2020-21,935,eb_lineup_team,unweighted,mae_gain_lm,0.25244,0.00265,0.53326
+season 2020-21,935,eb_lineup_team,unweighted,skill_lm,0.02574,0.00471,0.04692
+season 2020-21,935,eb_lineup_team,unweighted,rmse_gain_tp,0.01647,-0.00258,0.03974
+season 2020-21,935,eb_lineup_team,unweighted,mae_gain_tp,0.02177,-0.00108,0.04453
+season 2020-21,935,eb_lineup_team,unweighted,skill_tp,0.00128,-0.0002,0.00307
+season 2020-21,935,player_composite,unweighted,mae,20.23912,19.17719,21.31691
+season 2020-21,935,player_composite,unweighted,rmse,25.78412,24.61468,26.94878
+season 2020-21,935,player_composite,unweighted,r2,0.02524,0.01045,0.04151
+season 2020-21,935,player_composite,unweighted,rmse_gain_lm,0.3595,0.15087,0.62983
+season 2020-21,935,player_composite,unweighted,mae_gain_lm,0.32027,0.15406,0.53775
+season 2020-21,935,player_composite,unweighted,skill_lm,0.02731,0.01181,0.04643
+season 2020-21,935,player_composite,unweighted,rmse_gain_tp,0.03733,-0.10393,0.20431
+season 2020-21,935,player_composite,unweighted,mae_gain_tp,0.0896,-0.04626,0.24965
+season 2020-21,935,player_composite,unweighted,skill_tp,0.00289,-0.00797,0.01592
+season 2020-21,935,linear,unweighted,mae,20.24875,19.19282,21.27715
+season 2020-21,935,linear,unweighted,rmse,25.80858,24.63458,26.97622
+season 2020-21,935,linear,unweighted,r2,0.02339,0.00632,0.04076
+season 2020-21,935,linear,unweighted,rmse_gain_lm,0.33504,0.09144,0.60565
+season 2020-21,935,linear,unweighted,mae_gain_lm,0.31064,0.11064,0.53235
+season 2020-21,935,linear,unweighted,skill_lm,0.02547,0.00692,0.04537
+season 2020-21,935,linear,unweighted,rmse_gain_tp,0.01287,-0.17886,0.19795
+season 2020-21,935,linear,unweighted,mae_gain_tp,0.07997,-0.09226,0.28316
+season 2020-21,935,linear,unweighted,skill_tp,0.001,-0.01396,0.01543
+season 2020-21,935,ridge,unweighted,mae,20.40519,19.32547,21.47614
+season 2020-21,935,ridge,unweighted,rmse,25.93464,24.77492,27.07646
+season 2020-21,935,ridge,unweighted,r2,0.01383,0.00452,0.01941
+season 2020-21,935,ridge,unweighted,rmse_gain_lm,0.20897,0.10243,0.32341
+season 2020-21,935,ridge,unweighted,mae_gain_lm,0.1542,0.069,0.23931
+season 2020-21,935,ridge,unweighted,skill_lm,0.01592,0.00788,0.02436
+season 2020-21,935,ridge,unweighted,rmse_gain_tp,-0.1132,-0.33574,0.10271
+season 2020-21,935,ridge,unweighted,mae_gain_tp,-0.07647,-0.29538,0.14082
+season 2020-21,935,ridge,unweighted,skill_tp,-0.00879,-0.02589,0.00773
+season 2020-21,935,forest,unweighted,mae,20.37437,19.29734,21.44719
+season 2020-21,935,forest,unweighted,rmse,25.88124,24.71991,27.01656
+season 2020-21,935,forest,unweighted,r2,0.01789,0.00792,0.02533
+season 2020-21,935,forest,unweighted,rmse_gain_lm,0.26237,0.12555,0.413
+season 2020-21,935,forest,unweighted,mae_gain_lm,0.18502,0.06863,0.29992
+season 2020-21,935,forest,unweighted,skill_lm,0.01997,0.0098,0.03088
+season 2020-21,935,forest,unweighted,rmse_gain_tp,-0.05979,-0.24742,0.12449
+season 2020-21,935,forest,unweighted,mae_gain_tp,-0.04565,-0.24248,0.14068
+season 2020-21,935,forest,unweighted,skill_tp,-0.00464,-0.01926,0.00968
+season 2020-21,935,noise_floor,unweighted,rmse_floor,26.09729,25.60492,26.46367
+season 2020-21,935,noise_floor,unweighted,mae_floor,20.1478,19.71099,20.49204
+season 2020-21,935,noise_floor,unweighted,r2_ceiling,0.00142,-0.09326,0.07872
+season 2020-21,935,linear,weighted,rmse_minus_team_prior,-0.05105,-0.2796,0.17967
+season 2020-21,935,linear,weighted,mae_minus_team_prior,-0.1491,-0.50012,0.23003
+season 2020-21,935,linear,weighted,r2_minus_team_prior,0.00457,-0.01599,0.0251
+season 2020-21,935,linear,weighted,calibration_slope,1.45888,0.91613,1.86468
+season 2020-21,935,ridge,weighted,rmse_minus_team_prior,0.19644,-0.0997,0.51857
+season 2020-21,935,ridge,weighted,mae_minus_team_prior,0.16902,-0.2806,0.63879
+season 2020-21,935,ridge,weighted,r2_minus_team_prior,-0.01767,-0.04659,0.00924
+season 2020-21,935,ridge,weighted,calibration_slope,4.18956,2.99739,5.17832
+season 2020-21,935,forest,weighted,rmse_minus_team_prior,0.1474,-0.09666,0.4295
+season 2020-21,935,forest,weighted,mae_minus_team_prior,0.15927,-0.2366,0.59576
+season 2020-21,935,forest,weighted,r2_minus_team_prior,-0.01324,-0.03826,0.00924
+season 2020-21,935,forest,weighted,calibration_slope,2.96085,1.9171,3.92529
+season 2020-21,935,linear,unweighted,rmse_minus_team_prior,-0.01287,-0.19795,0.17886
+season 2020-21,935,linear,unweighted,mae_minus_team_prior,-0.07997,-0.28316,0.09226
+season 2020-21,935,linear,unweighted,r2_minus_team_prior,0.00097,-0.01344,0.01536
+season 2020-21,935,linear,unweighted,calibration_slope,1.222,0.76564,1.59999
+season 2020-21,935,ridge,unweighted,rmse_minus_team_prior,0.1132,-0.10271,0.33574
+season 2020-21,935,ridge,unweighted,mae_minus_team_prior,0.07647,-0.14082,0.29538
+season 2020-21,935,ridge,unweighted,r2_minus_team_prior,-0.00859,-0.02479,0.00771
+season 2020-21,935,ridge,unweighted,calibration_slope,4.04054,3.02105,4.92513
+season 2020-21,935,forest,unweighted,rmse_minus_team_prior,0.05979,-0.12449,0.24742
+season 2020-21,935,forest,unweighted,mae_minus_team_prior,0.04565,-0.14068,0.24248
+season 2020-21,935,forest,unweighted,r2_minus_team_prior,-0.00453,-0.0184,0.00964
+season 2020-21,935,forest,unweighted,calibration_slope,3.06454,2.12464,3.97349
+season 2021-22,558,league_mean,weighted,mae,17.22486,15.66701,18.99179
+season 2021-22,558,league_mean,weighted,rmse,22.93195,21.18503,24.8489
+season 2021-22,558,league_mean,weighted,r2,-0.00056,-0.02231,-0.0
+season 2021-22,558,league_mean,weighted,rmse_gain_lm,0.0,0.0,0.0
+season 2021-22,558,league_mean,weighted,mae_gain_lm,0.0,0.0,0.0
+season 2021-22,558,league_mean,weighted,skill_lm,0.0,0.0,0.0
+season 2021-22,558,league_mean,weighted,rmse_gain_tp,-0.4157,-0.77391,-0.05668
+season 2021-22,558,league_mean,weighted,mae_gain_tp,-0.75674,-1.21815,-0.31817
+season 2021-22,558,league_mean,weighted,skill_tp,-0.03727,-0.07013,-0.00503
+season 2021-22,558,team_prior,weighted,mae,16.46812,15.02233,18.25086
+season 2021-22,558,team_prior,weighted,rmse,22.51625,20.7508,24.30054
+season 2021-22,558,team_prior,weighted,r2,0.03539,-0.00044,0.05932
+season 2021-22,558,team_prior,weighted,rmse_gain_lm,0.4157,0.05668,0.77391
+season 2021-22,558,team_prior,weighted,mae_gain_lm,0.75674,0.31817,1.21815
+season 2021-22,558,team_prior,weighted,skill_lm,0.03593,0.00501,0.06553
+season 2021-22,558,team_prior,weighted,rmse_gain_tp,0.0,0.0,0.0
+season 2021-22,558,team_prior,weighted,mae_gain_tp,0.0,0.0,0.0
+season 2021-22,558,team_prior,weighted,skill_tp,0.0,0.0,0.0
+season 2021-22,558,team_prior_calibrated,weighted,mae,16.52601,15.05423,18.27861
+season 2021-22,558,team_prior_calibrated,weighted,rmse,22.52324,20.75044,24.32476
+season 2021-22,558,team_prior_calibrated,weighted,r2,0.03479,0.0038,0.05427
+season 2021-22,558,team_prior_calibrated,weighted,rmse_gain_lm,0.40871,0.11451,0.71298
+season 2021-22,558,team_prior_calibrated,weighted,mae_gain_lm,0.69885,0.31245,1.12284
+season 2021-22,558,team_prior_calibrated,weighted,skill_lm,0.03533,0.01008,0.06049
+season 2021-22,558,team_prior_calibrated,weighted,rmse_gain_tp,-0.00699,-0.085,0.06023
+season 2021-22,558,team_prior_calibrated,weighted,mae_gain_tp,-0.05789,-0.1223,0.00549
+season 2021-22,558,team_prior_calibrated,weighted,skill_tp,-0.00062,-0.00747,0.00532
+season 2021-22,558,eb_lineup_team,weighted,mae,16.54375,15.06884,18.34822
+season 2021-22,558,eb_lineup_team,weighted,rmse,22.53217,20.75254,24.32246
+season 2021-22,558,eb_lineup_team,weighted,r2,0.03402,-0.00229,0.06038
+season 2021-22,558,eb_lineup_team,weighted,rmse_gain_lm,0.39978,0.00931,0.79972
+season 2021-22,558,eb_lineup_team,weighted,mae_gain_lm,0.68111,0.17173,1.16237
+season 2021-22,558,eb_lineup_team,weighted,skill_lm,0.03456,0.00084,0.06671
+season 2021-22,558,eb_lineup_team,weighted,rmse_gain_tp,-0.01592,-0.09661,0.07159
+season 2021-22,558,eb_lineup_team,weighted,mae_gain_tp,-0.07564,-0.23267,0.09149
+season 2021-22,558,eb_lineup_team,weighted,skill_tp,-0.00141,-0.00863,0.00643
+season 2021-22,558,player_composite,weighted,mae,16.59913,15.14024,18.36652
+season 2021-22,558,player_composite,weighted,rmse,22.47812,20.70199,24.23984
+season 2021-22,558,player_composite,weighted,r2,0.03865,0.00695,0.06323
+season 2021-22,558,player_composite,weighted,rmse_gain_lm,0.45383,0.12476,0.81005
+season 2021-22,558,player_composite,weighted,mae_gain_lm,0.62573,0.24462,1.0508
+season 2021-22,558,player_composite,weighted,skill_lm,0.03919,0.01101,0.06733
+season 2021-22,558,player_composite,weighted,rmse_gain_tp,0.03813,-0.10153,0.17966
+season 2021-22,558,player_composite,weighted,mae_gain_tp,-0.13102,-0.29242,0.01492
+season 2021-22,558,player_composite,weighted,skill_tp,0.00338,-0.00931,0.0153
+season 2021-22,558,linear,weighted,mae,16.42203,15.01526,18.0368
+season 2021-22,558,linear,weighted,rmse,22.35857,20.59977,24.09849
+season 2021-22,558,linear,weighted,r2,0.04885,0.00062,0.08818
+season 2021-22,558,linear,weighted,rmse_gain_lm,0.57338,0.09193,1.10045
+season 2021-22,558,linear,weighted,mae_gain_lm,0.80283,0.30427,1.30295
+season 2021-22,558,linear,weighted,skill_lm,0.04938,0.00807,0.09231
+season 2021-22,558,linear,weighted,rmse_gain_tp,0.15768,-0.10718,0.4204
+season 2021-22,558,linear,weighted,mae_gain_tp,0.04609,-0.18329,0.2926
+season 2021-22,558,linear,weighted,skill_tp,0.01396,-0.00963,0.03671
+season 2021-22,558,ridge,weighted,mae,16.5549,15.14862,18.12947
+season 2021-22,558,ridge,weighted,rmse,22.4071,20.68752,24.13418
+season 2021-22,558,ridge,weighted,r2,0.04471,-0.0044,0.08462
+season 2021-22,558,ridge,weighted,rmse_gain_lm,0.52485,0.03504,1.09117
+season 2021-22,558,ridge,weighted,mae_gain_lm,0.66996,0.12343,1.22932
+season 2021-22,558,ridge,weighted,skill_lm,0.04525,0.00325,0.09012
+season 2021-22,558,ridge,weighted,rmse_gain_tp,0.10915,-0.1795,0.4147
+season 2021-22,558,ridge,weighted,mae_gain_tp,-0.08678,-0.40588,0.26712
+season 2021-22,558,ridge,weighted,skill_tp,0.00967,-0.01634,0.03617
+season 2021-22,558,forest,weighted,mae,16.57109,15.09041,18.18003
+season 2021-22,558,forest,weighted,rmse,22.40864,20.61096,24.17339
+season 2021-22,558,forest,weighted,r2,0.04458,0.00297,0.08075
+season 2021-22,558,forest,weighted,rmse_gain_lm,0.52331,0.0778,1.02076
+season 2021-22,558,forest,weighted,mae_gain_lm,0.65377,0.18571,1.20905
+season 2021-22,558,forest,weighted,skill_lm,0.04512,0.00705,0.08597
+season 2021-22,558,forest,weighted,rmse_gain_tp,0.10761,-0.14413,0.39098
+season 2021-22,558,forest,weighted,mae_gain_tp,-0.10298,-0.3702,0.18488
+season 2021-22,558,forest,weighted,skill_tp,0.00954,-0.01283,0.03325
+season 2021-22,558,noise_floor,weighted,rmse_floor,20.92304,20.11921,21.73176
+season 2021-22,558,noise_floor,weighted,mae_floor,15.47987,14.75898,16.20477
+season 2021-22,558,noise_floor,weighted,r2_ceiling,0.16706,0.04379,0.26694
+season 2021-22,558,league_mean,unweighted,mae,21.28905,19.82467,22.98732
+season 2021-22,558,league_mean,unweighted,rmse,27.62265,25.71223,29.90268
+season 2021-22,558,league_mean,unweighted,r2,-0.00127,-0.02221,-1e-05
+season 2021-22,558,league_mean,unweighted,rmse_gain_lm,0.0,0.0,0.0
+season 2021-22,558,league_mean,unweighted,mae_gain_lm,0.0,0.0,0.0
+season 2021-22,558,league_mean,unweighted,skill_lm,0.0,0.0,0.0
+season 2021-22,558,league_mean,unweighted,rmse_gain_tp,-0.20577,-0.5443,0.06735
+season 2021-22,558,league_mean,unweighted,mae_gain_tp,-0.45732,-0.80622,-0.13467
+season 2021-22,558,league_mean,unweighted,skill_tp,-0.01507,-0.04022,0.00494
+season 2021-22,558,team_prior,unweighted,mae,20.83173,19.44581,22.44974
+season 2021-22,558,team_prior,unweighted,rmse,27.41688,25.47998,29.70614
+season 2021-22,558,team_prior,unweighted,r2,0.01359,-0.00997,0.0329
+season 2021-22,558,team_prior,unweighted,rmse_gain_lm,0.20577,-0.06735,0.5443
+season 2021-22,558,team_prior,unweighted,mae_gain_lm,0.45732,0.13467,0.80622
+season 2021-22,558,team_prior,unweighted,skill_lm,0.01484,-0.00496,0.03866
+season 2021-22,558,team_prior,unweighted,rmse_gain_tp,0.0,0.0,0.0
+season 2021-22,558,team_prior,unweighted,mae_gain_tp,0.0,0.0,0.0
+season 2021-22,558,team_prior,unweighted,skill_tp,0.0,0.0,0.0
+season 2021-22,558,team_prior_calibrated,unweighted,mae,20.85787,19.4654,22.46203
+season 2021-22,558,team_prior_calibrated,unweighted,rmse,27.3943,25.45046,29.67232
+season 2021-22,558,team_prior_calibrated,unweighted,r2,0.01521,-0.00661,0.03033
+season 2021-22,558,team_prior_calibrated,unweighted,rmse_gain_lm,0.22835,-0.00542,0.50656
+season 2021-22,558,team_prior_calibrated,unweighted,mae_gain_lm,0.43118,0.14639,0.74918
+season 2021-22,558,team_prior_calibrated,unweighted,skill_lm,0.01647,-0.00039,0.03646
+season 2021-22,558,team_prior_calibrated,unweighted,rmse_gain_tp,0.02258,-0.04945,0.07639
+season 2021-22,558,team_prior_calibrated,unweighted,mae_gain_tp,-0.02614,-0.08118,0.02234
+season 2021-22,558,team_prior_calibrated,unweighted,skill_tp,0.00165,-0.0035,0.00555
+season 2021-22,558,eb_lineup_team,unweighted,mae,20.84747,19.45017,22.47144
+season 2021-22,558,eb_lineup_team,unweighted,rmse,27.41526,25.45164,29.69271
+season 2021-22,558,eb_lineup_team,unweighted,r2,0.01371,-0.00986,0.03295
+season 2021-22,558,eb_lineup_team,unweighted,rmse_gain_lm,0.20739,-0.07652,0.55537
+season 2021-22,558,eb_lineup_team,unweighted,mae_gain_lm,0.44158,0.10718,0.80136
+season 2021-22,558,eb_lineup_team,unweighted,skill_lm,0.01496,-0.0053,0.03954
+season 2021-22,558,eb_lineup_team,unweighted,rmse_gain_tp,0.00161,-0.03696,0.04472
+season 2021-22,558,eb_lineup_team,unweighted,mae_gain_tp,-0.01574,-0.06238,0.03424
+season 2021-22,558,eb_lineup_team,unweighted,skill_tp,0.00012,-0.0027,0.00335
+season 2021-22,558,player_composite,unweighted,mae,20.87131,19.45057,22.47191
+season 2021-22,558,player_composite,unweighted,rmse,27.35065,25.37663,29.58367
+season 2021-22,558,player_composite,unweighted,r2,0.01835,-0.00754,0.03925
+season 2021-22,558,player_composite,unweighted,rmse_gain_lm,0.272,-0.04003,0.65155
+season 2021-22,558,player_composite,unweighted,mae_gain_lm,0.41774,0.10448,0.77042
+season 2021-22,558,player_composite,unweighted,skill_lm,0.0196,-0.00292,0.04706
+season 2021-22,558,player_composite,unweighted,rmse_gain_tp,0.06622,-0.08252,0.2227
+season 2021-22,558,player_composite,unweighted,mae_gain_tp,-0.03958,-0.16603,0.08022
+season 2021-22,558,player_composite,unweighted,skill_tp,0.00483,-0.0061,0.01635
+season 2021-22,558,linear,unweighted,mae,20.76953,19.40398,22.4334
+season 2021-22,558,linear,unweighted,rmse,27.31508,25.31848,29.61379
+season 2021-22,558,linear,unweighted,r2,0.0209,-0.01898,0.05529
+season 2021-22,558,linear,unweighted,rmse_gain_lm,0.30757,-0.17687,0.88804
+season 2021-22,558,linear,unweighted,mae_gain_lm,0.51952,0.05956,1.03001
+season 2021-22,558,linear,unweighted,skill_lm,0.02215,-0.01242,0.06323
+season 2021-22,558,linear,unweighted,rmse_gain_tp,0.1018,-0.18933,0.39596
+season 2021-22,558,linear,unweighted,mae_gain_tp,0.0622,-0.20614,0.32872
+season 2021-22,558,linear,unweighted,skill_tp,0.00741,-0.01381,0.02896
+season 2021-22,558,ridge,unweighted,mae,20.79552,19.38701,22.45946
+season 2021-22,558,ridge,unweighted,rmse,27.31345,25.29563,29.57002
+season 2021-22,558,ridge,unweighted,r2,0.02102,-0.0202,0.05749
+season 2021-22,558,ridge,unweighted,rmse_gain_lm,0.3092,-0.21103,0.91377
+season 2021-22,558,ridge,unweighted,mae_gain_lm,0.49353,0.0334,1.01781
+season 2021-22,558,ridge,unweighted,skill_lm,0.02226,-0.01596,0.06637
+season 2021-22,558,ridge,unweighted,rmse_gain_tp,0.10343,-0.24645,0.4312
+season 2021-22,558,ridge,unweighted,mae_gain_tp,0.03621,-0.27706,0.33381
+season 2021-22,558,ridge,unweighted,skill_tp,0.00753,-0.01774,0.03141
+season 2021-22,558,forest,unweighted,mae,20.80451,19.33633,22.4008
+season 2021-22,558,forest,unweighted,rmse,27.26823,25.2251,29.40131
+season 2021-22,558,forest,unweighted,r2,0.02426,-0.01072,0.05721
+season 2021-22,558,forest,unweighted,rmse_gain_lm,0.35442,-0.11078,0.9405
+season 2021-22,558,forest,unweighted,mae_gain_lm,0.48454,0.08137,0.97503
+season 2021-22,558,forest,unweighted,skill_lm,0.0255,-0.00828,0.06736
+season 2021-22,558,forest,unweighted,rmse_gain_tp,0.14865,-0.13438,0.45183
+season 2021-22,558,forest,unweighted,mae_gain_tp,0.02722,-0.21736,0.30258
+season 2021-22,558,forest,unweighted,skill_tp,0.01081,-0.01015,0.03384
+season 2021-22,558,noise_floor,unweighted,rmse_floor,25.89706,25.3662,26.42265
+season 2021-22,558,noise_floor,unweighted,mae_floor,19.96528,19.52435,20.41619
+season 2021-22,558,noise_floor,unweighted,r2_ceiling,0.11992,-0.02014,0.23979
+season 2021-22,558,linear,weighted,rmse_minus_team_prior,-0.15768,-0.4204,0.10718
+season 2021-22,558,linear,weighted,mae_minus_team_prior,-0.04609,-0.2926,0.18329
+season 2021-22,558,linear,weighted,r2_minus_team_prior,0.01346,-0.00942,0.03527
+season 2021-22,558,linear,weighted,calibration_slope,0.98547,0.59663,1.35631
+season 2021-22,558,ridge,weighted,rmse_minus_team_prior,-0.10915,-0.4147,0.1795
+season 2021-22,558,ridge,weighted,mae_minus_team_prior,0.08678,-0.26712,0.40588
+season 2021-22,558,ridge,weighted,r2_minus_team_prior,0.00933,-0.01617,0.03431
+season 2021-22,558,ridge,weighted,calibration_slope,0.9085,0.55132,1.28478
+season 2021-22,558,forest,weighted,rmse_minus_team_prior,-0.10761,-0.39098,0.14413
+season 2021-22,558,forest,weighted,mae_minus_team_prior,0.10298,-0.18488,0.3702
+season 2021-22,558,forest,weighted,r2_minus_team_prior,0.0092,-0.01261,0.03207
+season 2021-22,558,forest,weighted,calibration_slope,1.13037,0.59,1.61971
+season 2021-22,558,linear,unweighted,rmse_minus_team_prior,-0.1018,-0.39596,0.18933
+season 2021-22,558,linear,unweighted,mae_minus_team_prior,-0.0622,-0.32872,0.20614
+season 2021-22,558,linear,unweighted,r2_minus_team_prior,0.00731,-0.01369,0.02853
+season 2021-22,558,linear,unweighted,calibration_slope,0.79887,0.26053,1.26973
+season 2021-22,558,ridge,unweighted,rmse_minus_team_prior,-0.10343,-0.4312,0.24645
+season 2021-22,558,ridge,unweighted,mae_minus_team_prior,-0.03621,-0.33381,0.27706
+season 2021-22,558,ridge,unweighted,r2_minus_team_prior,0.00743,-0.01762,0.03072
+season 2021-22,558,ridge,unweighted,calibration_slope,0.79175,0.25173,1.29839
+season 2021-22,558,forest,unweighted,rmse_minus_team_prior,-0.14865,-0.45183,0.13438
+season 2021-22,558,forest,unweighted,mae_minus_team_prior,-0.02722,-0.30258,0.21736
+season 2021-22,558,forest,unweighted,r2_minus_team_prior,0.01067,-0.01011,0.03301
+season 2021-22,558,forest,unweighted,calibration_slope,0.99376,0.25815,1.58772
+season 2022-23,572,league_mean,weighted,mae,16.33536,15.09497,17.67906
+season 2022-23,572,league_mean,weighted,rmse,21.80251,20.55957,23.2275
+season 2022-23,572,league_mean,weighted,r2,-0.00036,-0.01431,-0.0
+season 2022-23,572,league_mean,weighted,rmse_gain_lm,0.0,0.0,0.0
+season 2022-23,572,league_mean,weighted,mae_gain_lm,0.0,0.0,0.0
+season 2022-23,572,league_mean,weighted,skill_lm,0.0,0.0,0.0
+season 2022-23,572,league_mean,weighted,rmse_gain_tp,-0.42459,-0.7465,-0.1449
+season 2022-23,572,league_mean,weighted,mae_gain_tp,-0.55501,-1.00409,-0.16837
+season 2022-23,572,league_mean,weighted,skill_tp,-0.04012,-0.06985,-0.01358
+season 2022-23,572,team_prior,weighted,mae,15.78035,14.61753,17.16593
+season 2022-23,572,team_prior,weighted,rmse,21.37793,20.20014,22.69903
+season 2022-23,572,team_prior,weighted,r2,0.03822,0.00891,0.06331
+season 2022-23,572,team_prior,weighted,rmse_gain_lm,0.42459,0.1449,0.7465
+season 2022-23,572,team_prior,weighted,mae_gain_lm,0.55501,0.16837,1.00409
+season 2022-23,572,team_prior,weighted,skill_lm,0.03857,0.0134,0.06529
+season 2022-23,572,team_prior,weighted,rmse_gain_tp,0.0,0.0,0.0
+season 2022-23,572,team_prior,weighted,mae_gain_tp,0.0,0.0,0.0
+season 2022-23,572,team_prior,weighted,skill_tp,0.0,0.0,0.0
+season 2022-23,572,team_prior_calibrated,weighted,mae,15.85928,14.70274,17.24795
+season 2022-23,572,team_prior_calibrated,weighted,rmse,21.41211,20.22977,22.75501
+season 2022-23,572,team_prior_calibrated,weighted,r2,0.03514,0.00749,0.05695
+season 2022-23,572,team_prior_calibrated,weighted,rmse_gain_lm,0.39041,0.14089,0.67053
+season 2022-23,572,team_prior_calibrated,weighted,mae_gain_lm,0.47608,0.15704,0.84975
+season 2022-23,572,team_prior_calibrated,weighted,skill_lm,0.03549,0.01327,0.05901
+season 2022-23,572,team_prior_calibrated,weighted,rmse_gain_tp,-0.03418,-0.07561,0.00407
+season 2022-23,572,team_prior_calibrated,weighted,mae_gain_tp,-0.07893,-0.15267,-0.0128
+season 2022-23,572,team_prior_calibrated,weighted,skill_tp,-0.0032,-0.00711,0.00039
+season 2022-23,572,eb_lineup_team,weighted,mae,15.90856,14.7118,17.24221
+season 2022-23,572,eb_lineup_team,weighted,rmse,21.45546,20.29132,22.78756
+season 2022-23,572,eb_lineup_team,weighted,r2,0.03123,-0.00118,0.05873
+season 2022-23,572,eb_lineup_team,weighted,rmse_gain_lm,0.34706,0.04574,0.68913
+season 2022-23,572,eb_lineup_team,weighted,mae_gain_lm,0.4268,0.01798,0.94106
+season 2022-23,572,eb_lineup_team,weighted,skill_lm,0.03158,0.00425,0.06088
+season 2022-23,572,eb_lineup_team,weighted,rmse_gain_tp,-0.07753,-0.16308,-0.00181
+season 2022-23,572,eb_lineup_team,weighted,mae_gain_tp,-0.12821,-0.32786,0.07198
+season 2022-23,572,eb_lineup_team,weighted,skill_tp,-0.00727,-0.01563,-0.00017
+season 2022-23,572,player_composite,weighted,mae,15.84154,14.68252,17.16629
+season 2022-23,572,player_composite,weighted,rmse,21.31799,20.13265,22.67177
+season 2022-23,572,player_composite,weighted,r2,0.04361,0.01713,0.06369
+season 2022-23,572,player_composite,weighted,rmse_gain_lm,0.48453,0.26199,0.7602
+season 2022-23,572,player_composite,weighted,mae_gain_lm,0.49382,0.19877,0.87522
+season 2022-23,572,player_composite,weighted,skill_lm,0.04395,0.02462,0.0663
+season 2022-23,572,player_composite,weighted,rmse_gain_tp,0.05994,-0.10107,0.24418
+season 2022-23,572,player_composite,weighted,mae_gain_tp,-0.06119,-0.26538,0.16932
+season 2022-23,572,player_composite,weighted,skill_tp,0.0056,-0.00945,0.02325
+season 2022-23,572,linear,weighted,mae,15.82965,14.67582,17.12128
+season 2022-23,572,linear,weighted,rmse,21.35199,20.17216,22.56837
+season 2022-23,572,linear,weighted,r2,0.04055,0.00806,0.06981
+season 2022-23,572,linear,weighted,rmse_gain_lm,0.45053,0.15153,0.81137
+season 2022-23,572,linear,weighted,mae_gain_lm,0.50571,0.0893,1.01923
+season 2022-23,572,linear,weighted,skill_lm,0.0409,0.01378,0.07139
+season 2022-23,572,linear,weighted,rmse_gain_tp,0.02594,-0.1951,0.27214
+season 2022-23,572,linear,weighted,mae_gain_tp,-0.04929,-0.38139,0.28928
+season 2022-23,572,linear,weighted,skill_tp,0.00243,-0.01815,0.02488
+season 2022-23,572,ridge,weighted,mae,15.86173,14.67819,17.1807
+season 2022-23,572,ridge,weighted,rmse,21.32263,20.17128,22.5371
+season 2022-23,572,ridge,weighted,r2,0.04319,0.01157,0.07042
+season 2022-23,572,ridge,weighted,rmse_gain_lm,0.47988,0.19068,0.83354
+season 2022-23,572,ridge,weighted,mae_gain_lm,0.47363,0.07071,0.94871
+season 2022-23,572,ridge,weighted,skill_lm,0.04354,0.01769,0.07275
+season 2022-23,572,ridge,weighted,rmse_gain_tp,0.0553,-0.17148,0.29278
+season 2022-23,572,ridge,weighted,mae_gain_tp,-0.08138,-0.42322,0.23861
+season 2022-23,572,ridge,weighted,skill_tp,0.00517,-0.01625,0.0267
+season 2022-23,572,forest,weighted,mae,15.74564,14.44695,17.05843
+season 2022-23,572,forest,weighted,rmse,21.32387,20.18047,22.63177
+season 2022-23,572,forest,weighted,r2,0.04308,0.01578,0.0673
+season 2022-23,572,forest,weighted,rmse_gain_lm,0.47864,0.19858,0.78205
+season 2022-23,572,forest,weighted,mae_gain_lm,0.58972,0.11992,1.05369
+season 2022-23,572,forest,weighted,skill_lm,0.04343,0.0189,0.06932
+season 2022-23,572,forest,weighted,rmse_gain_tp,0.05406,-0.14698,0.24118
+season 2022-23,572,forest,weighted,mae_gain_tp,0.03471,-0.47133,0.53635
+season 2022-23,572,forest,weighted,skill_tp,0.00505,-0.01368,0.02267
+season 2022-23,572,noise_floor,weighted,rmse_floor,21.03732,20.23569,21.8912
+season 2022-23,572,noise_floor,weighted,mae_floor,15.30041,14.56077,16.0997
+season 2022-23,572,noise_floor,weighted,r2_ceiling,0.06862,-0.05329,0.17159
+season 2022-23,572,league_mean,unweighted,mae,21.02462,19.83447,22.40526
+season 2022-23,572,league_mean,unweighted,rmse,26.77479,25.26909,28.30627
+season 2022-23,572,league_mean,unweighted,r2,-0.00015,-0.01404,-1e-05
+season 2022-23,572,league_mean,unweighted,rmse_gain_lm,0.0,0.0,0.0
+season 2022-23,572,league_mean,unweighted,mae_gain_lm,0.0,0.0,0.0
+season 2022-23,572,league_mean,unweighted,skill_lm,0.0,0.0,0.0
+season 2022-23,572,league_mean,unweighted,rmse_gain_tp,-0.30877,-0.6157,-0.03109
+season 2022-23,572,league_mean,unweighted,mae_gain_tp,-0.19692,-0.4184,0.05107
+season 2022-23,572,league_mean,unweighted,skill_tp,-0.02347,-0.04715,-0.00239
+season 2022-23,572,team_prior,unweighted,mae,20.8277,19.61416,22.23461
+season 2022-23,572,team_prior,unweighted,rmse,26.46602,24.91011,27.97145
+season 2022-23,572,team_prior,unweighted,r2,0.02278,-0.0024,0.04431
+season 2022-23,572,team_prior,unweighted,rmse_gain_lm,0.30877,0.03109,0.6157
+season 2022-23,572,team_prior,unweighted,mae_gain_lm,0.19692,-0.05107,0.4184
+season 2022-23,572,team_prior,unweighted,skill_lm,0.02293,0.00238,0.04502
+season 2022-23,572,team_prior,unweighted,rmse_gain_tp,0.0,0.0,0.0
+season 2022-23,572,team_prior,unweighted,mae_gain_tp,0.0,0.0,0.0
+season 2022-23,572,team_prior,unweighted,skill_tp,0.0,0.0,0.0
+season 2022-23,572,team_prior_calibrated,unweighted,mae,20.84222,19.6314,22.2421
+season 2022-23,572,team_prior_calibrated,unweighted,rmse,26.48247,24.92017,28.00032
+season 2022-23,572,team_prior_calibrated,unweighted,r2,0.02157,-0.00111,0.04095
+season 2022-23,572,team_prior_calibrated,unweighted,rmse_gain_lm,0.29232,0.05786,0.5615
+season 2022-23,572,team_prior_calibrated,unweighted,mae_gain_lm,0.1824,-0.02691,0.37268
+season 2022-23,572,team_prior_calibrated,unweighted,skill_lm,0.02172,0.00423,0.04191
+season 2022-23,572,team_prior_calibrated,unweighted,rmse_gain_tp,-0.01646,-0.06307,0.02818
+season 2022-23,572,team_prior_calibrated,unweighted,mae_gain_tp,-0.01452,-0.05274,0.02536
+season 2022-23,572,team_prior_calibrated,unweighted,skill_tp,-0.00124,-0.00482,0.00212
+season 2022-23,572,eb_lineup_team,unweighted,mae,20.86589,19.66354,22.24256
+season 2022-23,572,eb_lineup_team,unweighted,rmse,26.47875,24.93135,27.95962
+season 2022-23,572,eb_lineup_team,unweighted,r2,0.02184,-0.00401,0.04407
+season 2022-23,572,eb_lineup_team,unweighted,rmse_gain_lm,0.29604,0.00934,0.62136
+season 2022-23,572,eb_lineup_team,unweighted,mae_gain_lm,0.15872,-0.08235,0.38035
+season 2022-23,572,eb_lineup_team,unweighted,skill_lm,0.02199,0.00072,0.04535
+season 2022-23,572,eb_lineup_team,unweighted,rmse_gain_tp,-0.01274,-0.0467,0.0311
+season 2022-23,572,eb_lineup_team,unweighted,mae_gain_tp,-0.03819,-0.08351,0.0173
+season 2022-23,572,eb_lineup_team,unweighted,skill_tp,-0.00096,-0.00362,0.00225
+season 2022-23,572,player_composite,unweighted,mae,20.6991,19.5175,22.08851
+season 2022-23,572,player_composite,unweighted,rmse,26.36569,24.81348,27.92292
+season 2022-23,572,player_composite,unweighted,r2,0.03018,0.0057,0.04709
+season 2022-23,572,player_composite,unweighted,rmse_gain_lm,0.4091,0.17591,0.67855
+season 2022-23,572,player_composite,unweighted,mae_gain_lm,0.32552,0.12877,0.53843
+season 2022-23,572,player_composite,unweighted,skill_lm,0.03033,0.01316,0.0501
+season 2022-23,572,player_composite,unweighted,rmse_gain_tp,0.10033,-0.11598,0.32408
+season 2022-23,572,player_composite,unweighted,mae_gain_tp,0.1286,-0.05967,0.35571
+season 2022-23,572,player_composite,unweighted,skill_tp,0.00757,-0.00899,0.02387
+season 2022-23,572,linear,unweighted,mae,20.83222,19.65696,22.12775
+season 2022-23,572,linear,unweighted,rmse,26.4374,24.82975,27.92801
+season 2022-23,572,linear,unweighted,r2,0.02489,-0.00507,0.05189
+season 2022-23,572,linear,unweighted,rmse_gain_lm,0.33739,-4e-05,0.75534
+season 2022-23,572,linear,unweighted,mae_gain_lm,0.1924,-0.08981,0.51579
+season 2022-23,572,linear,unweighted,skill_lm,0.02504,-0.0,0.05458
+season 2022-23,572,linear,unweighted,rmse_gain_tp,0.02862,-0.23935,0.31532
+season 2022-23,572,linear,unweighted,mae_gain_tp,-0.00452,-0.29327,0.33985
+season 2022-23,572,linear,unweighted,skill_tp,0.00216,-0.01878,0.02348
+season 2022-23,572,ridge,unweighted,mae,20.78987,19.60934,22.12179
+season 2022-23,572,ridge,unweighted,rmse,26.38351,24.80699,27.88319
+season 2022-23,572,ridge,unweighted,r2,0.02886,-0.0005,0.05403
+season 2022-23,572,ridge,unweighted,rmse_gain_lm,0.39128,0.08024,0.78821
+season 2022-23,572,ridge,unweighted,mae_gain_lm,0.23475,-0.04053,0.54751
+season 2022-23,572,ridge,unweighted,skill_lm,0.02901,0.00617,0.05664
+season 2022-23,572,ridge,unweighted,rmse_gain_tp,0.0825,-0.1887,0.3549
+season 2022-23,572,ridge,unweighted,mae_gain_tp,0.03783,-0.25104,0.34337
+season 2022-23,572,ridge,unweighted,skill_tp,0.00622,-0.0147,0.02641
+season 2022-23,572,forest,unweighted,mae,20.61124,19.46119,21.96402
+season 2022-23,572,forest,unweighted,rmse,26.37615,24.85668,27.92716
+season 2022-23,572,forest,unweighted,r2,0.02941,0.00172,0.0517
+season 2022-23,572,forest,unweighted,rmse_gain_lm,0.39864,0.08073,0.73239
+season 2022-23,572,forest,unweighted,mae_gain_lm,0.41338,0.12229,0.70882
+season 2022-23,572,forest,unweighted,skill_lm,0.02956,0.00602,0.05418
+season 2022-23,572,forest,unweighted,rmse_gain_tp,0.08986,-0.14646,0.31743
+season 2022-23,572,forest,unweighted,mae_gain_tp,0.21646,-0.09696,0.52237
+season 2022-23,572,forest,unweighted,skill_tp,0.00678,-0.01153,0.02349
+season 2022-23,572,noise_floor,unweighted,rmse_floor,26.67876,26.20952,27.14
+season 2022-23,572,noise_floor,unweighted,mae_floor,20.59428,20.17288,21.00633
+season 2022-23,572,noise_floor,unweighted,r2_ceiling,0.00701,-0.11959,0.11129
+season 2022-23,572,linear,weighted,rmse_minus_team_prior,-0.02594,-0.27214,0.1951
+season 2022-23,572,linear,weighted,mae_minus_team_prior,0.04929,-0.28928,0.38139
+season 2022-23,572,linear,weighted,r2_minus_team_prior,0.00233,-0.01748,0.02395
+season 2022-23,572,linear,weighted,calibration_slope,1.0435,0.65424,1.39617
+season 2022-23,572,ridge,weighted,rmse_minus_team_prior,-0.0553,-0.29278,0.17148
+season 2022-23,572,ridge,weighted,mae_minus_team_prior,0.08138,-0.23861,0.42322
+season 2022-23,572,ridge,weighted,r2_minus_team_prior,0.00497,-0.01561,0.0257
+season 2022-23,572,ridge,weighted,calibration_slope,1.11851,0.70984,1.50707
+season 2022-23,572,forest,weighted,rmse_minus_team_prior,-0.05406,-0.24118,0.14698
+season 2022-23,572,forest,weighted,mae_minus_team_prior,-0.03471,-0.53635,0.47133
+season 2022-23,572,forest,weighted,r2_minus_team_prior,0.00486,-0.01321,0.02188
+season 2022-23,572,forest,weighted,calibration_slope,1.29842,0.85169,1.6982
+season 2022-23,572,linear,unweighted,rmse_minus_team_prior,-0.02862,-0.31532,0.23935
+season 2022-23,572,linear,unweighted,mae_minus_team_prior,0.00452,-0.33985,0.29327
+season 2022-23,572,linear,unweighted,r2_minus_team_prior,0.00211,-0.01856,0.023
+season 2022-23,572,linear,unweighted,calibration_slope,0.94883,0.46089,1.386
+season 2022-23,572,ridge,unweighted,rmse_minus_team_prior,-0.0825,-0.3549,0.1887
+season 2022-23,572,ridge,unweighted,mae_minus_team_prior,-0.03783,-0.34337,0.25104
+season 2022-23,572,ridge,unweighted,r2_minus_team_prior,0.00608,-0.0142,0.02599
+season 2022-23,572,ridge,unweighted,calibration_slope,1.07561,0.6147,1.51292
+season 2022-23,572,forest,unweighted,rmse_minus_team_prior,-0.08986,-0.31743,0.14646
+season 2022-23,572,forest,unweighted,mae_minus_team_prior,-0.21646,-0.52237,0.09696
+season 2022-23,572,forest,unweighted,r2_minus_team_prior,0.00662,-0.01114,0.02327
+season 2022-23,572,forest,unweighted,calibration_slope,1.08025,0.60842,1.511
+season 2023-24,660,league_mean,weighted,mae,16.18548,15.17086,17.21482
+season 2023-24,660,league_mean,weighted,rmse,22.29838,21.24366,23.43274
+season 2023-24,660,league_mean,weighted,r2,-0.00021,-0.01861,-0.0
+season 2023-24,660,league_mean,weighted,rmse_gain_lm,0.0,0.0,0.0
+season 2023-24,660,league_mean,weighted,mae_gain_lm,0.0,0.0,0.0
+season 2023-24,660,league_mean,weighted,skill_lm,0.0,0.0,0.0
+season 2023-24,660,league_mean,weighted,rmse_gain_tp,-0.50549,-1.09342,-0.06675
+season 2023-24,660,league_mean,weighted,mae_gain_tp,-0.33295,-0.97615,0.28837
+season 2023-24,660,league_mean,weighted,skill_tp,-0.04693,-0.10424,-0.00608
+season 2023-24,660,team_prior,weighted,mae,15.85252,14.91278,16.90211
+season 2023-24,660,team_prior,weighted,rmse,21.79289,20.70243,22.92037
+season 2023-24,660,team_prior,weighted,r2,0.04463,0.00278,0.08609
+season 2023-24,660,team_prior,weighted,rmse_gain_lm,0.50549,0.06675,1.09342
+season 2023-24,660,team_prior,weighted,mae_gain_lm,0.33295,-0.28837,0.97615
+season 2023-24,660,team_prior,weighted,skill_lm,0.04482,0.00604,0.0944
+season 2023-24,660,team_prior,weighted,rmse_gain_tp,0.0,0.0,0.0
+season 2023-24,660,team_prior,weighted,mae_gain_tp,0.0,0.0,0.0
+season 2023-24,660,team_prior,weighted,skill_tp,0.0,0.0,0.0
+season 2023-24,660,team_prior_calibrated,weighted,mae,15.82924,14.9195,16.84769
+season 2023-24,660,team_prior_calibrated,weighted,rmse,21.79308,20.71304,22.92273
+season 2023-24,660,team_prior_calibrated,weighted,r2,0.04461,0.00699,0.08254
+season 2023-24,660,team_prior_calibrated,weighted,rmse_gain_lm,0.50529,0.10916,1.03578
+season 2023-24,660,team_prior_calibrated,weighted,mae_gain_lm,0.35624,-0.19935,0.91071
+season 2023-24,660,team_prior_calibrated,weighted,skill_lm,0.04481,0.0098,0.08959
+season 2023-24,660,team_prior_calibrated,weighted,rmse_gain_tp,-0.00019,-0.05829,0.05593
+season 2023-24,660,team_prior_calibrated,weighted,mae_gain_tp,0.02329,-0.05476,0.11414
+season 2023-24,660,team_prior_calibrated,weighted,skill_tp,-2e-05,-0.00533,0.0051
+season 2023-24,660,eb_lineup_team,weighted,mae,15.71073,14.73327,16.76346
+season 2023-24,660,eb_lineup_team,weighted,rmse,21.70293,20.58926,22.84696
+season 2023-24,660,eb_lineup_team,weighted,r2,0.0525,0.00864,0.09589
+season 2023-24,660,eb_lineup_team,weighted,rmse_gain_lm,0.59545,0.14547,1.20594
+season 2023-24,660,eb_lineup_team,weighted,mae_gain_lm,0.47474,-0.12219,1.1632
+season 2023-24,660,eb_lineup_team,weighted,skill_lm,0.05269,0.01305,0.10292
+season 2023-24,660,eb_lineup_team,weighted,rmse_gain_tp,0.08996,-0.00679,0.20107
+season 2023-24,660,eb_lineup_team,weighted,mae_gain_tp,0.14179,-0.06336,0.37542
+season 2023-24,660,eb_lineup_team,weighted,skill_tp,0.00824,-0.00063,0.01841
+season 2023-24,660,player_composite,weighted,mae,15.70106,14.71816,16.72212
+season 2023-24,660,player_composite,weighted,rmse,21.81548,20.74368,22.90143
+season 2023-24,660,player_composite,weighted,r2,0.04265,0.00951,0.07085
+season 2023-24,660,player_composite,weighted,rmse_gain_lm,0.4829,0.17341,0.85502
+season 2023-24,660,player_composite,weighted,mae_gain_lm,0.48442,0.08214,0.97647
+season 2023-24,660,player_composite,weighted,skill_lm,0.04284,0.01556,0.07484
+season 2023-24,660,player_composite,weighted,rmse_gain_tp,-0.02259,-0.35846,0.2731
+season 2023-24,660,player_composite,weighted,mae_gain_tp,0.15147,-0.23759,0.55884
+season 2023-24,660,player_composite,weighted,skill_tp,-0.00207,-0.03343,0.02509
+season 2023-24,660,linear,weighted,mae,15.53342,14.5477,16.56017
+season 2023-24,660,linear,weighted,rmse,21.57676,20.45791,22.74748
+season 2023-24,660,linear,weighted,r2,0.06348,0.0166,0.10056
+season 2023-24,660,linear,weighted,rmse_gain_lm,0.72162,0.23699,1.23848
+season 2023-24,660,linear,weighted,mae_gain_lm,0.65205,0.14862,1.18771
+season 2023-24,660,linear,weighted,skill_lm,0.06368,0.02141,0.10755
+season 2023-24,660,linear,weighted,rmse_gain_tp,0.21613,-0.08858,0.55007
+season 2023-24,660,linear,weighted,mae_gain_tp,0.3191,-0.05157,0.72336
+season 2023-24,660,linear,weighted,skill_tp,0.01974,-0.0083,0.04904
+season 2023-24,660,ridge,weighted,mae,15.54032,14.54892,16.56799
+season 2023-24,660,ridge,weighted,rmse,21.60343,20.48589,22.77072
+season 2023-24,660,ridge,weighted,r2,0.06117,0.01549,0.09789
+season 2023-24,660,ridge,weighted,rmse_gain_lm,0.69495,0.23763,1.20031
+season 2023-24,660,ridge,weighted,mae_gain_lm,0.64516,0.12909,1.18974
+season 2023-24,660,ridge,weighted,skill_lm,0.06136,0.02125,0.10428
+season 2023-24,660,ridge,weighted,rmse_gain_tp,0.18947,-0.09987,0.51514
+season 2023-24,660,ridge,weighted,mae_gain_tp,0.31221,-0.06407,0.75506
+season 2023-24,660,ridge,weighted,skill_tp,0.01731,-0.00905,0.04722
+season 2023-24,660,forest,weighted,mae,15.59285,14.56299,16.68328
+season 2023-24,660,forest,weighted,rmse,21.54941,20.35352,22.73564
+season 2023-24,660,forest,weighted,r2,0.06586,0.02052,0.10982
+season 2023-24,660,forest,weighted,rmse_gain_lm,0.74897,0.28197,1.36652
+season 2023-24,660,forest,weighted,mae_gain_lm,0.59262,0.06638,1.20665
+season 2023-24,660,forest,weighted,skill_lm,0.06605,0.02545,0.11703
+season 2023-24,660,forest,weighted,rmse_gain_tp,0.24349,-0.07884,0.59592
+season 2023-24,660,forest,weighted,mae_gain_tp,0.25967,-0.16544,0.72894
+season 2023-24,660,forest,weighted,skill_tp,0.02222,-0.00723,0.05391
+season 2023-24,660,noise_floor,weighted,rmse_floor,20.71911,20.00487,21.45337
+season 2023-24,660,noise_floor,weighted,mae_floor,15.14905,14.50641,15.83306
+season 2023-24,660,noise_floor,weighted,r2_ceiling,0.13646,0.05518,0.20237
+season 2023-24,660,league_mean,unweighted,mae,21.81143,20.8117,22.78906
+season 2023-24,660,league_mean,unweighted,rmse,28.29632,26.82917,29.87816
+season 2023-24,660,league_mean,unweighted,r2,-0.00022,-0.01947,-0.0
+season 2023-24,660,league_mean,unweighted,rmse_gain_lm,0.0,0.0,0.0
+season 2023-24,660,league_mean,unweighted,mae_gain_lm,0.0,0.0,0.0
+season 2023-24,660,league_mean,unweighted,skill_lm,0.0,0.0,0.0
+season 2023-24,660,league_mean,unweighted,rmse_gain_tp,-0.63417,-1.10622,-0.27436
+season 2023-24,660,league_mean,unweighted,mae_gain_tp,-0.47956,-0.8764,-0.17279
+season 2023-24,660,league_mean,unweighted,skill_tp,-0.04638,-0.08535,-0.01965
+season 2023-24,660,team_prior,unweighted,mae,21.33187,20.31572,22.31833
+season 2023-24,660,team_prior,unweighted,rmse,27.66214,26.17697,29.27759
+season 2023-24,660,team_prior,unweighted,r2,0.04411,0.01437,0.0694
+season 2023-24,660,team_prior,unweighted,rmse_gain_lm,0.63417,0.27436,1.10622
+season 2023-24,660,team_prior,unweighted,mae_gain_lm,0.47956,0.17279,0.8764
+season 2023-24,660,team_prior,unweighted,skill_lm,0.04432,0.01928,0.07864
+season 2023-24,660,team_prior,unweighted,rmse_gain_tp,0.0,0.0,0.0
+season 2023-24,660,team_prior,unweighted,mae_gain_tp,0.0,0.0,0.0
+season 2023-24,660,team_prior,unweighted,skill_tp,0.0,0.0,0.0
+season 2023-24,660,team_prior_calibrated,unweighted,mae,21.34214,20.32161,22.34321
+season 2023-24,660,team_prior_calibrated,unweighted,rmse,27.68815,26.22593,29.30362
+season 2023-24,660,team_prior_calibrated,unweighted,r2,0.04231,0.01432,0.06541
+season 2023-24,660,team_prior_calibrated,unweighted,rmse_gain_lm,0.60817,0.27282,1.04737
+season 2023-24,660,team_prior_calibrated,unweighted,mae_gain_lm,0.46928,0.18885,0.83457
+season 2023-24,660,team_prior_calibrated,unweighted,skill_lm,0.04252,0.01904,0.07377
+season 2023-24,660,team_prior_calibrated,unweighted,rmse_gain_tp,-0.02601,-0.06907,0.0077
+season 2023-24,660,team_prior_calibrated,unweighted,mae_gain_tp,-0.01027,-0.05157,0.02961
+season 2023-24,660,team_prior_calibrated,unweighted,skill_tp,-0.00188,-0.0051,0.00056
+season 2023-24,660,eb_lineup_team,unweighted,mae,21.28938,20.29716,22.28479
+season 2023-24,660,eb_lineup_team,unweighted,rmse,27.62169,26.13789,29.22597
+season 2023-24,660,eb_lineup_team,unweighted,r2,0.04691,0.01644,0.07154
+season 2023-24,660,eb_lineup_team,unweighted,rmse_gain_lm,0.67462,0.31039,1.16417
+season 2023-24,660,eb_lineup_team,unweighted,mae_gain_lm,0.52205,0.19958,0.91837
+season 2023-24,660,eb_lineup_team,unweighted,skill_lm,0.04711,0.02146,0.08258
+season 2023-24,660,eb_lineup_team,unweighted,rmse_gain_tp,0.04045,0.00051,0.07863
+season 2023-24,660,eb_lineup_team,unweighted,mae_gain_tp,0.04249,-0.02405,0.1129
+season 2023-24,660,eb_lineup_team,unweighted,skill_tp,0.00292,4e-05,0.00579
+season 2023-24,660,player_composite,unweighted,mae,21.3218,20.29137,22.39833
+season 2023-24,660,player_composite,unweighted,rmse,27.73378,26.22777,29.3803
+season 2023-24,660,player_composite,unweighted,r2,0.03916,0.01662,0.05631
+season 2023-24,660,player_composite,unweighted,rmse_gain_lm,0.56254,0.32096,0.87898
+season 2023-24,660,player_composite,unweighted,mae_gain_lm,0.48963,0.208,0.81456
+season 2023-24,660,player_composite,unweighted,skill_lm,0.03937,0.02255,0.06177
+season 2023-24,660,player_composite,unweighted,rmse_gain_tp,-0.07163,-0.32598,0.13685
+season 2023-24,660,player_composite,unweighted,mae_gain_tp,0.01007,-0.18772,0.1989
+season 2023-24,660,player_composite,unweighted,skill_tp,-0.00519,-0.02454,0.0098
+season 2023-24,660,linear,unweighted,mae,21.14923,20.0626,22.23632
+season 2023-24,660,linear,unweighted,rmse,27.51126,26.02118,29.1108
+season 2023-24,660,linear,unweighted,r2,0.05451,0.02649,0.08301
+season 2023-24,660,linear,unweighted,rmse_gain_lm,0.78506,0.41778,1.2844
+season 2023-24,660,linear,unweighted,mae_gain_lm,0.6622,0.3148,1.05237
+season 2023-24,660,linear,unweighted,skill_lm,0.05472,0.02962,0.0892
+season 2023-24,660,linear,unweighted,rmse_gain_tp,0.15089,-0.10201,0.42747
+season 2023-24,660,linear,unweighted,mae_gain_tp,0.18264,-0.05666,0.44051
+season 2023-24,660,linear,unweighted,skill_tp,0.01088,-0.00743,0.03076
+season 2023-24,660,ridge,unweighted,mae,21.1826,20.10911,22.26012
+season 2023-24,660,ridge,unweighted,rmse,27.5516,26.06574,29.15838
+season 2023-24,660,ridge,unweighted,r2,0.05174,0.02396,0.07723
+season 2023-24,660,ridge,unweighted,rmse_gain_lm,0.74472,0.39242,1.22142
+season 2023-24,660,ridge,unweighted,mae_gain_lm,0.62883,0.29766,1.0153
+season 2023-24,660,ridge,unweighted,skill_lm,0.05194,0.02768,0.08529
+season 2023-24,660,ridge,unweighted,rmse_gain_tp,0.11055,-0.12849,0.36274
+season 2023-24,660,ridge,unweighted,mae_gain_tp,0.14927,-0.06979,0.39412
+season 2023-24,660,ridge,unweighted,skill_tp,0.00798,-0.00965,0.02613
+season 2023-24,660,forest,unweighted,mae,21.18038,20.05016,22.36522
+season 2023-24,660,forest,unweighted,rmse,27.51374,25.90543,29.14154
+season 2023-24,660,forest,unweighted,r2,0.05434,0.02171,0.08883
+season 2023-24,660,forest,unweighted,rmse_gain_lm,0.78258,0.36379,1.36993
+season 2023-24,660,forest,unweighted,mae_gain_lm,0.63105,0.19076,1.0786
+season 2023-24,660,forest,unweighted,skill_lm,0.05455,0.02524,0.09441
+season 2023-24,660,forest,unweighted,rmse_gain_tp,0.14841,-0.14726,0.48227
+season 2023-24,660,forest,unweighted,mae_gain_tp,0.15149,-0.15559,0.49826
+season 2023-24,660,forest,unweighted,skill_tp,0.0107,-0.01051,0.03509
+season 2023-24,660,noise_floor,unweighted,rmse_floor,26.08396,25.59206,26.53648
+season 2023-24,660,noise_floor,unweighted,mae_floor,20.12345,19.70606,20.52274
+season 2023-24,660,noise_floor,unweighted,r2_ceiling,0.15007,0.05704,0.22579
+season 2023-24,660,linear,weighted,rmse_minus_team_prior,-0.21613,-0.55007,0.08858
+season 2023-24,660,linear,weighted,mae_minus_team_prior,-0.3191,-0.72336,0.05157
+season 2023-24,660,linear,weighted,r2_minus_team_prior,0.01886,-0.00797,0.04756
+season 2023-24,660,linear,weighted,calibration_slope,1.30289,0.79064,1.78495
+season 2023-24,660,ridge,weighted,rmse_minus_team_prior,-0.18947,-0.51514,0.09987
+season 2023-24,660,ridge,weighted,mae_minus_team_prior,-0.31221,-0.75506,0.06407
+season 2023-24,660,ridge,weighted,r2_minus_team_prior,0.01654,-0.00863,0.04619
+season 2023-24,660,ridge,weighted,calibration_slope,1.3175,0.81377,1.81121
+season 2023-24,660,forest,weighted,rmse_minus_team_prior,-0.24349,-0.59592,0.07884
+season 2023-24,660,forest,weighted,mae_minus_team_prior,-0.25967,-0.72894,0.16544
+season 2023-24,660,forest,weighted,r2_minus_team_prior,0.02123,-0.00677,0.05155
+season 2023-24,660,forest,weighted,calibration_slope,1.17844,0.7544,1.57572
+season 2023-24,660,linear,unweighted,rmse_minus_team_prior,-0.15089,-0.42747,0.10201
+season 2023-24,660,linear,unweighted,mae_minus_team_prior,-0.18264,-0.44051,0.05666
+season 2023-24,660,linear,unweighted,r2_minus_team_prior,0.0104,-0.00701,0.02941
+season 2023-24,660,linear,unweighted,calibration_slope,1.49791,1.0779,1.9866
+season 2023-24,660,ridge,unweighted,rmse_minus_team_prior,-0.11055,-0.36274,0.12849
+season 2023-24,660,ridge,unweighted,mae_minus_team_prior,-0.14927,-0.39412,0.06979
+season 2023-24,660,ridge,unweighted,r2_minus_team_prior,0.00762,-0.00905,0.02535
+season 2023-24,660,ridge,unweighted,calibration_slope,1.53657,1.09108,2.03099
+season 2023-24,660,forest,unweighted,rmse_minus_team_prior,-0.14841,-0.48227,0.14726
+season 2023-24,660,forest,unweighted,mae_minus_team_prior,-0.15149,-0.49826,0.15559
+season 2023-24,660,forest,unweighted,r2_minus_team_prior,0.01023,-0.01026,0.03373
+season 2023-24,660,forest,unweighted,calibration_slope,1.27836,0.86517,1.67442
+no pre-break history,1743,league_mean,weighted,mae,19.21702,18.25502,20.27486
+no pre-break history,1743,league_mean,weighted,rmse,25.00815,23.90093,26.10559
+no pre-break history,1743,league_mean,weighted,r2,-0.00871,-0.02559,-0.00112
+no pre-break history,1743,league_mean,weighted,rmse_gain_lm,0.0,0.0,0.0
+no pre-break history,1743,league_mean,weighted,mae_gain_lm,0.0,0.0,0.0
+no pre-break history,1743,league_mean,weighted,skill_lm,0.0,0.0,0.0
+no pre-break history,1743,league_mean,weighted,rmse_gain_tp,-0.57373,-0.88318,-0.2798
+no pre-break history,1743,league_mean,weighted,mae_gain_tp,-0.49334,-0.7696,-0.21453
+no pre-break history,1743,league_mean,weighted,skill_tp,-0.04751,-0.07243,-0.02277
+no pre-break history,1743,team_prior,weighted,mae,18.72369,17.83792,19.65954
+no pre-break history,1743,team_prior,weighted,rmse,24.43442,23.44465,25.42602
+no pre-break history,1743,team_prior,weighted,r2,0.03704,0.01717,0.05588
+no pre-break history,1743,team_prior,weighted,rmse_gain_lm,0.57373,0.2798,0.88318
+no pre-break history,1743,team_prior,weighted,mae_gain_lm,0.49334,0.21453,0.7696
+no pre-break history,1743,team_prior,weighted,skill_lm,0.04536,0.02226,0.06754
+no pre-break history,1743,team_prior,weighted,rmse_gain_tp,0.0,0.0,0.0
+no pre-break history,1743,team_prior,weighted,mae_gain_tp,0.0,0.0,0.0
+no pre-break history,1743,team_prior,weighted,skill_tp,0.0,0.0,0.0
+no pre-break history,1743,team_prior_calibrated,weighted,mae,18.78775,17.87592,19.75294
+no pre-break history,1743,team_prior_calibrated,weighted,rmse,24.50137,23.49164,25.51881
+no pre-break history,1743,team_prior_calibrated,weighted,r2,0.03175,0.01558,0.04653
+no pre-break history,1743,team_prior_calibrated,weighted,rmse_gain_lm,0.50678,0.28139,0.74859
+no pre-break history,1743,team_prior_calibrated,weighted,mae_gain_lm,0.42928,0.21421,0.64775
+no pre-break history,1743,team_prior_calibrated,weighted,skill_lm,0.04012,0.02268,0.05777
+no pre-break history,1743,team_prior_calibrated,weighted,rmse_gain_tp,-0.06695,-0.14547,0.00534
+no pre-break history,1743,team_prior_calibrated,weighted,mae_gain_tp,-0.06406,-0.13526,0.00998
+no pre-break history,1743,team_prior_calibrated,weighted,skill_tp,-0.00549,-0.01182,0.00044
+no pre-break history,1743,eb_lineup_team,weighted,mae,18.71984,17.83793,19.64666
+no pre-break history,1743,eb_lineup_team,weighted,rmse,24.42617,23.44256,25.41165
+no pre-break history,1743,eb_lineup_team,weighted,r2,0.03769,0.01802,0.05643
+no pre-break history,1743,eb_lineup_team,weighted,rmse_gain_lm,0.58199,0.28218,0.89879
+no pre-break history,1743,eb_lineup_team,weighted,mae_gain_lm,0.49718,0.21796,0.77851
+no pre-break history,1743,eb_lineup_team,weighted,skill_lm,0.046,0.02254,0.06854
+no pre-break history,1743,eb_lineup_team,weighted,rmse_gain_tp,0.00825,-0.00095,0.017
+no pre-break history,1743,eb_lineup_team,weighted,mae_gain_tp,0.00384,-0.00697,0.01545
+no pre-break history,1743,eb_lineup_team,weighted,skill_tp,0.00068,-8e-05,0.00137
+no pre-break history,1743,player_composite,weighted,mae,18.75665,17.89492,19.72869
+no pre-break history,1743,player_composite,weighted,rmse,24.48111,23.46943,25.49614
+no pre-break history,1743,player_composite,weighted,r2,0.03335,0.02011,0.04635
+no pre-break history,1743,player_composite,weighted,rmse_gain_lm,0.52705,0.3174,0.77712
+no pre-break history,1743,player_composite,weighted,mae_gain_lm,0.46037,0.27475,0.6842
+no pre-break history,1743,player_composite,weighted,skill_lm,0.04171,0.02546,0.06053
+no pre-break history,1743,player_composite,weighted,rmse_gain_tp,-0.04668,-0.18422,0.09565
+no pre-break history,1743,player_composite,weighted,mae_gain_tp,-0.03296,-0.18529,0.11805
+no pre-break history,1743,player_composite,weighted,skill_tp,-0.00382,-0.01556,0.00775
+no pre-break history,1743,linear,weighted,mae,18.6981,17.87774,19.66069
+no pre-break history,1743,linear,weighted,rmse,24.42531,23.46573,25.38155
+no pre-break history,1743,linear,weighted,r2,0.03776,0.01967,0.05721
+no pre-break history,1743,linear,weighted,rmse_gain_lm,0.58285,0.28,0.94323
+no pre-break history,1743,linear,weighted,mae_gain_lm,0.51892,0.2601,0.84154
+no pre-break history,1743,linear,weighted,skill_lm,0.04607,0.02273,0.07191
+no pre-break history,1743,linear,weighted,rmse_gain_tp,0.00912,-0.16081,0.17534
+no pre-break history,1743,linear,weighted,mae_gain_tp,0.02558,-0.17853,0.23282
+no pre-break history,1743,linear,weighted,skill_tp,0.00075,-0.01324,0.01397
+no pre-break history,1743,ridge,weighted,mae,18.7893,17.9311,19.73868
+no pre-break history,1743,ridge,weighted,rmse,24.49642,23.48466,25.49153
+no pre-break history,1743,ridge,weighted,r2,0.03214,0.01685,0.04636
+no pre-break history,1743,ridge,weighted,rmse_gain_lm,0.51173,0.27023,0.76673
+no pre-break history,1743,ridge,weighted,mae_gain_lm,0.42773,0.21212,0.65168
+no pre-break history,1743,ridge,weighted,skill_lm,0.04051,0.02174,0.05918
+no pre-break history,1743,ridge,weighted,rmse_gain_tp,-0.062,-0.25292,0.10301
+no pre-break history,1743,ridge,weighted,mae_gain_tp,-0.06561,-0.28752,0.12145
+no pre-break history,1743,ridge,weighted,skill_tp,-0.00508,-0.0211,0.00855
+no pre-break history,1743,forest,weighted,mae,18.69544,17.79604,19.63743
+no pre-break history,1743,forest,weighted,rmse,24.42672,23.41431,25.42576
+no pre-break history,1743,forest,weighted,r2,0.03765,0.01973,0.0557
+no pre-break history,1743,forest,weighted,rmse_gain_lm,0.58144,0.30816,0.90086
+no pre-break history,1743,forest,weighted,mae_gain_lm,0.52158,0.26665,0.795
+no pre-break history,1743,forest,weighted,skill_lm,0.04596,0.0249,0.06839
+no pre-break history,1743,forest,weighted,rmse_gain_tp,0.00771,-0.16165,0.18505
+no pre-break history,1743,forest,weighted,mae_gain_tp,0.02825,-0.15609,0.22259
+no pre-break history,1743,forest,weighted,skill_tp,0.00063,-0.01359,0.01513
+no pre-break history,1743,noise_floor,weighted,rmse_floor,23.39279,22.87493,23.92105
+no pre-break history,1743,noise_floor,weighted,mae_floor,17.65589,17.1393,18.20075
+no pre-break history,1743,noise_floor,weighted,r2_ceiling,0.11739,0.05195,0.18043
+no pre-break history,1743,league_mean,unweighted,mae,22.08573,21.22203,22.97131
+no pre-break history,1743,league_mean,unweighted,rmse,28.15842,27.09961,29.2089
+no pre-break history,1743,league_mean,unweighted,r2,-0.00681,-0.01965,-0.00086
+no pre-break history,1743,league_mean,unweighted,rmse_gain_lm,0.0,0.0,0.0
+no pre-break history,1743,league_mean,unweighted,mae_gain_lm,0.0,0.0,0.0
+no pre-break history,1743,league_mean,unweighted,skill_lm,0.0,0.0,0.0
+no pre-break history,1743,league_mean,unweighted,rmse_gain_tp,-0.38232,-0.61391,-0.15078
+no pre-break history,1743,league_mean,unweighted,mae_gain_tp,-0.32854,-0.53065,-0.10325
+no pre-break history,1743,league_mean,unweighted,skill_tp,-0.02772,-0.04439,-0.01107
+no pre-break history,1743,team_prior,unweighted,mae,21.75719,20.92923,22.6099
+no pre-break history,1743,team_prior,unweighted,rmse,27.7761,26.78547,28.75789
+no pre-break history,1743,team_prior,unweighted,r2,0.02034,0.00487,0.03418
+no pre-break history,1743,team_prior,unweighted,rmse_gain_lm,0.38232,0.15078,0.61391
+no pre-break history,1743,team_prior,unweighted,mae_gain_lm,0.32854,0.10325,0.53065
+no pre-break history,1743,team_prior,unweighted,skill_lm,0.02697,0.01095,0.0425
+no pre-break history,1743,team_prior,unweighted,rmse_gain_tp,0.0,0.0,0.0
+no pre-break history,1743,team_prior,unweighted,mae_gain_tp,0.0,0.0,0.0
+no pre-break history,1743,team_prior,unweighted,skill_tp,0.0,0.0,0.0
+no pre-break history,1743,team_prior_calibrated,unweighted,mae,21.78027,20.94627,22.61945
+no pre-break history,1743,team_prior_calibrated,unweighted,rmse,27.79652,26.77126,28.80275
+no pre-break history,1743,team_prior_calibrated,unweighted,r2,0.0189,0.00475,0.02943
+no pre-break history,1743,team_prior_calibrated,unweighted,rmse_gain_lm,0.3619,0.18317,0.54748
+no pre-break history,1743,team_prior_calibrated,unweighted,mae_gain_lm,0.30546,0.12395,0.4639
+no pre-break history,1743,team_prior_calibrated,unweighted,skill_lm,0.02554,0.01313,0.03802
+no pre-break history,1743,team_prior_calibrated,unweighted,rmse_gain_tp,-0.02042,-0.08181,0.0412
+no pre-break history,1743,team_prior_calibrated,unweighted,mae_gain_tp,-0.02308,-0.0741,0.03625
+no pre-break history,1743,team_prior_calibrated,unweighted,skill_tp,-0.00147,-0.00596,0.00296
+no pre-break history,1743,eb_lineup_team,unweighted,mae,21.75172,20.92076,22.6045
+no pre-break history,1743,eb_lineup_team,unweighted,rmse,27.7685,26.78515,28.7501
+no pre-break history,1743,eb_lineup_team,unweighted,r2,0.02088,0.00546,0.03453
+no pre-break history,1743,eb_lineup_team,unweighted,rmse_gain_lm,0.38992,0.15429,0.62459
+no pre-break history,1743,eb_lineup_team,unweighted,mae_gain_lm,0.33401,0.10571,0.53269
+no pre-break history,1743,eb_lineup_team,unweighted,skill_lm,0.0275,0.01116,0.04355
+no pre-break history,1743,eb_lineup_team,unweighted,rmse_gain_tp,0.0076,-0.00072,0.01517
+no pre-break history,1743,eb_lineup_team,unweighted,mae_gain_tp,0.00547,-0.00231,0.01386
+no pre-break history,1743,eb_lineup_team,unweighted,skill_tp,0.00055,-5e-05,0.00109
+no pre-break history,1743,player_composite,unweighted,mae,21.70855,20.85365,22.52934
+no pre-break history,1743,player_composite,unweighted,rmse,27.7676,26.76868,28.75126
+no pre-break history,1743,player_composite,unweighted,r2,0.02094,0.00979,0.03215
+no pre-break history,1743,player_composite,unweighted,rmse_gain_lm,0.39082,0.20949,0.61047
+no pre-break history,1743,player_composite,unweighted,mae_gain_lm,0.37718,0.21516,0.54204
+no pre-break history,1743,player_composite,unweighted,skill_lm,0.02757,0.01487,0.04265
+no pre-break history,1743,player_composite,unweighted,rmse_gain_tp,0.0085,-0.11189,0.14302
+no pre-break history,1743,player_composite,unweighted,mae_gain_tp,0.04864,-0.06824,0.17379
+no pre-break history,1743,player_composite,unweighted,skill_tp,0.00061,-0.00818,0.01008
+no pre-break history,1743,linear,unweighted,mae,21.75352,20.95502,22.56194
+no pre-break history,1743,linear,unweighted,rmse,27.78624,26.82341,28.78619
+no pre-break history,1743,linear,unweighted,r2,0.01963,0.00349,0.03432
+no pre-break history,1743,linear,unweighted,rmse_gain_lm,0.37218,0.11045,0.66904
+no pre-break history,1743,linear,unweighted,mae_gain_lm,0.33221,0.08795,0.56077
+no pre-break history,1743,linear,unweighted,skill_lm,0.02626,0.0079,0.04607
+no pre-break history,1743,linear,unweighted,rmse_gain_tp,-0.01014,-0.18396,0.14701
+no pre-break history,1743,linear,unweighted,mae_gain_tp,0.00367,-0.17464,0.16953
+no pre-break history,1743,linear,unweighted,skill_tp,-0.00073,-0.01329,0.01056
+no pre-break history,1743,ridge,unweighted,mae,21.77337,20.9613,22.59583
+no pre-break history,1743,ridge,unweighted,rmse,27.79569,26.81157,28.82679
+no pre-break history,1743,ridge,unweighted,r2,0.01896,0.00533,0.03111
+no pre-break history,1743,ridge,unweighted,rmse_gain_lm,0.36273,0.13987,0.60785
+no pre-break history,1743,ridge,unweighted,mae_gain_lm,0.31236,0.10852,0.52161
+no pre-break history,1743,ridge,unweighted,skill_lm,0.0256,0.00991,0.04233
+no pre-break history,1743,ridge,unweighted,rmse_gain_tp,-0.01959,-0.18582,0.15013
+no pre-break history,1743,ridge,unweighted,mae_gain_tp,-0.01618,-0.18949,0.13518
+no pre-break history,1743,ridge,unweighted,skill_tp,-0.00141,-0.01359,0.01076
+no pre-break history,1743,forest,unweighted,mae,21.66721,20.87957,22.48152
+no pre-break history,1743,forest,unweighted,rmse,27.7216,26.71033,28.74394
+no pre-break history,1743,forest,unweighted,r2,0.02418,0.00875,0.03963
+no pre-break history,1743,forest,unweighted,rmse_gain_lm,0.43682,0.18754,0.72843
+no pre-break history,1743,forest,unweighted,mae_gain_lm,0.41852,0.19737,0.65219
+no pre-break history,1743,forest,unweighted,skill_lm,0.03079,0.01348,0.05017
+no pre-break history,1743,forest,unweighted,rmse_gain_tp,0.0545,-0.10972,0.22867
+no pre-break history,1743,forest,unweighted,mae_gain_tp,0.08998,-0.06873,0.24304
+no pre-break history,1743,forest,unweighted,skill_tp,0.00392,-0.00789,0.01641
+no pre-break history,1743,noise_floor,unweighted,rmse_floor,27.25777,26.99272,27.54608
+no pre-break history,1743,noise_floor,unweighted,mae_floor,21.22142,20.98842,21.46844
+no pre-break history,1743,noise_floor,unweighted,r2_ceiling,0.05656,-0.00906,0.1214
+no pre-break history,1743,linear,weighted,rmse_minus_team_prior,-0.00912,-0.17534,0.16081
+no pre-break history,1743,linear,weighted,mae_minus_team_prior,-0.02558,-0.23282,0.17853
+no pre-break history,1743,linear,weighted,r2_minus_team_prior,0.00072,-0.01264,0.01357
+no pre-break history,1743,linear,weighted,calibration_slope,1.23069,0.89787,1.5578
+no pre-break history,1743,ridge,weighted,rmse_minus_team_prior,0.062,-0.10301,0.25292
+no pre-break history,1743,ridge,weighted,mae_minus_team_prior,0.06561,-0.12145,0.28752
+no pre-break history,1743,ridge,weighted,r2_minus_team_prior,-0.00489,-0.01995,0.0084
+no pre-break history,1743,ridge,weighted,calibration_slope,1.39871,1.0334,1.76723
+no pre-break history,1743,forest,weighted,rmse_minus_team_prior,-0.00771,-0.18505,0.16165
+no pre-break history,1743,forest,weighted,mae_minus_team_prior,-0.02825,-0.22259,0.15609
+no pre-break history,1743,forest,weighted,r2_minus_team_prior,0.00061,-0.01307,0.01453
+no pre-break history,1743,forest,weighted,calibration_slope,1.27284,0.95866,1.64059
+no pre-break history,1743,linear,unweighted,rmse_minus_team_prior,0.01014,-0.14701,0.18396
+no pre-break history,1743,linear,unweighted,mae_minus_team_prior,-0.00367,-0.16953,0.17464
+no pre-break history,1743,linear,unweighted,r2_minus_team_prior,-0.00072,-0.01299,0.01049
+no pre-break history,1743,linear,unweighted,calibration_slope,0.98201,0.6292,1.32286
+no pre-break history,1743,ridge,unweighted,rmse_minus_team_prior,0.01959,-0.15013,0.18582
+no pre-break history,1743,ridge,unweighted,mae_minus_team_prior,0.01618,-0.13518,0.18949
+no pre-break history,1743,ridge,unweighted,r2_minus_team_prior,-0.00138,-0.01322,0.01066
+no pre-break history,1743,ridge,unweighted,calibration_slope,1.15929,0.74983,1.57271
+no pre-break history,1743,forest,unweighted,rmse_minus_team_prior,-0.0545,-0.22867,0.10972
+no pre-break history,1743,forest,unweighted,mae_minus_team_prior,-0.08998,-0.24304,0.06873
+no pre-break history,1743,forest,unweighted,r2_minus_team_prior,0.00384,-0.00771,0.01613
+no pre-break history,1743,forest,unweighted,calibration_slope,1.10781,0.74798,1.51376
+history < 100 poss,1098,league_mean,weighted,mae,16.83397,15.9612,17.80397
+history < 100 poss,1098,league_mean,weighted,rmse,22.14051,21.18093,23.15691
+history < 100 poss,1098,league_mean,weighted,r2,-0.00773,-0.01797,-0.00088
+history < 100 poss,1098,league_mean,weighted,rmse_gain_lm,0.0,0.0,0.0
+history < 100 poss,1098,league_mean,weighted,mae_gain_lm,0.0,0.0,0.0
+history < 100 poss,1098,league_mean,weighted,skill_lm,0.0,0.0,0.0
+history < 100 poss,1098,league_mean,weighted,rmse_gain_tp,-0.27668,-0.46399,-0.0961
+history < 100 poss,1098,league_mean,weighted,mae_gain_tp,-0.23941,-0.53615,0.00876
+history < 100 poss,1098,league_mean,weighted,skill_tp,-0.02547,-0.04305,-0.00907
+history < 100 poss,1098,team_prior,weighted,mae,16.59456,15.7346,17.53406
+history < 100 poss,1098,team_prior,weighted,rmse,21.86382,20.9501,22.84971
+history < 100 poss,1098,team_prior,weighted,r2,0.0173,0.001,0.03305
+history < 100 poss,1098,team_prior,weighted,rmse_gain_lm,0.27668,0.0961,0.46399
+history < 100 poss,1098,team_prior,weighted,mae_gain_lm,0.23941,-0.00876,0.53615
+history < 100 poss,1098,team_prior,weighted,skill_lm,0.02484,0.00899,0.04128
+history < 100 poss,1098,team_prior,weighted,rmse_gain_tp,0.0,0.0,0.0
+history < 100 poss,1098,team_prior,weighted,mae_gain_tp,0.0,0.0,0.0
+history < 100 poss,1098,team_prior,weighted,skill_tp,0.0,0.0,0.0
+history < 100 poss,1098,team_prior_calibrated,weighted,mae,16.58237,15.72705,17.51029
+history < 100 poss,1098,team_prior_calibrated,weighted,rmse,21.84956,20.9433,22.85408
+history < 100 poss,1098,team_prior_calibrated,weighted,r2,0.01858,0.00402,0.03278
+history < 100 poss,1098,team_prior_calibrated,weighted,rmse_gain_lm,0.29094,0.14626,0.43955
+history < 100 poss,1098,team_prior_calibrated,weighted,mae_gain_lm,0.2516,0.06734,0.48054
+history < 100 poss,1098,team_prior_calibrated,weighted,skill_lm,0.02611,0.01348,0.03888
+history < 100 poss,1098,team_prior_calibrated,weighted,rmse_gain_tp,0.01426,-0.02973,0.05816
+history < 100 poss,1098,team_prior_calibrated,weighted,mae_gain_tp,0.01219,-0.05699,0.0882
+history < 100 poss,1098,team_prior_calibrated,weighted,skill_tp,0.0013,-0.00266,0.00535
+history < 100 poss,1098,eb_lineup_team,weighted,mae,16.61074,15.76248,17.53043
+history < 100 poss,1098,eb_lineup_team,weighted,rmse,21.85901,20.94213,22.83727
+history < 100 poss,1098,eb_lineup_team,weighted,r2,0.01774,-0.00023,0.03413
+history < 100 poss,1098,eb_lineup_team,weighted,rmse_gain_lm,0.2815,0.08765,0.47158
+history < 100 poss,1098,eb_lineup_team,weighted,mae_gain_lm,0.22323,-0.03559,0.51509
+history < 100 poss,1098,eb_lineup_team,weighted,skill_lm,0.02527,0.00804,0.04195
+history < 100 poss,1098,eb_lineup_team,weighted,rmse_gain_tp,0.00481,-0.02737,0.0351
+history < 100 poss,1098,eb_lineup_team,weighted,mae_gain_tp,-0.01618,-0.06016,0.02926
+history < 100 poss,1098,eb_lineup_team,weighted,skill_tp,0.00044,-0.00251,0.0032
+history < 100 poss,1098,player_composite,weighted,mae,16.56052,15.75278,17.47244
+history < 100 poss,1098,player_composite,weighted,rmse,21.80724,20.89878,22.80593
+history < 100 poss,1098,player_composite,weighted,r2,0.02238,0.0074,0.03547
+history < 100 poss,1098,player_composite,weighted,rmse_gain_lm,0.33326,0.17178,0.50283
+history < 100 poss,1098,player_composite,weighted,mae_gain_lm,0.27345,0.05743,0.50297
+history < 100 poss,1098,player_composite,weighted,skill_lm,0.02988,0.01542,0.04501
+history < 100 poss,1098,player_composite,weighted,rmse_gain_tp,0.05658,-0.04045,0.16854
+history < 100 poss,1098,player_composite,weighted,mae_gain_tp,0.03404,-0.09847,0.17174
+history < 100 poss,1098,player_composite,weighted,skill_tp,0.00517,-0.00364,0.01526
+history < 100 poss,1098,linear,weighted,mae,16.50259,15.7174,17.39163
+history < 100 poss,1098,linear,weighted,rmse,21.71993,20.83059,22.69661
+history < 100 poss,1098,linear,weighted,r2,0.03019,0.01015,0.04842
+history < 100 poss,1098,linear,weighted,rmse_gain_lm,0.42057,0.18498,0.65672
+history < 100 poss,1098,linear,weighted,mae_gain_lm,0.33138,0.03103,0.63424
+history < 100 poss,1098,linear,weighted,skill_lm,0.03763,0.01674,0.05924
+history < 100 poss,1098,linear,weighted,rmse_gain_tp,0.14389,-0.02816,0.29653
+history < 100 poss,1098,linear,weighted,mae_gain_tp,0.09197,-0.13169,0.30507
+history < 100 poss,1098,linear,weighted,skill_tp,0.01312,-0.00261,0.02672
+history < 100 poss,1098,ridge,weighted,mae,16.54316,15.76437,17.39124
+history < 100 poss,1098,ridge,weighted,rmse,21.7759,20.89663,22.74887
+history < 100 poss,1098,ridge,weighted,r2,0.02519,0.00639,0.043
+history < 100 poss,1098,ridge,weighted,rmse_gain_lm,0.3646,0.13657,0.59083
+history < 100 poss,1098,ridge,weighted,mae_gain_lm,0.29082,0.02166,0.56794
+history < 100 poss,1098,ridge,weighted,skill_lm,0.03266,0.01226,0.05242
+history < 100 poss,1098,ridge,weighted,rmse_gain_tp,0.08792,-0.08198,0.25207
+history < 100 poss,1098,ridge,weighted,mae_gain_tp,0.05141,-0.17523,0.28062
+history < 100 poss,1098,ridge,weighted,skill_tp,0.00803,-0.00762,0.02329
+history < 100 poss,1098,forest,weighted,mae,16.5879,15.80244,17.44793
+history < 100 poss,1098,forest,weighted,rmse,21.82181,20.92724,22.80767
+history < 100 poss,1098,forest,weighted,r2,0.02108,0.00351,0.03763
+history < 100 poss,1098,forest,weighted,rmse_gain_lm,0.31869,0.13163,0.51932
+history < 100 poss,1098,forest,weighted,mae_gain_lm,0.24608,-0.02078,0.50515
+history < 100 poss,1098,forest,weighted,skill_lm,0.02858,0.01189,0.04607
+history < 100 poss,1098,forest,weighted,rmse_gain_tp,0.04201,-0.10048,0.18816
+history < 100 poss,1098,forest,weighted,mae_gain_tp,0.00666,-0.1787,0.20475
+history < 100 poss,1098,forest,weighted,skill_tp,0.00384,-0.00913,0.01702
+history < 100 poss,1098,noise_floor,weighted,rmse_floor,21.61422,21.07286,22.34017
+history < 100 poss,1098,noise_floor,weighted,mae_floor,16.19978,15.69507,16.901
+history < 100 poss,1098,noise_floor,weighted,r2_ceiling,0.03961,-0.03809,0.10362
+history < 100 poss,1098,league_mean,unweighted,mae,20.57368,19.66138,21.59968
+history < 100 poss,1098,league_mean,unweighted,rmse,26.26954,25.0848,27.48591
+history < 100 poss,1098,league_mean,unweighted,r2,-0.00509,-0.01568,0.00011
+history < 100 poss,1098,league_mean,unweighted,rmse_gain_lm,0.0,0.0,0.0
+history < 100 poss,1098,league_mean,unweighted,mae_gain_lm,0.0,0.0,0.0
+history < 100 poss,1098,league_mean,unweighted,skill_lm,0.0,0.0,0.0
+history < 100 poss,1098,league_mean,unweighted,rmse_gain_tp,-0.32786,-0.55059,-0.12866
+history < 100 poss,1098,league_mean,unweighted,mae_gain_tp,-0.26752,-0.4784,-0.0742
+history < 100 poss,1098,league_mean,unweighted,skill_tp,-0.02544,-0.04214,-0.01004
+history < 100 poss,1098,team_prior,unweighted,mae,20.30617,19.4088,21.31824
+history < 100 poss,1098,team_prior,unweighted,rmse,25.94167,24.77882,27.14752
+history < 100 poss,1098,team_prior,unweighted,r2,0.01984,0.00523,0.03325
+history < 100 poss,1098,team_prior,unweighted,rmse_gain_lm,0.32786,0.12866,0.55059
+history < 100 poss,1098,team_prior,unweighted,mae_gain_lm,0.26752,0.0742,0.4784
+history < 100 poss,1098,team_prior,unweighted,skill_lm,0.02481,0.00994,0.04043
+history < 100 poss,1098,team_prior,unweighted,rmse_gain_tp,0.0,0.0,0.0
+history < 100 poss,1098,team_prior,unweighted,mae_gain_tp,0.0,0.0,0.0
+history < 100 poss,1098,team_prior,unweighted,skill_tp,0.0,0.0,0.0
+history < 100 poss,1098,team_prior_calibrated,unweighted,mae,20.31227,19.41172,21.34245
+history < 100 poss,1098,team_prior_calibrated,unweighted,rmse,25.94729,24.78625,27.16847
+history < 100 poss,1098,team_prior_calibrated,unweighted,r2,0.01942,0.00728,0.03044
+history < 100 poss,1098,team_prior_calibrated,unweighted,rmse_gain_lm,0.32225,0.17038,0.49199
+history < 100 poss,1098,team_prior_calibrated,unweighted,mae_gain_lm,0.26142,0.10955,0.4373
+history < 100 poss,1098,team_prior_calibrated,unweighted,skill_lm,0.02438,0.01312,0.03616
+history < 100 poss,1098,team_prior_calibrated,unweighted,rmse_gain_tp,-0.00561,-0.05843,0.04823
+history < 100 poss,1098,team_prior_calibrated,unweighted,mae_gain_tp,-0.0061,-0.05193,0.04356
+history < 100 poss,1098,team_prior_calibrated,unweighted,skill_tp,-0.00043,-0.00454,0.00365
+history < 100 poss,1098,eb_lineup_team,unweighted,mae,20.31332,19.40477,21.32702
+history < 100 poss,1098,eb_lineup_team,unweighted,rmse,25.9412,24.78821,27.15186
+history < 100 poss,1098,eb_lineup_team,unweighted,r2,0.01988,0.00519,0.03391
+history < 100 poss,1098,eb_lineup_team,unweighted,rmse_gain_lm,0.32833,0.12197,0.54151
+history < 100 poss,1098,eb_lineup_team,unweighted,mae_gain_lm,0.26037,0.0679,0.4725
+history < 100 poss,1098,eb_lineup_team,unweighted,skill_lm,0.02484,0.00936,0.04016
+history < 100 poss,1098,eb_lineup_team,unweighted,rmse_gain_tp,0.00047,-0.02753,0.02798
+history < 100 poss,1098,eb_lineup_team,unweighted,mae_gain_tp,-0.00715,-0.03648,0.01995
+history < 100 poss,1098,eb_lineup_team,unweighted,skill_tp,4e-05,-0.00211,0.00215
+history < 100 poss,1098,player_composite,unweighted,mae,20.30003,19.37281,21.30612
+history < 100 poss,1098,player_composite,unweighted,rmse,25.92863,24.73512,27.17343
+history < 100 poss,1098,player_composite,unweighted,r2,0.02083,0.00749,0.03242
+history < 100 poss,1098,player_composite,unweighted,rmse_gain_lm,0.34091,0.17164,0.53388
+history < 100 poss,1098,player_composite,unweighted,mae_gain_lm,0.27365,0.12136,0.43328
+history < 100 poss,1098,player_composite,unweighted,skill_lm,0.02579,0.01306,0.03996
+history < 100 poss,1098,player_composite,unweighted,rmse_gain_tp,0.01304,-0.09574,0.13332
+history < 100 poss,1098,player_composite,unweighted,mae_gain_tp,0.00614,-0.09598,0.1164
+history < 100 poss,1098,player_composite,unweighted,skill_tp,0.00101,-0.00738,0.01018
+history < 100 poss,1098,linear,unweighted,mae,20.19947,19.30001,21.16464
+history < 100 poss,1098,linear,unweighted,rmse,25.82236,24.654,27.00381
+history < 100 poss,1098,linear,unweighted,r2,0.02884,0.01186,0.0429
+history < 100 poss,1098,linear,unweighted,rmse_gain_lm,0.44718,0.19507,0.70792
+history < 100 poss,1098,linear,unweighted,mae_gain_lm,0.37422,0.15751,0.5913
+history < 100 poss,1098,linear,unweighted,skill_lm,0.03376,0.01487,0.05271
+history < 100 poss,1098,linear,unweighted,rmse_gain_tp,0.11932,-0.06026,0.29054
+history < 100 poss,1098,linear,unweighted,mae_gain_tp,0.1067,-0.08632,0.281
+history < 100 poss,1098,linear,unweighted,skill_tp,0.00918,-0.00479,0.02209
+history < 100 poss,1098,ridge,unweighted,mae,20.26801,19.35121,21.22556
+history < 100 poss,1098,ridge,unweighted,rmse,25.89391,24.72152,27.11927
+history < 100 poss,1098,ridge,unweighted,r2,0.02345,0.00696,0.03776
+history < 100 poss,1098,ridge,unweighted,rmse_gain_lm,0.37563,0.14769,0.63856
+history < 100 poss,1098,ridge,unweighted,mae_gain_lm,0.30567,0.10602,0.51392
+history < 100 poss,1098,ridge,unweighted,skill_lm,0.02839,0.01141,0.04709
+history < 100 poss,1098,ridge,unweighted,rmse_gain_tp,0.04776,-0.12853,0.22801
+history < 100 poss,1098,ridge,unweighted,mae_gain_tp,0.03816,-0.14072,0.20691
+history < 100 poss,1098,ridge,unweighted,skill_tp,0.00368,-0.00994,0.01738
+history < 100 poss,1098,forest,unweighted,mae,20.32097,19.3937,21.27913
+history < 100 poss,1098,forest,unweighted,rmse,25.93989,24.75204,27.17422
+history < 100 poss,1098,forest,unweighted,r2,0.01998,0.00544,0.03337
+history < 100 poss,1098,forest,unweighted,rmse_gain_lm,0.32964,0.13702,0.54437
+history < 100 poss,1098,forest,unweighted,mae_gain_lm,0.25271,0.06545,0.44142
+history < 100 poss,1098,forest,unweighted,skill_lm,0.02494,0.0104,0.04016
+history < 100 poss,1098,forest,unweighted,rmse_gain_tp,0.00178,-0.16552,0.17798
+history < 100 poss,1098,forest,unweighted,mae_gain_tp,-0.0148,-0.16956,0.13719
+history < 100 poss,1098,forest,unweighted,skill_tp,0.00014,-0.01284,0.01373
+history < 100 poss,1098,noise_floor,unweighted,rmse_floor,25.91399,25.56722,26.29411
+history < 100 poss,1098,noise_floor,unweighted,mae_floor,20.05132,19.76232,20.39406
+history < 100 poss,1098,noise_floor,unweighted,r2_ceiling,0.02193,-0.06604,0.09818
+history < 100 poss,1098,linear,weighted,rmse_minus_team_prior,-0.14389,-0.29653,0.02816
+history < 100 poss,1098,linear,weighted,mae_minus_team_prior,-0.09197,-0.30507,0.13169
+history < 100 poss,1098,linear,weighted,r2_minus_team_prior,0.01289,-0.00256,0.02654
+history < 100 poss,1098,linear,weighted,calibration_slope,1.03817,0.69765,1.37883
+history < 100 poss,1098,ridge,weighted,rmse_minus_team_prior,-0.08792,-0.25207,0.08198
+history < 100 poss,1098,ridge,weighted,mae_minus_team_prior,-0.05141,-0.28062,0.17523
+history < 100 poss,1098,ridge,weighted,r2_minus_team_prior,0.00789,-0.00745,0.02304
+history < 100 poss,1098,ridge,weighted,calibration_slope,1.03387,0.64463,1.38149
+history < 100 poss,1098,forest,weighted,rmse_minus_team_prior,-0.04201,-0.18816,0.10048
+history < 100 poss,1098,forest,weighted,mae_minus_team_prior,-0.00666,-0.20475,0.1787
+history < 100 poss,1098,forest,weighted,r2_minus_team_prior,0.00377,-0.00899,0.01685
+history < 100 poss,1098,forest,weighted,calibration_slope,1.08168,0.65332,1.47782
+history < 100 poss,1098,linear,unweighted,rmse_minus_team_prior,-0.11932,-0.29054,0.06026
+history < 100 poss,1098,linear,unweighted,mae_minus_team_prior,-0.1067,-0.281,0.08632
+history < 100 poss,1098,linear,unweighted,r2_minus_team_prior,0.009,-0.0047,0.02182
+history < 100 poss,1098,linear,unweighted,calibration_slope,1.16643,0.79092,1.51223
+history < 100 poss,1098,ridge,unweighted,rmse_minus_team_prior,-0.04776,-0.22801,0.12853
+history < 100 poss,1098,ridge,unweighted,mae_minus_team_prior,-0.03816,-0.20691,0.14072
+history < 100 poss,1098,ridge,unweighted,r2_minus_team_prior,0.00361,-0.00966,0.01726
+history < 100 poss,1098,ridge,unweighted,calibration_slope,1.13243,0.72549,1.5119
+history < 100 poss,1098,forest,unweighted,rmse_minus_team_prior,-0.00178,-0.17798,0.16552
+history < 100 poss,1098,forest,unweighted,mae_minus_team_prior,0.0148,-0.13719,0.16956
+history < 100 poss,1098,forest,unweighted,r2_minus_team_prior,0.00013,-0.01261,0.01363
+history < 100 poss,1098,forest,unweighted,calibration_slope,1.21677,0.75642,1.66535
+history >= 100 poss,273,league_mean,weighted,mae,10.64108,9.61079,11.66168
+history >= 100 poss,273,league_mean,weighted,rmse,14.68104,13.43719,15.91017
+history >= 100 poss,273,league_mean,weighted,r2,-0.01759,-0.07139,0.00184
+history >= 100 poss,273,league_mean,weighted,rmse_gain_lm,0.0,0.0,0.0
+history >= 100 poss,273,league_mean,weighted,mae_gain_lm,0.0,0.0,0.0
+history >= 100 poss,273,league_mean,weighted,skill_lm,0.0,0.0,0.0
+history >= 100 poss,273,league_mean,weighted,rmse_gain_tp,-0.07947,-0.60682,0.49974
+history >= 100 poss,273,league_mean,weighted,mae_gain_tp,-0.57313,-1.37779,0.21717
+history >= 100 poss,273,league_mean,weighted,skill_tp,-0.01091,-0.08797,0.06661
+history >= 100 poss,273,team_prior,weighted,mae,10.06795,9.037,11.24961
+history >= 100 poss,273,team_prior,weighted,rmse,14.60157,13.36396,15.9024
+history >= 100 poss,273,team_prior,weighted,r2,-0.0066,-0.09567,0.05828
+history >= 100 poss,273,team_prior,weighted,rmse_gain_lm,0.07947,-0.49974,0.60682
+history >= 100 poss,273,team_prior,weighted,mae_gain_lm,0.57313,-0.21717,1.37779
+history >= 100 poss,273,team_prior,weighted,skill_lm,0.0108,-0.07137,0.08084
+history >= 100 poss,273,team_prior,weighted,rmse_gain_tp,0.0,0.0,0.0
+history >= 100 poss,273,team_prior,weighted,mae_gain_tp,0.0,0.0,0.0
+history >= 100 poss,273,team_prior,weighted,skill_tp,0.0,0.0,0.0
+history >= 100 poss,273,team_prior_calibrated,weighted,mae,10.11624,9.16352,11.24292
+history >= 100 poss,273,team_prior_calibrated,weighted,rmse,14.50243,13.26923,15.78675
+history >= 100 poss,273,team_prior_calibrated,weighted,r2,0.00702,-0.06449,0.05979
+history >= 100 poss,273,team_prior_calibrated,weighted,rmse_gain_lm,0.17861,-0.29049,0.62451
+history >= 100 poss,273,team_prior_calibrated,weighted,mae_gain_lm,0.52484,-0.07416,1.09668
+history >= 100 poss,273,team_prior_calibrated,weighted,skill_lm,0.02418,-0.04154,0.08493
+history >= 100 poss,273,team_prior_calibrated,weighted,rmse_gain_tp,0.09914,-0.03708,0.23971
+history >= 100 poss,273,team_prior_calibrated,weighted,mae_gain_tp,-0.04829,-0.28095,0.21164
+history >= 100 poss,273,team_prior_calibrated,weighted,skill_tp,0.01353,-0.00525,0.03247
+history >= 100 poss,273,eb_lineup_team,weighted,mae,9.98885,8.92649,11.19431
+history >= 100 poss,273,eb_lineup_team,weighted,rmse,14.52419,13.28876,15.8818
+history >= 100 poss,273,eb_lineup_team,weighted,r2,0.00404,-0.07355,0.06454
+history >= 100 poss,273,eb_lineup_team,weighted,rmse_gain_lm,0.15685,-0.45161,0.71124
+history >= 100 poss,273,eb_lineup_team,weighted,mae_gain_lm,0.65223,-0.15207,1.37737
+history >= 100 poss,273,eb_lineup_team,weighted,skill_lm,0.02125,-0.0629,0.09481
+history >= 100 poss,273,eb_lineup_team,weighted,rmse_gain_tp,0.07738,-0.15842,0.35538
+history >= 100 poss,273,eb_lineup_team,weighted,mae_gain_tp,0.0791,-0.33291,0.47012
+history >= 100 poss,273,eb_lineup_team,weighted,skill_tp,0.01057,-0.02221,0.04772
+history >= 100 poss,273,player_composite,weighted,mae,9.99063,9.00475,11.0867
+history >= 100 poss,273,player_composite,weighted,rmse,14.43325,13.18431,15.7474
+history >= 100 poss,273,player_composite,weighted,r2,0.01647,-0.05331,0.06784
+history >= 100 poss,273,player_composite,weighted,rmse_gain_lm,0.24779,-0.27585,0.72882
+history >= 100 poss,273,player_composite,weighted,mae_gain_lm,0.65045,-0.02204,1.23969
+history >= 100 poss,273,player_composite,weighted,skill_lm,0.03347,-0.03941,0.09569
+history >= 100 poss,273,player_composite,weighted,rmse_gain_tp,0.16832,-0.09007,0.46687
+history >= 100 poss,273,player_composite,weighted,mae_gain_tp,0.07732,-0.36088,0.52479
+history >= 100 poss,273,player_composite,weighted,skill_tp,0.02292,-0.01278,0.06128
+history >= 100 poss,273,linear,weighted,mae,9.87733,8.84816,10.95636
+history >= 100 poss,273,linear,weighted,rmse,14.45204,13.17926,15.78957
+history >= 100 poss,273,linear,weighted,r2,0.01391,-0.06196,0.07253
+history >= 100 poss,273,linear,weighted,rmse_gain_lm,0.229,-0.38882,0.79009
+history >= 100 poss,273,linear,weighted,mae_gain_lm,0.76376,0.05102,1.38817
+history >= 100 poss,273,linear,weighted,skill_lm,0.03095,-0.05187,0.10488
+history >= 100 poss,273,linear,weighted,rmse_gain_tp,0.14953,-0.2034,0.5379
+history >= 100 poss,273,linear,weighted,mae_gain_tp,0.19062,-0.33296,0.7326
+history >= 100 poss,273,linear,weighted,skill_tp,0.02038,-0.02735,0.07029
+history >= 100 poss,273,ridge,weighted,mae,10.23789,9.21887,11.35496
+history >= 100 poss,273,ridge,weighted,rmse,14.64215,13.38818,15.89915
+history >= 100 poss,273,ridge,weighted,r2,-0.01221,-0.08586,0.04685
+history >= 100 poss,273,ridge,weighted,rmse_gain_lm,0.03889,-0.54031,0.60271
+history >= 100 poss,273,ridge,weighted,mae_gain_lm,0.40319,-0.33067,1.02247
+history >= 100 poss,273,ridge,weighted,skill_lm,0.00529,-0.07722,0.08131
+history >= 100 poss,273,ridge,weighted,rmse_gain_tp,-0.04058,-0.44662,0.40743
+history >= 100 poss,273,ridge,weighted,mae_gain_tp,-0.16994,-0.83124,0.46919
+history >= 100 poss,273,ridge,weighted,skill_tp,-0.00557,-0.06749,0.05463
+history >= 100 poss,273,forest,weighted,mae,10.38731,9.3238,11.53411
+history >= 100 poss,273,forest,weighted,rmse,14.68983,13.42644,15.98999
+history >= 100 poss,273,forest,weighted,r2,-0.01881,-0.08054,0.02674
+history >= 100 poss,273,forest,weighted,rmse_gain_lm,-0.00879,-0.51739,0.48438
+history >= 100 poss,273,forest,weighted,mae_gain_lm,0.25377,-0.35144,0.82534
+history >= 100 poss,273,forest,weighted,skill_lm,-0.0012,-0.07374,0.06482
+history >= 100 poss,273,forest,weighted,rmse_gain_tp,-0.08826,-0.48949,0.31115
+history >= 100 poss,273,forest,weighted,mae_gain_tp,-0.31936,-0.97885,0.34618
+history >= 100 poss,273,forest,weighted,skill_tp,-0.01213,-0.06877,0.04363
+history >= 100 poss,273,noise_floor,weighted,rmse_floor,13.50518,12.80447,14.20692
+history >= 100 poss,273,noise_floor,weighted,mae_floor,9.67338,9.13532,10.25645
+history >= 100 poss,273,noise_floor,weighted,r2_ceiling,0.13889,0.00588,0.23353
+history >= 100 poss,273,league_mean,unweighted,mae,16.98146,15.51659,18.65422
+history >= 100 poss,273,league_mean,unweighted,rmse,22.86409,20.38587,25.55781
+history >= 100 poss,273,league_mean,unweighted,r2,-0.00231,-0.02946,0.0011
+history >= 100 poss,273,league_mean,unweighted,rmse_gain_lm,0.0,0.0,0.0
+history >= 100 poss,273,league_mean,unweighted,mae_gain_lm,0.0,0.0,0.0
+history >= 100 poss,273,league_mean,unweighted,skill_lm,0.0,0.0,0.0
+history >= 100 poss,273,league_mean,unweighted,rmse_gain_tp,0.16927,-0.42077,0.79672
+history >= 100 poss,273,league_mean,unweighted,mae_gain_tp,-0.24644,-0.79501,0.32881
+history >= 100 poss,273,league_mean,unweighted,skill_tp,0.01464,-0.041,0.06476
+history >= 100 poss,273,team_prior,unweighted,mae,16.73501,15.29174,18.50781
+history >= 100 poss,273,team_prior,unweighted,rmse,23.03336,20.49438,26.04966
+history >= 100 poss,273,team_prior,unweighted,r2,-0.01721,-0.07711,0.03164
+history >= 100 poss,273,team_prior,unweighted,rmse_gain_lm,-0.16927,-0.79672,0.42077
+history >= 100 poss,273,team_prior,unweighted,mae_gain_lm,0.24644,-0.32881,0.79501
+history >= 100 poss,273,team_prior,unweighted,skill_lm,-0.01486,-0.06925,0.03938
+history >= 100 poss,273,team_prior,unweighted,rmse_gain_tp,0.0,0.0,0.0
+history >= 100 poss,273,team_prior,unweighted,mae_gain_tp,0.0,0.0,0.0
+history >= 100 poss,273,team_prior,unweighted,skill_tp,0.0,0.0,0.0
+history >= 100 poss,273,team_prior_calibrated,unweighted,mae,16.7032,15.31219,18.50031
+history >= 100 poss,273,team_prior_calibrated,unweighted,rmse,22.91001,20.417,25.82455
+history >= 100 poss,273,team_prior_calibrated,unweighted,r2,-0.00634,-0.05436,0.03341
+history >= 100 poss,273,team_prior_calibrated,unweighted,rmse_gain_lm,-0.04592,-0.54333,0.432
+history >= 100 poss,273,team_prior_calibrated,unweighted,mae_gain_lm,0.27826,-0.17372,0.70711
+history >= 100 poss,273,team_prior_calibrated,unweighted,skill_lm,-0.00402,-0.04706,0.04007
+history >= 100 poss,273,team_prior_calibrated,unweighted,rmse_gain_tp,0.12335,-0.02304,0.26029
+history >= 100 poss,273,team_prior_calibrated,unweighted,mae_gain_tp,0.03181,-0.12697,0.19537
+history >= 100 poss,273,team_prior_calibrated,unweighted,skill_tp,0.01068,-0.00214,0.02243
+history >= 100 poss,273,eb_lineup_team,unweighted,mae,16.70382,15.32037,18.44125
+history >= 100 poss,273,eb_lineup_team,unweighted,rmse,22.92563,20.35639,25.84377
+history >= 100 poss,273,eb_lineup_team,unweighted,r2,-0.00772,-0.07392,0.04574
+history >= 100 poss,273,eb_lineup_team,unweighted,rmse_gain_lm,-0.06154,-0.73112,0.5738
+history >= 100 poss,273,eb_lineup_team,unweighted,mae_gain_lm,0.27763,-0.3077,0.8396
+history >= 100 poss,273,eb_lineup_team,unweighted,skill_lm,-0.00539,-0.06433,0.05227
+history >= 100 poss,273,eb_lineup_team,unweighted,rmse_gain_tp,0.10773,-0.05199,0.26493
+history >= 100 poss,273,eb_lineup_team,unweighted,mae_gain_tp,0.03119,-0.17915,0.26569
+history >= 100 poss,273,eb_lineup_team,unweighted,skill_tp,0.00933,-0.00454,0.02364
+history >= 100 poss,273,player_composite,unweighted,mae,16.67921,15.30815,18.46381
+history >= 100 poss,273,player_composite,unweighted,rmse,22.8525,20.32682,25.70737
+history >= 100 poss,273,player_composite,unweighted,r2,-0.0013,-0.05153,0.038
+history >= 100 poss,273,player_composite,unweighted,rmse_gain_lm,0.0116,-0.49064,0.52856
+history >= 100 poss,273,player_composite,unweighted,mae_gain_lm,0.30224,-0.23559,0.76707
+history >= 100 poss,273,player_composite,unweighted,skill_lm,0.00101,-0.04357,0.04858
+history >= 100 poss,273,player_composite,unweighted,rmse_gain_tp,0.18087,-0.02294,0.39318
+history >= 100 poss,273,player_composite,unweighted,mae_gain_tp,0.0558,-0.17417,0.31362
+history >= 100 poss,273,player_composite,unweighted,skill_tp,0.01564,-0.00201,0.03195
+history >= 100 poss,273,linear,unweighted,mae,16.68312,15.24167,18.52915
+history >= 100 poss,273,linear,unweighted,rmse,22.93956,20.25974,25.76662
+history >= 100 poss,273,linear,unweighted,r2,-0.00894,-0.06066,0.04024
+history >= 100 poss,273,linear,unweighted,rmse_gain_lm,-0.07547,-0.64635,0.55146
+history >= 100 poss,273,linear,unweighted,mae_gain_lm,0.29833,-0.32683,0.82658
+history >= 100 poss,273,linear,unweighted,skill_lm,-0.00661,-0.05822,0.04984
+history >= 100 poss,273,linear,unweighted,rmse_gain_tp,0.0938,-0.21627,0.43766
+history >= 100 poss,273,linear,unweighted,mae_gain_tp,0.05189,-0.2693,0.44815
+history >= 100 poss,273,linear,unweighted,skill_tp,0.00813,-0.02006,0.03577
+history >= 100 poss,273,ridge,unweighted,mae,16.8725,15.46457,18.6422
+history >= 100 poss,273,ridge,unweighted,rmse,22.99101,20.34964,25.68914
+history >= 100 poss,273,ridge,unweighted,r2,-0.01347,-0.06212,0.02542
+history >= 100 poss,273,ridge,unweighted,rmse_gain_lm,-0.12692,-0.64294,0.42322
+history >= 100 poss,273,ridge,unweighted,mae_gain_lm,0.10896,-0.50958,0.6134
+history >= 100 poss,273,ridge,unweighted,skill_lm,-0.01113,-0.05893,0.03757
+history >= 100 poss,273,ridge,unweighted,rmse_gain_tp,0.04235,-0.35595,0.44474
+history >= 100 poss,273,ridge,unweighted,mae_gain_tp,-0.13749,-0.51989,0.28254
+history >= 100 poss,273,ridge,unweighted,skill_tp,0.00367,-0.0335,0.03548
+history >= 100 poss,273,forest,unweighted,mae,16.84955,15.47014,18.6368
+history >= 100 poss,273,forest,unweighted,rmse,22.91874,20.35445,25.63391
+history >= 100 poss,273,forest,unweighted,r2,-0.00711,-0.05172,0.0232
+history >= 100 poss,273,forest,unweighted,rmse_gain_lm,-0.05465,-0.5236,0.40224
+history >= 100 poss,273,forest,unweighted,mae_gain_lm,0.13191,-0.37666,0.6033
+history >= 100 poss,273,forest,unweighted,skill_lm,-0.00479,-0.0471,0.03624
+history >= 100 poss,273,forest,unweighted,rmse_gain_tp,0.11462,-0.29728,0.54537
+history >= 100 poss,273,forest,unweighted,mae_gain_tp,-0.11453,-0.49555,0.29407
+history >= 100 poss,273,forest,unweighted,skill_tp,0.00993,-0.02773,0.045
+history >= 100 poss,273,noise_floor,unweighted,rmse_floor,20.09888,19.24958,20.91547
+history >= 100 poss,273,noise_floor,unweighted,mae_floor,14.76556,14.08384,15.39832
+history >= 100 poss,273,noise_floor,unweighted,r2_ceiling,0.22547,0.02658,0.37019
+history >= 100 poss,273,linear,weighted,rmse_minus_team_prior,-0.14953,-0.5379,0.2034
+history >= 100 poss,273,linear,weighted,mae_minus_team_prior,-0.19062,-0.7326,0.33296
+history >= 100 poss,273,linear,weighted,r2_minus_team_prior,0.02051,-0.02806,0.07335
+history >= 100 poss,273,linear,weighted,calibration_slope,0.59582,0.15692,0.99289
+history >= 100 poss,273,ridge,weighted,rmse_minus_team_prior,0.04058,-0.40743,0.44662
+history >= 100 poss,273,ridge,weighted,mae_minus_team_prior,0.16994,-0.46919,0.83124
+history >= 100 poss,273,ridge,weighted,r2_minus_team_prior,-0.0056,-0.06368,0.0576
+history >= 100 poss,273,ridge,weighted,calibration_slope,0.42493,-0.0621,0.85221
+history >= 100 poss,273,forest,weighted,rmse_minus_team_prior,0.08826,-0.31115,0.48949
+history >= 100 poss,273,forest,weighted,mae_minus_team_prior,0.31936,-0.34618,0.97885
+history >= 100 poss,273,forest,weighted,r2_minus_team_prior,-0.01221,-0.06599,0.04584
+history >= 100 poss,273,forest,weighted,calibration_slope,0.29092,-0.33039,0.85687
+history >= 100 poss,273,linear,unweighted,rmse_minus_team_prior,-0.0938,-0.43766,0.21627
+history >= 100 poss,273,linear,unweighted,mae_minus_team_prior,-0.05189,-0.44815,0.2693
+history >= 100 poss,273,linear,unweighted,r2_minus_team_prior,0.00827,-0.02057,0.03768
+history >= 100 poss,273,linear,unweighted,calibration_slope,0.40736,-0.34946,1.04477
+history >= 100 poss,273,ridge,unweighted,rmse_minus_team_prior,-0.04235,-0.44474,0.35595
+history >= 100 poss,273,ridge,unweighted,mae_minus_team_prior,0.13749,-0.28254,0.51989
+history >= 100 poss,273,ridge,unweighted,r2_minus_team_prior,0.00374,-0.03368,0.03705
+history >= 100 poss,273,ridge,unweighted,calibration_slope,0.33857,-0.40323,0.96136
+history >= 100 poss,273,forest,unweighted,rmse_minus_team_prior,-0.11462,-0.54537,0.29728
+history >= 100 poss,273,forest,unweighted,mae_minus_team_prior,0.11453,-0.29407,0.49555
+history >= 100 poss,273,forest,unweighted,r2_minus_team_prior,0.0101,-0.02796,0.04832
+history >= 100 poss,273,forest,unweighted,calibration_slope,0.38237,-0.60831,1.27782

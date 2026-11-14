@@ -17,6 +17,8 @@ import numpy as np
 import pandas as pd
 
 from ..analysis import reliability as rel
+from ..analysis.data import HeldOutDataError
+from ..config import DEV_SEASONS
 from .raw import PreBreakTables, lineup_pairs
 from .registry import AUXILIARY, FEATURE_NAMES
 
@@ -121,6 +123,8 @@ class FeatureBuilder:
     # ------------------------------------------------------------------ fit
     def fit(self, tables: PreBreakTables, train_seasons) -> FeatureBuilder:
         train_seasons = tuple(sorted(train_seasons))
+        if not set(train_seasons) <= set(DEV_SEASONS):     # never fit on held-out data, even with a HoldoutKey
+            raise HeldOutDataError(f"FeatureBuilder may only be fitted on development seasons, got {train_seasons}")
         t = tables.subset(train_seasons).validate()
         if not set(t.seasons) <= set(train_seasons) or not t.seasons:
             raise ValueError("fit() received no training data")

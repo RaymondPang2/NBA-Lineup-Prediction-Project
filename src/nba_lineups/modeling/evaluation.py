@@ -103,3 +103,47 @@ def weighted_corr(x, y, w) -> float:
     xm, ym = np.average(x, weights=w), np.average(y, weights=w)
     c = np.average((x - xm) * (y - ym), weights=w)
     return float(c / np.sqrt(np.average((x - xm) ** 2, weights=w) * np.average((y - ym) ** 2, weights=w)))
+
+
+def calibration_slope(y, pred, w=None) -> float:
+    """WLS slope of the outcome on the prediction. 1 = calibrated spread; < 1 = predictions too extreme."""
+    y, pred = np.asarray(y, float), np.asarray(pred, float)
+    w = np.ones_like(y) if w is None else np.asarray(w, float)
+    pm, ym = np.average(pred, weights=w), np.average(y, weights=w)
+    return float(np.sum(w * (pred - pm) * (y - ym)) / np.sum(w * (pred - pm) ** 2))
+
+
+def paired_differences(df: pd.DataFrame, models: list[str], references: list[str]) -> dict[str, float]:
+    """MODEL MINUS BASELINE on the same rows: rmse/mae differences (negative = model better) and r2
+    differences (positive = model better), plus each model's calibration slope."""
+    out = {}
+    for wt in WEIGHTINGS:
+        w = _w(df, wt)
+        ms = {p: regression_metrics(df.y, df[p], w) for p in set(models) | set(references)}
+        for m in models:
+            for b in references:
+                if b == m:
+                    continue
+                for k in ("rmse", "mae", "r2"):
+                    out[f"{m}|{wt}|{k}_minus_{b}"] = ms[m][k] - ms[b][k]
+            out[f"{m}|{wt}|calibration_slope"] = calibration_slope(df.y, df[m], w)
+    return out
+
+
+def bootstrap_comparison(df: pd.DataFrame, predictors: list[str], models: list[str], references: list[str],
+                         n_boot: int = 1000, seed: int = 0) -> pd.DataFrame:
+    """One team-season cluster bootstrap for every metric, the noise floor, and every paired
+    model-minus-baseline difference (all computed on the same resampled rows)."""
+    stat = lambda d: metric_table(d, predictors) | paired_differences(d, models, references)  # noqa: E731
+    return tidy(rel.cluster_bootstrap(df, ["season_id", "team_id"], stat, n_boot=n_boot, seed=seed))
+
+
+def calibration_bins(y, pred, w, bins: int = 10) -> pd.DataFrame:
+    """Possession-weighted mean prediction and outcome in prediction deciles."""
+    d = pd.DataFrame({"y": y, "p": pred, "w": w})
+    d["bin"] = pd.qcut(d.p.rank(method="first"), bins, labels=False)
+    g = d.groupby("bin")
+    return pd.DataFrame({"n": g.size(), "mean_pred": g.apply(lambda x: np.average(x.p, weights=x.w)),
+                         "mean_y": g.apply(lambda x: np.average(x.y, weights=x.w)),
+                         "se_y": g.apply(lambda x: np.sqrt(np.average((x.y - np.average(x.y, weights=x.w)) ** 2,
+                                                                       weights=x.w) / rel.kish_effective_n(x.w)))})

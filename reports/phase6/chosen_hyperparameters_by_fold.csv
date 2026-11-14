@@ -1,0 +1,25 @@
+variant,val_season,model,n_train_seasons,params,tuned,train_rmse_w,val_rmse_w
+all,2019-20,linear,1,{},False,19.6585,22.4876
+all,2019-20,ridge,1,{'alpha': 100.0},False,19.6488,22.4798
+all,2019-20,forest,1,"{'max_depth': 5, 'min_samples_leaf': 50, 'max_features': 0.33}",False,19.2513,22.5837
+all,2020-21,linear,2,{},False,20.6564,21.3898
+all,2020-21,ridge,2,{'alpha': 10000.0},True,20.8382,21.6373
+all,2020-21,forest,2,"{'max_depth': 3, 'min_samples_leaf': 200, 'max_features': 0.33}",True,20.7454,21.5883
+all,2021-22,linear,3,{},False,20.8954,22.3586
+all,2021-22,ridge,3,{'alpha': 0.1},True,20.8588,22.4071
+all,2021-22,forest,3,"{'max_depth': 3, 'min_samples_leaf': 100, 'max_features': 0.66}",True,20.7336,22.4086
+all,2022-23,linear,4,{},False,21.218,21.352
+all,2022-23,ridge,4,{'alpha': 316.2278},True,21.2244,21.3226
+all,2022-23,forest,4,"{'max_depth': 3, 'min_samples_leaf': 100, 'max_features': 0.66}",True,21.0666,21.3239
+all,2023-24,linear,5,{},False,21.2328,21.5768
+all,2023-24,ridge,5,{'alpha': 316.2278},True,21.2356,21.6034
+all,2023-24,forest,5,"{'max_depth': 3, 'min_samples_leaf': 100, 'max_features': 0.66}",True,21.0775,21.5494
+regular_only,2021-22,linear,1,{},False,19.6585,22.3914
+regular_only,2021-22,ridge,1,{'alpha': 100.0},False,19.6488,22.4464
+regular_only,2021-22,forest,1,"{'max_depth': 5, 'min_samples_leaf': 50, 'max_features': 0.33}",False,19.2513,22.7009
+regular_only,2022-23,linear,2,{},False,20.8977,21.3533
+regular_only,2022-23,ridge,2,{'alpha': 316.2278},True,20.9356,21.3123
+regular_only,2022-23,forest,2,"{'max_depth': 3, 'min_samples_leaf': 100, 'max_features': 0.66}",True,20.8332,21.2875
+regular_only,2023-24,linear,3,{},False,21.0271,21.5795
+regular_only,2023-24,ridge,3,{'alpha': 316.2278},True,21.0433,21.6268
+regular_only,2023-24,forest,3,"{'max_depth': 5, 'min_samples_leaf': 100, 'max_features': 0.66}",True,20.811,21.5867

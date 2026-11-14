@@ -7,7 +7,8 @@ Leakage contract:
 - Feature tables are read from `window_type = 'pre_asb'` rows only. `PreBreakTables.validate` re-checks it.
 - Teams come from the LINEUP feed (each lineup was requested per team). `player_window_stats.last_team_id`
   is never selected: the API fills it with the player's latest team even under a pre-break date filter.
-- Only development seasons can be requested (`check_seasons`). Held-out seasons raise HeldOutDataError.
+- Only development seasons can be requested (`access.check_seasons`). Held-out seasons raise HeldOutDataError
+  unless a HoldoutKey is passed, which only `holdout.unlock` can issue once the final model is frozen.
 - `load_targets` is the only function that reads post-break data, and it returns labels, never features.
 """
 from __future__ import annotations
@@ -19,8 +20,9 @@ import numpy as np
 import pandas as pd
 import psycopg
 
-from ..analysis.data import HeldOutDataError, query, require_dev
+from ..analysis.data import HeldOutDataError, query  # noqa: F401  (re-exported for callers and tests)
 from ..config import DEV_SEASONS, IRREGULAR_SEASONS
+from .access import HoldoutKey, check_seasons, require_allowed
 
 PRE = "pre_asb"
 MIN_TARGET_POSS = 25   # target sample: >= 25 post-break possessions on EACH end (approved design)
@@ -31,14 +33,6 @@ class LeakageError(RuntimeError):
     pass
 
 
-def check_seasons(seasons: Iterable[str]) -> list[str]:
-    s = list(seasons)
-    bad = sorted(set(s) - set(DEV_SEASONS))
-    if bad:
-        raise HeldOutDataError(f"Phase 5 may only read development seasons; refused {bad}")
-    return s
-
-
 @dataclass(frozen=True)
 class PreBreakTables:
     """Pre-break inputs for a set of seasons. All later features are computed from these frames."""
@@ -47,6 +41,7 @@ class PreBreakTables:
     usage: pd.DataFrame         # season_id, player_id, window_type, usage_poss, usg_pct (player endpoint, pre-break; no team label)
     player_team: pd.DataFrame   # season_id, team_id, player_id: on-court and off-court totals for that team (derived)
     pairs: pd.DataFrame         # season_id, team_id, player_a, player_b, shared_poss (derived)
+    key: HoldoutKey | None = None   # set only for the final held-out evaluation (see access.py)
 
     @property
     def seasons(self) -> list[str]:
@@ -61,13 +56,13 @@ class PreBreakTables:
             df = getattr(self, name)
             if "last_team_id" in df.columns:
                 raise LeakageError("last_team_id leaks post-break trades (the API ignores the date filter for it)")
-            require_dev(df)
+            require_allowed(df, self.key)
         return self
 
     def subset(self, seasons: Iterable[str]) -> PreBreakTables:
         s = set(seasons)
         return PreBreakTables(*(getattr(self, f).loc[lambda d: d.season_id.isin(s)].reset_index(drop=True)
-                                for f in ("lineups", "members", "usage", "player_team", "pairs")))
+                                for f in ("lineups", "members", "usage", "player_team", "pairs")), key=self.key)
 
 
 def derive_player_team(lineups: pd.DataFrame, members: pd.DataFrame) -> pd.DataFrame:
@@ -100,15 +95,17 @@ def derive_pairs(lineups: pd.DataFrame, members: pd.DataFrame) -> pd.DataFrame:
             .rename(columns={"poss": "shared_poss"}))
 
 
-def build_tables(lineups: pd.DataFrame, members: pd.DataFrame, usage: pd.DataFrame) -> PreBreakTables:
+def build_tables(lineups: pd.DataFrame, members: pd.DataFrame, usage: pd.DataFrame,
+                 key: HoldoutKey | None = None) -> PreBreakTables:
     return PreBreakTables(lineups, members, usage, derive_player_team(lineups, members),
-                          derive_pairs(lineups, members)).validate()
+                          derive_pairs(lineups, members), key=key).validate()
 
 
-def load_pre_break_tables(conn: psycopg.Connection, seasons: Iterable[str] = DEV_SEASONS) -> PreBreakTables:
+def load_pre_break_tables(conn: psycopg.Connection, seasons: Iterable[str] = DEV_SEASONS,
+                          key: HoldoutKey | None = None) -> PreBreakTables:
     """Read the pre-break inputs. Unknown opponent possessions (zero-second rows only) count as 0
     possessions AND 0 points, so numerator and denominator always cover the same rows."""
-    p = {"seasons": check_seasons(seasons)}
+    p = {"seasons": check_seasons(seasons, key)}
     lineups = query(conn, """
         SELECT l.season_id, l.team_id, s.lineup_id, s.window_type, s.gp, s.poss,
                coalesce(s.opp_poss, 0) AS opp_poss, s.pts,
@@ -123,23 +120,23 @@ def load_pre_break_tables(conn: psycopg.Connection, seasons: Iterable[str] = DEV
         SELECT season_id, player_id, window_type, poss AS usage_poss, usg_pct::float AS usg_pct
         FROM player_window_stats
         WHERE window_type = 'pre_asb' AND season_id = ANY(%(seasons)s)""", p)
-    return build_tables(lineups, members, usage)
+    return build_tables(lineups, members, usage, key)
 
 
 def load_targets(conn: psycopg.Connection, seasons: Iterable[str] = DEV_SEASONS,
-                 min_poss: int = MIN_TARGET_POSS) -> pd.DataFrame:
+                 min_poss: int = MIN_TARGET_POSS, key: HoldoutKey | None = None) -> pd.DataFrame:
     """LABELS: post-break net rating of every lineup with >= min_poss possessions on each end after the break.
 
     This defines the modeling SAMPLE (the estimand is conditional on the lineup being played after the
     break) and the target. Nothing returned here may become a feature.
     """
-    df = require_dev(query(conn, """
+    df = require_allowed(query(conn, """
         SELECT season_id, team_id, lineup_id, poss AS post_poss, opp_poss AS post_opp_poss,
                pts AS post_pts, opp_pts AS post_opp_pts, net_rating::float AS y
         FROM v_lineup_window_ratings
         WHERE window_type = 'post_asb' AND season_id = ANY(%(seasons)s)
           AND poss >= %(min_poss)s AND opp_poss >= %(min_poss)s
-        ORDER BY season_id, team_id, lineup_id""", {"seasons": check_seasons(seasons), "min_poss": min_poss}))
+        ORDER BY season_id, team_id, lineup_id""", {"seasons": check_seasons(seasons, key), "min_poss": min_poss}), key)
     df["w"] = df.post_poss.astype(float)   # possession weight (approved design)
     df["is_irregular"] = df.season_id.isin(IRREGULAR_SEASONS)
     assert np.isfinite(df.y).all()
