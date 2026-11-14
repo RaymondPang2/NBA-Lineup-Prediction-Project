@@ -2,7 +2,7 @@
 
 Analyzes historical NBA five-player lineup performance and predicts post-All-Star-break lineup net rating with leak-free, chronologically validated models.
 
-**Status:** Phase 6 (model training, evaluation, interpretability and a pre-registered held-out test) complete. Headline: on the held-out 2024-25 and 2025-26 seasons the frozen model beats the league mean but is statistically indistinguishable from a simple team-strength baseline, because the target is dominated by measurement noise (see the [model card](docs/model_card.md)). See [docs/project_plan.md](docs/project_plan.md).
+**Status:** Phase 7 (read-only FastAPI service over the warehouse and the frozen model, [docs/api.md](docs/api.md)) complete. Phase 6 headline: on the held-out 2024-25 and 2025-26 seasons the frozen model beats the league mean but is statistically indistinguishable from a simple team-strength baseline, because the target is dominated by measurement noise (see the [model card](docs/model_card.md)). See [docs/project_plan.md](docs/project_plan.md).
 
 | Doc | Contents |
 |---|---|
@@ -14,6 +14,7 @@ Analyzes historical NBA five-player lineup performance and predicts post-All-Sta
 | [docs/features_baselines.md](docs/features_baselines.md) | Feature dictionary, leakage audit, expanding-window CV, baselines vs the noise floor ([figures](reports/phase5/figures)) |
 | [docs/modeling.md](docs/modeling.md) | Nested CV of linear / ridge / random forest, interpretability, freeze protocol, final held-out test ([figures](reports/phase6/figures)) |
 | [docs/model_card.md](docs/model_card.md) | Model card: estimand, performance, appropriate use, limitations |
+| [docs/api.md](docs/api.md) | REST API: endpoints, examples, prediction uncertainty, architecture, tests, frontend setup |
 
 ## Setup (macOS)
 ```bash
@@ -30,7 +31,8 @@ docker compose up -d                       # PostgreSQL 17.6 on 127.0.0.1:5432
 .venv/bin/python scripts/phase5/features_baselines.py  # Phase 5 feature quality + baseline CV (reports/phase5/)
 .venv/bin/python scripts/phase6/train_evaluate.py      # Phase 6 nested CV, selection, freeze (models/final/)
 .venv/bin/python scripts/phase6/holdout_evaluation.py  # Phase 6 final test (needs the committed freeze)
-.venv/bin/python -m pytest                 # 150+ tests; DB tests auto-skip if Postgres is down
+.venv/bin/uvicorn nba_lineups.api.main:app --reload    # API on http://127.0.0.1:8000 (Swagger UI at /docs)
+.venv/bin/python -m pytest                 # 240+ tests; DB tests auto-skip if Postgres is down
 ```
 Run ingestion from a non-cloud IP, because stats.nba.com blocks many datacenter ranges.
 

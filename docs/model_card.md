@@ -75,3 +75,5 @@ Development cross-validation (2019-20 to 2023-24) agrees: weighted RMSE 21.73 vs
 To load the model in Python: `nba_lineups.modeling.final.load("models/final")` returns a `LineupModel`. Use `.predict(tables, lineups)` with pre-break tables from `modeling.raw`. The same scikit-learn version is required to unpickle it.
 
 Full evaluation, interpretability and the leakage audit: `docs/modeling.md`.
+
+**Serving:** the REST API (`docs/api.md`) serves this exact artifact read-only. Each prediction comes with the team-prior baseline, model and sampling uncertainty, and the notes above. `GET /api/v1/model` re-verifies the SHA-256.

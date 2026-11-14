@@ -15,10 +15,13 @@ dependencies = [
     "psycopg[binary]==3.3.8",
     "matplotlib==3.11.2",      # Phase 4: static EDA figures
     "scikit-learn==1.9.1",     # Phase 4: continuation model; Phase 6: prediction models
+    "fastapi==0.163.0",        # Phase 7: REST API (brings pydantic and starlette)
+    "uvicorn==0.54.0",         # Phase 7: ASGI server that runs the API
+    "psycopg-pool==3.3.3",     # Phase 7: connection pool (the psycopg project's own)
 ]
 
 [project.optional-dependencies]
-dev = ["pytest==8.4.2"]
+dev = ["pytest==8.4.2", "httpx2==2.16.0"]   # httpx2: FastAPI/Starlette TestClient
 
 [tool.setuptools.packages.find]
 where = ["src"]
