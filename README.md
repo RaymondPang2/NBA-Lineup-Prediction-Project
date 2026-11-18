@@ -2,7 +2,7 @@
 
 Analyzes historical NBA five-player lineup performance and predicts post-All-Star-break lineup net rating with leak-free, chronologically validated models.
 
-**Status:** Phase 7 (read-only FastAPI service over the warehouse and the frozen model, [docs/api.md](docs/api.md)) complete. Phase 6 headline: on the held-out 2024-25 and 2025-26 seasons the frozen model beats the league mean but is statistically indistinguishable from a simple team-strength baseline, because the target is dominated by measurement noise (see the [model card](docs/model_card.md)). See [docs/project_plan.md](docs/project_plan.md).
+**Status:** Phase 8 (React + TypeScript dashboard over the API, [docs/dashboard.md](docs/dashboard.md)) complete, awaiting review. Phase 7 provides the read-only FastAPI service over the warehouse and the frozen model ([docs/api.md](docs/api.md)). Phase 6 headline: on the held-out 2024-25 and 2025-26 seasons the frozen model beats the league mean but is statistically indistinguishable from a simple team-strength baseline, because the target is dominated by measurement noise (see the [model card](docs/model_card.md)). See [docs/project_plan.md](docs/project_plan.md).
 
 | Doc | Contents |
 |---|---|
@@ -15,6 +15,7 @@ Analyzes historical NBA five-player lineup performance and predicts post-All-Sta
 | [docs/modeling.md](docs/modeling.md) | Nested CV of linear / ridge / random forest, interpretability, freeze protocol, final held-out test ([figures](reports/phase6/figures)) |
 | [docs/model_card.md](docs/model_card.md) | Model card: estimand, performance, appropriate use, limitations |
 | [docs/api.md](docs/api.md) | REST API: endpoints, examples, prediction uncertainty, architecture, tests, frontend setup |
+| [docs/dashboard.md](docs/dashboard.md) | Web dashboard: pages, how the analytical contract is kept in the UI, architecture, tests |
 
 ## Setup (macOS)
 ```bash
@@ -33,6 +34,11 @@ docker compose up -d                       # PostgreSQL 17.6 on 127.0.0.1:5432
 .venv/bin/python scripts/phase6/holdout_evaluation.py  # Phase 6 final test (needs the committed freeze)
 .venv/bin/uvicorn nba_lineups.api.main:app --reload    # API on http://127.0.0.1:8000 (Swagger UI at /docs)
 .venv/bin/python -m pytest                 # 240+ tests; DB tests auto-skip if Postgres is down
+
+cd web && npm install && cp .env.example .env.local   # Phase 8 dashboard (Node 20+)
+npm run dev                                # http://localhost:5173 (needs the API on :8000)
+npm run fixtures && npm test               # unit/component tests on fixtures recorded from the live API
+npm run test:integration && npm run test:e2e   # live API integration + Playwright end-to-end
 ```
 Run ingestion from a non-cloud IP, because stats.nba.com blocks many datacenter ranges.
 

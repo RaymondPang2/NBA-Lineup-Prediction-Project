@@ -1,0 +1,2881 @@
+{
+  "components": {
+    "schemas": {
+      "Baselines": {
+        "properties": {
+          "eb_lineup_team": {
+            "description": "the lineup's own pre-break rating shrunk toward the team prior",
+            "title": "Eb Lineup Team",
+            "type": "number"
+          },
+          "league_mean": {
+            "description": "possession-weighted mean post-break net rating of development lineups",
+            "title": "League Mean",
+            "type": "number"
+          },
+          "team_prior": {
+            "description": "team's pre-break net rating from its OTHER lineups + a constant fitted on the development seasons. The reference the model must beat.",
+            "title": "Team Prior",
+            "type": "number"
+          }
+        },
+        "required": [
+          "team_prior",
+          "league_mean",
+          "eb_lineup_team"
+        ],
+        "title": "Baselines",
+        "type": "object"
+      },
+      "Change": {
+        "description": "Post-break minus pre-break. For def_rating a NEGATIVE change is an improvement.",
+        "properties": {
+          "def_rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Def Rating"
+          },
+          "exceeds_noise": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "|change| > 1.96 × sampling SD (a rough flag, not a test of a pre-chosen lineup: scanning many lineups finds some by chance)",
+            "title": "Exceeds Noise"
+          },
+          "net_rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Net Rating"
+          },
+          "net_rating_sampling_sd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "SD of the net-rating change expected from sampling noise alone, if true quality never changed",
+            "title": "Net Rating Sampling Sd"
+          },
+          "off_rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Off Rating"
+          }
+        },
+        "required": [
+          "off_rating",
+          "def_rating",
+          "net_rating",
+          "net_rating_sampling_sd",
+          "exceeds_noise"
+        ],
+        "title": "Change",
+        "type": "object"
+      },
+      "Coefficient": {
+        "properties": {
+          "coefficient": {
+            "description": "net-rating points per 1 training SD of the feature",
+            "title": "Coefficient",
+            "type": "number"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "feature": {
+            "title": "Feature",
+            "type": "string"
+          },
+          "training_mean": {
+            "title": "Training Mean",
+            "type": "number"
+          },
+          "training_sd": {
+            "title": "Training Sd",
+            "type": "number"
+          }
+        },
+        "required": [
+          "feature",
+          "description",
+          "coefficient",
+          "training_mean",
+          "training_sd"
+        ],
+        "title": "Coefficient",
+        "type": "object"
+      },
+      "Contribution": {
+        "properties": {
+          "contribution": {
+            "description": "coefficient × standardized value: points this feature adds to the intercept. Contributions + intercept = prediction",
+            "title": "Contribution",
+            "type": "number"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "feature": {
+            "title": "Feature",
+            "type": "string"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "raw feature value (null = missing, imputed with the training median)",
+            "title": "Value"
+          }
+        },
+        "required": [
+          "feature",
+          "description",
+          "value",
+          "contribution"
+        ],
+        "title": "Contribution",
+        "type": "object"
+      },
+      "ErrorBody": {
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "details": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Details"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "ErrorBody",
+        "type": "object"
+      },
+      "ErrorResponse": {
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorBody"
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "title": "ErrorResponse",
+        "type": "object"
+      },
+      "Estimate": {
+        "properties": {
+          "estimate": {
+            "title": "Estimate",
+            "type": "number"
+          },
+          "hi": {
+            "title": "Hi",
+            "type": "number"
+          },
+          "lo": {
+            "description": "95% team-season cluster-bootstrap interval",
+            "title": "Lo",
+            "type": "number"
+          }
+        },
+        "required": [
+          "estimate",
+          "lo",
+          "hi"
+        ],
+        "title": "Estimate",
+        "type": "object"
+      },
+      "EvaluationSummary": {
+        "properties": {
+          "calibration_slope": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Estimate"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "evaluation": {
+            "title": "Evaluation",
+            "type": "string"
+          },
+          "model_minus_league_mean": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Estimate"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "model_minus_team_prior": {
+            "$ref": "#/components/schemas/Estimate"
+          },
+          "n_lineups": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "N Lineups"
+          },
+          "r2_ceiling": {
+            "$ref": "#/components/schemas/Estimate"
+          },
+          "r2_model": {
+            "$ref": "#/components/schemas/Estimate"
+          },
+          "rmse_league_mean": {
+            "$ref": "#/components/schemas/Estimate"
+          },
+          "rmse_model": {
+            "$ref": "#/components/schemas/Estimate"
+          },
+          "rmse_noise_floor": {
+            "$ref": "#/components/schemas/Estimate"
+          },
+          "rmse_team_prior": {
+            "$ref": "#/components/schemas/Estimate"
+          }
+        },
+        "required": [
+          "evaluation",
+          "n_lineups",
+          "rmse_model",
+          "rmse_team_prior",
+          "rmse_league_mean",
+          "rmse_noise_floor",
+          "r2_model",
+          "r2_ceiling",
+          "model_minus_team_prior",
+          "model_minus_league_mean",
+          "calibration_slope"
+        ],
+        "title": "EvaluationSummary",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "Health": {
+        "properties": {
+          "database": {
+            "enum": [
+              "ok",
+              "unavailable",
+              "not_configured"
+            ],
+            "title": "Database",
+            "type": "string"
+          },
+          "model": {
+            "enum": [
+              "ok",
+              "unavailable"
+            ],
+            "title": "Model",
+            "type": "string"
+          },
+          "model_artifact_sha256": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Artifact Sha256"
+          },
+          "status": {
+            "enum": [
+              "ok",
+              "degraded"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "database",
+          "model"
+        ],
+        "title": "Health",
+        "type": "object"
+      },
+      "Interval": {
+        "properties": {
+          "hi": {
+            "title": "Hi",
+            "type": "number"
+          },
+          "lo": {
+            "title": "Lo",
+            "type": "number"
+          }
+        },
+        "required": [
+          "lo",
+          "hi"
+        ],
+        "title": "Interval",
+        "type": "object"
+      },
+      "LineupDetail": {
+        "properties": {
+          "change": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Change"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lineup_id": {
+            "title": "Lineup Id",
+            "type": "integer"
+          },
+          "players": {
+            "items": {
+              "$ref": "#/components/schemas/Player"
+            },
+            "title": "Players",
+            "type": "array"
+          },
+          "post_break": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WindowStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "pre_break": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WindowStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "season_id": {
+            "title": "Season Id",
+            "type": "string"
+          },
+          "season_total": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WindowStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "team_abbreviation": {
+            "title": "Team Abbreviation",
+            "type": "string"
+          },
+          "team_id": {
+            "title": "Team Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "lineup_id",
+          "season_id",
+          "team_id",
+          "team_abbreviation",
+          "players",
+          "pre_break",
+          "post_break",
+          "change",
+          "season_total"
+        ],
+        "title": "LineupDetail",
+        "type": "object"
+      },
+      "LineupSummary": {
+        "properties": {
+          "change": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Change"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lineup_id": {
+            "title": "Lineup Id",
+            "type": "integer"
+          },
+          "players": {
+            "items": {
+              "$ref": "#/components/schemas/Player"
+            },
+            "title": "Players",
+            "type": "array"
+          },
+          "post_break": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WindowStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "pre_break": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/WindowStats"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "season_id": {
+            "title": "Season Id",
+            "type": "string"
+          },
+          "team_abbreviation": {
+            "title": "Team Abbreviation",
+            "type": "string"
+          },
+          "team_id": {
+            "title": "Team Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "lineup_id",
+          "season_id",
+          "team_id",
+          "team_abbreviation",
+          "players",
+          "pre_break",
+          "post_break",
+          "change"
+        ],
+        "title": "LineupSummary",
+        "type": "object"
+      },
+      "ModelCard": {
+        "properties": {
+          "appropriate_use": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Appropriate Use",
+            "type": "array"
+          },
+          "artifact_sha256": {
+            "title": "Artifact Sha256",
+            "type": "string"
+          },
+          "artifact_verified": {
+            "description": "artifact on disk re-hashed now and equal to the frozen spec",
+            "title": "Artifact Verified",
+            "type": "boolean"
+          },
+          "coefficients": {
+            "items": {
+              "$ref": "#/components/schemas/Coefficient"
+            },
+            "title": "Coefficients",
+            "type": "array"
+          },
+          "features_in": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Features In",
+            "type": "array"
+          },
+          "features_used": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Features Used",
+            "type": "array"
+          },
+          "frozen_at_utc": {
+            "title": "Frozen At Utc",
+            "type": "string"
+          },
+          "held_out_seasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Held Out Seasons",
+            "type": "array"
+          },
+          "intercept": {
+            "title": "Intercept",
+            "type": "number"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "not_for": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Not For",
+            "type": "array"
+          },
+          "prediction_target": {
+            "title": "Prediction Target",
+            "type": "string"
+          },
+          "sample_weight": {
+            "title": "Sample Weight",
+            "type": "string"
+          },
+          "selection": {
+            "additionalProperties": true,
+            "title": "Selection",
+            "type": "object"
+          },
+          "software": {
+            "additionalProperties": true,
+            "title": "Software",
+            "type": "object"
+          },
+          "spec_sha256": {
+            "title": "Spec Sha256",
+            "type": "string"
+          },
+          "trained_seasons": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Trained Seasons",
+            "type": "array"
+          },
+          "uncertainty_method": {
+            "title": "Uncertainty Method",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "label",
+          "frozen_at_utc",
+          "artifact_sha256",
+          "spec_sha256",
+          "artifact_verified",
+          "trained_seasons",
+          "held_out_seasons",
+          "prediction_target",
+          "sample_weight",
+          "features_in",
+          "features_used",
+          "intercept",
+          "coefficients",
+          "selection",
+          "uncertainty_method",
+          "appropriate_use",
+          "not_for",
+          "limitations",
+          "software"
+        ],
+        "title": "ModelCard",
+        "type": "object"
+      },
+      "ModelPerformance": {
+        "properties": {
+          "beats_league_mean": {
+            "title": "Beats League Mean",
+            "type": "boolean"
+          },
+          "beats_team_prior": {
+            "description": "pre-registered primary question: does the pooled held-out RMSE difference vs the team prior have a 95% CI entirely below 0?",
+            "title": "Beats Team Prior",
+            "type": "boolean"
+          },
+          "conclusion": {
+            "title": "Conclusion",
+            "type": "string"
+          },
+          "development_cv": {
+            "$ref": "#/components/schemas/EvaluationSummary"
+          },
+          "held_out": {
+            "items": {
+              "$ref": "#/components/schemas/EvaluationSummary"
+            },
+            "title": "Held Out",
+            "type": "array"
+          },
+          "weighting": {
+            "title": "Weighting",
+            "type": "string"
+          }
+        },
+        "required": [
+          "weighting",
+          "development_cv",
+          "held_out",
+          "beats_team_prior",
+          "beats_league_mean",
+          "conclusion"
+        ],
+        "title": "ModelPerformance",
+        "type": "object"
+      },
+      "ObservedPostBreak": {
+        "description": "What actually happened after the break. NOT an input: the prediction never reads post-break data.",
+        "properties": {
+          "in_evaluation_sample": {
+            "description": "≥ 25 possessions on each end (the model's target sample)",
+            "title": "In Evaluation Sample",
+            "type": "boolean"
+          },
+          "net_rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Net Rating"
+          },
+          "opp_poss": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Opp Poss"
+          },
+          "poss": {
+            "title": "Poss",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "poss",
+          "opp_poss",
+          "net_rating",
+          "in_evaluation_sample"
+        ],
+        "title": "ObservedPostBreak",
+        "type": "object"
+      },
+      "Page_LineupSummary_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/LineupSummary"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "page": {
+            "minimum": 1.0,
+            "title": "Page",
+            "type": "integer"
+          },
+          "page_size": {
+            "minimum": 1.0,
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "total": {
+            "description": "rows matching the filters, over all pages",
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          },
+          "total_pages": {
+            "minimum": 0.0,
+            "title": "Total Pages",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "page",
+          "page_size",
+          "total",
+          "total_pages"
+        ],
+        "title": "Page[LineupSummary]",
+        "type": "object"
+      },
+      "Page_PlayerTeamSeason_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/PlayerTeamSeason"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "page": {
+            "minimum": 1.0,
+            "title": "Page",
+            "type": "integer"
+          },
+          "page_size": {
+            "minimum": 1.0,
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "total": {
+            "description": "rows matching the filters, over all pages",
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          },
+          "total_pages": {
+            "minimum": 0.0,
+            "title": "Total Pages",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "page",
+          "page_size",
+          "total",
+          "total_pages"
+        ],
+        "title": "Page[PlayerTeamSeason]",
+        "type": "object"
+      },
+      "Page_Prediction_": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Prediction"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "page": {
+            "minimum": 1.0,
+            "title": "Page",
+            "type": "integer"
+          },
+          "page_size": {
+            "minimum": 1.0,
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "total": {
+            "description": "rows matching the filters, over all pages",
+            "minimum": 0.0,
+            "title": "Total",
+            "type": "integer"
+          },
+          "total_pages": {
+            "minimum": 0.0,
+            "title": "Total Pages",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "page",
+          "page_size",
+          "total",
+          "total_pages"
+        ],
+        "title": "Page[Prediction]",
+        "type": "object"
+      },
+      "Player": {
+        "properties": {
+          "player_id": {
+            "title": "Player Id",
+            "type": "integer"
+          },
+          "player_name": {
+            "title": "Player Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "player_id",
+          "player_name"
+        ],
+        "title": "Player",
+        "type": "object"
+      },
+      "PlayerDetail": {
+        "properties": {
+          "player_id": {
+            "title": "Player Id",
+            "type": "integer"
+          },
+          "player_name": {
+            "title": "Player Name",
+            "type": "string"
+          },
+          "seasons": {
+            "items": {
+              "$ref": "#/components/schemas/PlayerTeamSeason"
+            },
+            "title": "Seasons",
+            "type": "array"
+          }
+        },
+        "required": [
+          "player_id",
+          "player_name",
+          "seasons"
+        ],
+        "title": "PlayerDetail",
+        "type": "object"
+      },
+      "PlayerTeamSeason": {
+        "properties": {
+          "player_id": {
+            "title": "Player Id",
+            "type": "integer"
+          },
+          "player_name": {
+            "title": "Player Name",
+            "type": "string"
+          },
+          "post_break": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PlayerWindow"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "pre_break": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PlayerWindow"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "season_id": {
+            "title": "Season Id",
+            "type": "string"
+          },
+          "team_abbreviation": {
+            "title": "Team Abbreviation",
+            "type": "string"
+          },
+          "team_id": {
+            "title": "Team Id",
+            "type": "integer"
+          },
+          "usage_post_break": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PlayerUsage"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "usage_pre_break": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/PlayerUsage"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "player_id",
+          "player_name",
+          "season_id",
+          "team_id",
+          "team_abbreviation",
+          "pre_break",
+          "post_break",
+          "usage_pre_break",
+          "usage_post_break"
+        ],
+        "title": "PlayerTeamSeason",
+        "type": "object"
+      },
+      "PlayerUsage": {
+        "description": "From the player endpoint: one row per season and window, ALL teams combined (traded players).",
+        "properties": {
+          "gp": {
+            "title": "Gp",
+            "type": "integer"
+          },
+          "minutes": {
+            "title": "Minutes",
+            "type": "number"
+          },
+          "ts_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ts Pct"
+          },
+          "usg_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "share of team plays used while on court, 0-1",
+            "title": "Usg Pct"
+          }
+        },
+        "required": [
+          "gp",
+          "minutes",
+          "usg_pct",
+          "ts_pct"
+        ],
+        "title": "PlayerUsage",
+        "type": "object"
+      },
+      "PlayerWindow": {
+        "description": "A player's ON-COURT totals for one team in one window, pooled over every lineup they played in.",
+        "properties": {
+          "def_rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Def Rating"
+          },
+          "minutes": {
+            "title": "Minutes",
+            "type": "number"
+          },
+          "n_lineups": {
+            "title": "N Lineups",
+            "type": "integer"
+          },
+          "net_rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Net Rating"
+          },
+          "off_court_net_rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "team net rating with the player OFF the court",
+            "title": "Off Court Net Rating"
+          },
+          "off_rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Off Rating"
+          },
+          "on_off_net": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "on-court net minus off-court net (noisy, context-dependent)",
+            "title": "On Off Net"
+          },
+          "opp_poss": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Opp Poss"
+          },
+          "poss": {
+            "title": "Poss",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "n_lineups",
+          "minutes",
+          "poss",
+          "opp_poss",
+          "off_rating",
+          "def_rating",
+          "net_rating",
+          "off_court_net_rating",
+          "on_off_net"
+        ],
+        "title": "PlayerWindow",
+        "type": "object"
+      },
+      "PreBreakContext": {
+        "properties": {
+          "net_rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "raw pre-break net rating (noisy at small samples)",
+            "title": "Net Rating"
+          },
+          "opp_poss": {
+            "title": "Opp Poss",
+            "type": "integer"
+          },
+          "poss": {
+            "title": "Poss",
+            "type": "integer"
+          },
+          "reliability": {
+            "description": "share of the raw rating's variance that is signal (0 without history)",
+            "title": "Reliability",
+            "type": "number"
+          },
+          "team_net_rating_excluding_lineup": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Team Net Rating Excluding Lineup"
+          }
+        },
+        "required": [
+          "poss",
+          "opp_poss",
+          "net_rating",
+          "reliability",
+          "team_net_rating_excluding_lineup"
+        ],
+        "title": "PreBreakContext",
+        "type": "object"
+      },
+      "Prediction": {
+        "properties": {
+          "baselines": {
+            "$ref": "#/components/schemas/Baselines"
+          },
+          "contributions": {
+            "items": {
+              "$ref": "#/components/schemas/Contribution"
+            },
+            "title": "Contributions",
+            "type": "array"
+          },
+          "intercept": {
+            "title": "Intercept",
+            "type": "number"
+          },
+          "lineup_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "null for a combination that never played together this season",
+            "title": "Lineup Id"
+          },
+          "model_minus_team_prior": {
+            "title": "Model Minus Team Prior",
+            "type": "number"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Notes",
+            "type": "array"
+          },
+          "observed_post_break": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ObservedPostBreak"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "players": {
+            "items": {
+              "$ref": "#/components/schemas/PredictionPlayer"
+            },
+            "title": "Players",
+            "type": "array"
+          },
+          "pre_break": {
+            "$ref": "#/components/schemas/PreBreakContext"
+          },
+          "predicted_net_rating": {
+            "description": "frozen linear model, post-break net rating per 100 possessions",
+            "title": "Predicted Net Rating",
+            "type": "number"
+          },
+          "season_id": {
+            "title": "Season Id",
+            "type": "string"
+          },
+          "season_used_for_training": {
+            "description": "true: this season's post-break results were training labels, so the prediction is in-sample",
+            "title": "Season Used For Training",
+            "type": "boolean"
+          },
+          "team_abbreviation": {
+            "title": "Team Abbreviation",
+            "type": "string"
+          },
+          "team_id": {
+            "title": "Team Id",
+            "type": "integer"
+          },
+          "uncertainty": {
+            "$ref": "#/components/schemas/Uncertainty"
+          }
+        },
+        "required": [
+          "lineup_id",
+          "season_id",
+          "team_id",
+          "team_abbreviation",
+          "players",
+          "predicted_net_rating",
+          "baselines",
+          "model_minus_team_prior",
+          "uncertainty",
+          "pre_break",
+          "intercept",
+          "contributions",
+          "season_used_for_training",
+          "notes"
+        ],
+        "title": "Prediction",
+        "type": "object"
+      },
+      "PredictionPlayer": {
+        "properties": {
+          "has_pre_break_data": {
+            "description": "played before the break this season (any team)",
+            "title": "Has Pre Break Data",
+            "type": "boolean"
+          },
+          "new_to_team": {
+            "description": "no pre-break minutes for THIS team (e.g. traded or returning)",
+            "title": "New To Team",
+            "type": "boolean"
+          },
+          "player_id": {
+            "title": "Player Id",
+            "type": "integer"
+          },
+          "player_name": {
+            "title": "Player Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "player_id",
+          "player_name",
+          "has_pre_break_data",
+          "new_to_team"
+        ],
+        "title": "PredictionPlayer",
+        "type": "object"
+      },
+      "PredictionRequest": {
+        "description": "A lineup to predict: five players of one team in one season. The lineup need not have played together.",
+        "examples": [
+          {
+            "player_ids": [
+              1628369,
+              1627759,
+              201950,
+              1630202,
+              1628401
+            ],
+            "possessions": 100,
+            "season_id": "2025-26",
+            "team_id": 1610612738
+          }
+        ],
+        "properties": {
+          "player_ids": {
+            "description": "exactly five distinct player ids",
+            "items": {
+              "type": "integer"
+            },
+            "maxItems": 5,
+            "minItems": 5,
+            "title": "Player Ids",
+            "type": "array"
+          },
+          "possessions": {
+            "default": 100,
+            "description": "post-break possessions (each end) to size the predictive interval for",
+            "maximum": 3000.0,
+            "minimum": 10.0,
+            "title": "Possessions",
+            "type": "integer"
+          },
+          "season_id": {
+            "pattern": "^\\d{4}-\\d{2}$",
+            "title": "Season Id",
+            "type": "string"
+          },
+          "team_id": {
+            "exclusiveMinimum": 0.0,
+            "title": "Team Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "season_id",
+          "team_id",
+          "player_ids"
+        ],
+        "title": "PredictionRequest",
+        "type": "object"
+      },
+      "Season": {
+        "properties": {
+          "first_game_date": {
+            "format": "date",
+            "title": "First Game Date",
+            "type": "string"
+          },
+          "is_irregular": {
+            "description": "2019-20 (bubble) and 2020-21 (72 games)",
+            "title": "Is Irregular",
+            "type": "boolean"
+          },
+          "last_game_date": {
+            "format": "date",
+            "title": "Last Game Date",
+            "type": "string"
+          },
+          "n_lineups": {
+            "title": "N Lineups",
+            "type": "integer"
+          },
+          "role": {
+            "description": "development: used to train the frozen model; held_out: its final test seasons",
+            "enum": [
+              "development",
+              "held_out"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "season_id": {
+            "examples": [
+              "2025-26"
+            ],
+            "title": "Season Id",
+            "type": "string"
+          },
+          "start_year": {
+            "title": "Start Year",
+            "type": "integer"
+          },
+          "windows": {
+            "items": {
+              "$ref": "#/components/schemas/Window"
+            },
+            "title": "Windows",
+            "type": "array"
+          }
+        },
+        "required": [
+          "season_id",
+          "start_year",
+          "is_irregular",
+          "first_game_date",
+          "last_game_date",
+          "role",
+          "windows",
+          "n_lineups"
+        ],
+        "title": "Season",
+        "type": "object"
+      },
+      "Team": {
+        "properties": {
+          "abbreviation": {
+            "title": "Abbreviation",
+            "type": "string"
+          },
+          "team_id": {
+            "title": "Team Id",
+            "type": "integer"
+          },
+          "team_name": {
+            "title": "Team Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "team_id",
+          "abbreviation",
+          "team_name"
+        ],
+        "title": "Team",
+        "type": "object"
+      },
+      "TeamSeason": {
+        "properties": {
+          "abbreviation": {
+            "title": "Abbreviation",
+            "type": "string"
+          },
+          "change": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Change"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "post_break": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TeamWindow"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "pre_break": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TeamWindow"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "season_id": {
+            "title": "Season Id",
+            "type": "string"
+          },
+          "team_id": {
+            "title": "Team Id",
+            "type": "integer"
+          },
+          "team_name": {
+            "title": "Team Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "team_id",
+          "abbreviation",
+          "team_name",
+          "season_id",
+          "pre_break",
+          "post_break",
+          "change"
+        ],
+        "title": "TeamSeason",
+        "type": "object"
+      },
+      "TeamWindow": {
+        "properties": {
+          "def_rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Def Rating"
+          },
+          "games": {
+            "title": "Games",
+            "type": "integer"
+          },
+          "lineup_minutes": {
+            "description": "sum over lineups (≈ team minutes)",
+            "title": "Lineup Minutes",
+            "type": "number"
+          },
+          "losses": {
+            "title": "Losses",
+            "type": "integer"
+          },
+          "n_lineups": {
+            "title": "N Lineups",
+            "type": "integer"
+          },
+          "net_rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Net Rating"
+          },
+          "off_rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Off Rating"
+          },
+          "opp_poss": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Opp Poss"
+          },
+          "opp_pts": {
+            "title": "Opp Pts",
+            "type": "integer"
+          },
+          "poss": {
+            "title": "Poss",
+            "type": "integer"
+          },
+          "pts": {
+            "title": "Pts",
+            "type": "integer"
+          },
+          "wins": {
+            "title": "Wins",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "lineup_minutes",
+          "poss",
+          "opp_poss",
+          "pts",
+          "opp_pts",
+          "off_rating",
+          "def_rating",
+          "net_rating",
+          "games",
+          "wins",
+          "losses",
+          "n_lineups"
+        ],
+        "title": "TeamWindow",
+        "type": "object"
+      },
+      "Uncertainty": {
+        "properties": {
+          "method": {
+            "title": "Method",
+            "type": "string"
+          },
+          "model_sd": {
+            "description": "PREDICTIVE (model) uncertainty: typical error of the prediction about the lineup's TRUE post-break rating, sqrt(MSE − noise variance) on held-out data",
+            "title": "Model Sd",
+            "type": "number"
+          },
+          "observed_rating_interval_95": {
+            "$ref": "#/components/schemas/Interval"
+          },
+          "possessions": {
+            "description": "post-break possessions on each end assumed for the intervals",
+            "title": "Possessions",
+            "type": "integer"
+          },
+          "sampling_sd": {
+            "description": "SAMPLING uncertainty: how much the OBSERVED rating varies around the true one after `possessions` possessions, sqrt(K·2/possessions)",
+            "title": "Sampling Sd",
+            "type": "number"
+          },
+          "total_sd": {
+            "description": "sqrt(model_sd² + sampling_sd²): error vs the rating you would observe",
+            "title": "Total Sd",
+            "type": "number"
+          },
+          "true_rating_interval_95": {
+            "$ref": "#/components/schemas/Interval"
+          }
+        },
+        "required": [
+          "possessions",
+          "model_sd",
+          "sampling_sd",
+          "total_sd",
+          "true_rating_interval_95",
+          "observed_rating_interval_95",
+          "method"
+        ],
+        "title": "Uncertainty",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      },
+      "Window": {
+        "properties": {
+          "date_from": {
+            "format": "date",
+            "title": "Date From",
+            "type": "string"
+          },
+          "date_to": {
+            "format": "date",
+            "title": "Date To",
+            "type": "string"
+          },
+          "window_type": {
+            "enum": [
+              "pre_asb",
+              "post_asb"
+            ],
+            "title": "Window Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "window_type",
+          "date_from",
+          "date_to"
+        ],
+        "title": "Window",
+        "type": "object"
+      },
+      "WindowStats": {
+        "description": "Totals and ratings for one window (pre- or post-All-Star break).",
+        "properties": {
+          "def_rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Def Rating"
+          },
+          "gp": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gp"
+          },
+          "minutes": {
+            "title": "Minutes",
+            "type": "number"
+          },
+          "net_rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Net Rating"
+          },
+          "net_rating_sampling_sd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "SD of the observed net rating from sampling noise alone: sqrt(K·(1/poss + 1/opp_poss))",
+            "title": "Net Rating Sampling Sd"
+          },
+          "off_rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Off Rating"
+          },
+          "opp_poss": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "opponent possessions; null only for zero-second rows",
+            "title": "Opp Poss"
+          },
+          "opp_pts": {
+            "title": "Opp Pts",
+            "type": "integer"
+          },
+          "poss": {
+            "description": "own (offensive) possessions",
+            "title": "Poss",
+            "type": "integer"
+          },
+          "pts": {
+            "title": "Pts",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "minutes",
+          "poss",
+          "opp_poss",
+          "pts",
+          "opp_pts",
+          "off_rating",
+          "def_rating",
+          "net_rating"
+        ],
+        "title": "WindowStats",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "\nRead-only API over eight NBA regular seasons (2018-19 to 2025-26) of five-man lineup data, split at the\nAll-Star break, and the **frozen** Phase 6 model that predicts a lineup's post-break net rating.\n\n**Read before using predictions**\n* A prediction is **conditional**: the expected post-break net rating *if* the lineup plays after the break.\n* It uses **pre-break data only**.\n* It is **not statistically better than the team-prior baseline**, which is returned with every prediction\n  (see `GET /api/v1/model/performance`).\n* Uncertainty is large and has two parts: the model's error about the lineup's true quality, and the sampling\n  noise of a rating measured over a few dozen to a few hundred possessions.\n\nRatings are points per 100 possessions. Errors share one shape: `{\"error\": {\"code\", \"message\", \"details\"}}`.\n",
+    "title": "NBA Lineup Analytics API",
+    "version": "1.0.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/v1/lineups": {
+      "get": {
+        "description": "Filter by season, team, player(s) and minimum possessions. Each lineup carries its pre-break and\npost-break ratings, the change, and how large a change sampling noise alone would produce.\n\nPossession thresholds apply to BOTH ends (own and opponent possessions), as in the model's target sample\n(≥ 25 post-break possessions per end).",
+        "operationId": "list_lineups_api_v1_lineups_get",
+        "parameters": [
+          {
+            "description": "season id, e.g. 2025-26",
+            "in": "query",
+            "name": "season",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "pattern": "^\\d{4}-\\d{2}$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "season id, e.g. 2025-26",
+              "title": "Season"
+            }
+          },
+          {
+            "in": "query",
+            "name": "team_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "exclusiveMinimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Team Id"
+            }
+          },
+          {
+            "description": "lineups containing ALL of these players (repeat the parameter, up to 5)",
+            "in": "query",
+            "name": "player_id",
+            "required": false,
+            "schema": {
+              "default": [],
+              "description": "lineups containing ALL of these players (repeat the parameter, up to 5)",
+              "items": {
+                "type": "integer"
+              },
+              "title": "Player Id",
+              "type": "array"
+            }
+          },
+          {
+            "description": "minimum pre-break possessions on EACH end",
+            "in": "query",
+            "name": "min_pre_poss",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "description": "minimum pre-break possessions on EACH end",
+              "maximum": 5000,
+              "minimum": 0,
+              "title": "Min Pre Poss",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "minimum post-break possessions on EACH end",
+            "in": "query",
+            "name": "min_post_poss",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "description": "minimum post-break possessions on EACH end",
+              "maximum": 5000,
+              "minimum": 0,
+              "title": "Min Post Poss",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "default": "pre_poss",
+              "enum": [
+                "pre_poss",
+                "post_poss",
+                "pre_net",
+                "post_net",
+                "net_change",
+                "pre_off",
+                "pre_def",
+                "post_off",
+                "post_def",
+                "lineup_id"
+              ],
+              "title": "Sort",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "order",
+            "required": false,
+            "schema": {
+              "default": "desc",
+              "pattern": "^(asc|desc)$",
+              "title": "Order",
+              "type": "string"
+            }
+          },
+          {
+            "description": "1-based page number",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "description": "1-based page number",
+              "minimum": 1,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "rows per page (max 200)",
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "description": "rows per page (max 200)",
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Page Size",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_LineupSummary_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Five-man lineups, pre vs post break",
+        "tags": [
+          "lineups"
+        ]
+      }
+    },
+    "/api/v1/lineups/{lineup_id}": {
+      "get": {
+        "operationId": "get_lineup_api_v1_lineups__lineup_id__get",
+        "parameters": [
+          {
+            "description": "lineup id (from GET /lineups)",
+            "in": "path",
+            "name": "lineup_id",
+            "required": true,
+            "schema": {
+              "description": "lineup id (from GET /lineups)",
+              "exclusiveMinimum": 0,
+              "title": "Lineup Id",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LineupDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "lineup not found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "One lineup",
+        "tags": [
+          "lineups"
+        ]
+      }
+    },
+    "/api/v1/lineups/{lineup_id}/prediction": {
+      "get": {
+        "description": "Post-break net rating predicted from PRE-BREAK data only, conditional on the lineup playing after the\nbreak, with the team-prior baseline, uncertainty and per-feature contributions.",
+        "operationId": "predict_lineup_api_v1_lineups__lineup_id__prediction_get",
+        "parameters": [
+          {
+            "description": "lineup id (from GET /lineups)",
+            "in": "path",
+            "name": "lineup_id",
+            "required": true,
+            "schema": {
+              "description": "lineup id (from GET /lineups)",
+              "exclusiveMinimum": 0,
+              "title": "Lineup Id",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "post-break possessions per end to size the observed-rating interval for",
+            "in": "query",
+            "name": "possessions",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "description": "post-break possessions per end to size the observed-rating interval for",
+              "maximum": 3000,
+              "minimum": 10,
+              "title": "Possessions",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "also return what actually happened after the break (read separately; never a model input)",
+            "in": "query",
+            "name": "include_observed",
+            "required": false,
+            "schema": {
+              "default": false,
+              "description": "also return what actually happened after the break (read separately; never a model input)",
+              "title": "Include Observed",
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Prediction"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "lineup not found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Frozen-model prediction for a lineup",
+        "tags": [
+          "lineups"
+        ]
+      }
+    },
+    "/api/v1/model": {
+      "get": {
+        "description": "What the model is, what it was trained on, its coefficients, intended use and limitations.\n`artifact_verified` re-hashes the artifact on disk and checks the in-memory parameters on every call.",
+        "operationId": "model_card_api_v1_model_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelCard"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Model card of the frozen model",
+        "tags": [
+          "model"
+        ]
+      }
+    },
+    "/api/v1/model/performance": {
+      "get": {
+        "description": "Development cross-validation and the one-time held-out evaluation, possession-weighted, with 95%\nteam-season cluster-bootstrap intervals, and the answer to the pre-registered question: does the model\nbeat the team prior?",
+        "operationId": "model_performance_api_v1_model_performance_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ModelPerformance"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Evaluation results",
+        "tags": [
+          "model"
+        ]
+      }
+    },
+    "/api/v1/players": {
+      "get": {
+        "description": "One row per player and team in `season` (a traded player has one row per team). On-court ratings and\non/off come from lineup data; usage from the player endpoint (all teams combined).",
+        "operationId": "list_players_api_v1_players_get",
+        "parameters": [
+          {
+            "description": "season id, e.g. 2025-26",
+            "in": "query",
+            "name": "season",
+            "required": true,
+            "schema": {
+              "description": "season id, e.g. 2025-26",
+              "examples": [
+                "2025-26"
+              ],
+              "pattern": "^\\d{4}-\\d{2}$",
+              "title": "Season",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "team_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "exclusiveMinimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Team Id"
+            }
+          },
+          {
+            "description": "case-insensitive name search",
+            "in": "query",
+            "name": "search",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "maxLength": 50,
+                  "minLength": 2,
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "case-insensitive name search",
+              "title": "Search"
+            }
+          },
+          {
+            "in": "query",
+            "name": "min_pre_minutes",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "maximum": 5000,
+              "minimum": 0,
+              "title": "Min Pre Minutes",
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "default": "pre_minutes",
+              "enum": [
+                "pre_minutes",
+                "post_minutes",
+                "pre_net",
+                "post_net",
+                "pre_on_off",
+                "post_on_off",
+                "name"
+              ],
+              "title": "Sort",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "order",
+            "required": false,
+            "schema": {
+              "default": "desc",
+              "pattern": "^(asc|desc)$",
+              "title": "Order",
+              "type": "string"
+            }
+          },
+          {
+            "description": "1-based page number",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "description": "1-based page number",
+              "minimum": 1,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "rows per page (max 200)",
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "description": "rows per page (max 200)",
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Page Size",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_PlayerTeamSeason_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Player on-court and on/off stats",
+        "tags": [
+          "players"
+        ]
+      }
+    },
+    "/api/v1/players/{player_id}": {
+      "get": {
+        "description": "Every (season, team) of the player, or only `season`.",
+        "operationId": "get_player_api_v1_players__player_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "player_id",
+            "required": true,
+            "schema": {
+              "exclusiveMinimum": 0,
+              "title": "Player Id",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "season id, e.g. 2025-26",
+            "in": "query",
+            "name": "season",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "pattern": "^\\d{4}-\\d{2}$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "season id, e.g. 2025-26",
+              "title": "Season"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "player not found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "One player",
+        "tags": [
+          "players"
+        ]
+      }
+    },
+    "/api/v1/predictions": {
+      "post": {
+        "description": "Predict a lineup given by its five players, including combinations that never played together.\n\nPOST because the input is a JSON body, not because anything is created or stored: the call is read-only\nand repeatable (same input → same output). If the five already form a recorded lineup, the result equals\nGET /lineups/{lineup_id}/prediction.",
+        "operationId": "predict_api_v1_predictions_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PredictionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Prediction"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "a player never played for the team that season"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "season or team not found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Predict any five players of one team",
+        "tags": [
+          "predictions"
+        ]
+      }
+    },
+    "/api/v1/seasons": {
+      "get": {
+        "description": "Every loaded season with its pre/post All-Star-break windows, whether it is irregular, and its role:\n`development` (used to train the frozen model) or `held_out` (its final test seasons).",
+        "operationId": "list_seasons_api_v1_seasons_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Season"
+                  },
+                  "title": "Response List Seasons Api V1 Seasons Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Seasons in the database",
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
+    "/api/v1/teams": {
+      "get": {
+        "description": "All franchises, or only those with lineups in `season`.",
+        "operationId": "list_teams_api_v1_teams_get",
+        "parameters": [
+          {
+            "description": "season id, e.g. 2025-26",
+            "in": "query",
+            "name": "season",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "pattern": "^\\d{4}-\\d{2}$",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "season id, e.g. 2025-26",
+              "title": "Season"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Team"
+                  },
+                  "title": "Response List Teams Api V1 Teams Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Teams",
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
+    "/api/v1/teams/stats": {
+      "get": {
+        "description": "Pre- and post-break offensive, defensive and net ratings (from lineup totals) and win-loss records.",
+        "operationId": "all_team_stats_api_v1_teams_stats_get",
+        "parameters": [
+          {
+            "description": "season id, e.g. 2025-26",
+            "in": "query",
+            "name": "season",
+            "required": true,
+            "schema": {
+              "description": "season id, e.g. 2025-26",
+              "examples": [
+                "2025-26"
+              ],
+              "pattern": "^\\d{4}-\\d{2}$",
+              "title": "Season",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/TeamSeason"
+                  },
+                  "title": "Response All Team Stats Api V1 Teams Stats Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "season or team not found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "All teams' ratings in a season",
+        "tags": [
+          "teams"
+        ]
+      }
+    },
+    "/api/v1/teams/{team_id}/predictions": {
+      "get": {
+        "description": "The team's lineups ranked by predicted post-break net rating (highest first), each with the team-prior\nbaseline. Differences between lineups of the same team are small next to the uncertainty: read the\nranking as weak evidence.",
+        "operationId": "team_predictions_api_v1_teams__team_id__predictions_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "team_id",
+            "required": true,
+            "schema": {
+              "exclusiveMinimum": 0,
+              "title": "Team Id",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "season id, e.g. 2025-26",
+            "in": "query",
+            "name": "season",
+            "required": true,
+            "schema": {
+              "description": "season id, e.g. 2025-26",
+              "examples": [
+                "2025-26"
+              ],
+              "pattern": "^\\d{4}-\\d{2}$",
+              "title": "Season",
+              "type": "string"
+            }
+          },
+          {
+            "description": "minimum pre-break possessions per end",
+            "in": "query",
+            "name": "min_pre_poss",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "description": "minimum pre-break possessions per end",
+              "maximum": 5000,
+              "minimum": 0,
+              "title": "Min Pre Poss",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "possessions",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 3000,
+              "minimum": 10,
+              "title": "Possessions",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "1-based page number",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "description": "1-based page number",
+              "minimum": 1,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "rows per page (max 200)",
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "description": "rows per page (max 200)",
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Page Size",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Page_Prediction_"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "season or team not found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Frozen-model predictions for a team's lineups",
+        "tags": [
+          "teams"
+        ]
+      }
+    },
+    "/api/v1/teams/{team_id}/stats": {
+      "get": {
+        "operationId": "team_stats_api_v1_teams__team_id__stats_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "team_id",
+            "required": true,
+            "schema": {
+              "exclusiveMinimum": 0,
+              "title": "Team Id",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "season id, e.g. 2025-26",
+            "in": "query",
+            "name": "season",
+            "required": true,
+            "schema": {
+              "description": "season id, e.g. 2025-26",
+              "examples": [
+                "2025-26"
+              ],
+              "pattern": "^\\d{4}-\\d{2}$",
+              "title": "Season",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamSeason"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "season or team not found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "One team's ratings",
+        "tags": [
+          "teams"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "description": "200 when the database answers and the frozen model is loaded and unchanged; 503 otherwise.",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Liveness and readiness",
+        "tags": [
+          "health"
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "description": "Seasons and teams.",
+      "name": "catalog"
+    },
+    {
+      "description": "Five-man lineups with pre- vs post-break ratings.",
+      "name": "lineups"
+    },
+    {
+      "description": "Player on-court, on/off and usage statistics.",
+      "name": "players"
+    },
+    {
+      "description": "Team ratings and records; model predictions for a team's lineups.",
+      "name": "teams"
+    },
+    {
+      "description": "Frozen-model predictions for any five players of a team.",
+      "name": "predictions"
+    },
+    {
+      "description": "Model card and evaluation results.",
+      "name": "model"
+    },
+    {
+      "description": "Liveness / readiness.",
+      "name": "health"
+    }
+  ]
+}

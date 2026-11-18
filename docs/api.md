@@ -208,6 +208,7 @@ db.py ── psycopg ConnectionPool (read-only sessions, statement timeout)  ─
 ```
 
 ## Connecting the React frontend (Phase 8)
+The dashboard in `web/` follows these rules; see [docs/dashboard.md](dashboard.md).
 - **Base URL:** `http://127.0.0.1:8000/api/v1`, taken from an environment variable such as `VITE_API_BASE_URL`.
 - **CORS:** the Vite dev origin `http://localhost:5173` is allowed by default. Add production origins with `NBA_API_CORS_ORIGINS`.
 - **Typed client:** generate TypeScript types from the contract instead of writing them by hand, for example `npx openapi-typescript http://127.0.0.1:8000/openapi.json -o src/api/schema.ts`.

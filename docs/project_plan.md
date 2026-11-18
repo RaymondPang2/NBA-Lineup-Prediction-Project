@@ -38,8 +38,8 @@ Post-All-Star-break lineup net rating (per 100 possessions). Features come from 
 | 4 | EDA, reliability and selection analysis (Matplotlib) | Done (approved 2026-11-12) |
 | 5 | Features + baselines + chronological splits | Done (approved 2026-11-13) |
 | 6 | Linear / Ridge / Random Forest, evaluation, model card | Done (approved 2026-11-14) |
-| 7 | FastAPI (read-only API over the warehouse and the frozen model; `docs/api.md`) | Done, awaiting review |
-| 8 | React + TypeScript + Tailwind + Recharts dashboard | |
+| 7 | FastAPI (read-only API over the warehouse and the frozen model; `docs/api.md`) | Done (approved 2026-11-18) |
+| 8 | React + TypeScript + Tailwind + Recharts dashboard (`web/`; `docs/dashboard.md`) | Done, awaiting review |
 | 9 | Power BI datasets + report | |
 | 10 | CI/CD, deployment, documentation | |
 
