@@ -56,7 +56,7 @@ def real_settings() -> Settings:
             seasons = [r[0] for r in c.execute("SELECT season_id FROM seasons ORDER BY 1")]
     except psycopg.Error as exc:
         pytest.skip(f"PostgreSQL not available: {exc}")
-    if seasons != list(ALL_SEASONS):
+    if not set(ALL_SEASONS) <= set(seasons):
         pytest.skip(f"database does not hold the eight production seasons (has {seasons})")
     return s
 

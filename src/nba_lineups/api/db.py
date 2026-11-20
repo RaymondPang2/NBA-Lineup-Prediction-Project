@@ -23,7 +23,11 @@ from .settings import Settings
 def make_pool(settings: Settings) -> ConnectionPool | None:
     if not settings.database_url:
         return None
-    options = f"-c default_transaction_read_only=on -c statement_timeout={settings.statement_timeout_ms}"
+    # No parallel query: API requests are many small concurrent reads, and each parallel worker allocates
+    # dynamic shared memory; under the dashboard's concurrent paging that exhausted Docker's default 64 MB
+    # /dev/shm ("could not resize shared memory segment"), so serial plans are both safer and fast enough.
+    options = (f"-c default_transaction_read_only=on -c statement_timeout={settings.statement_timeout_ms} "
+               "-c max_parallel_workers_per_gather=0")
     return ConnectionPool(settings.database_url, min_size=settings.pool_min, max_size=settings.pool_max,
                           timeout=settings.pool_timeout_s, open=False, name="nba-api",
                           kwargs={"options": options, "connect_timeout": 3, "application_name": "nba-lineups-api"})

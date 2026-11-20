@@ -15,7 +15,7 @@ from ..config import PROJECT_ROOT
 
 # Dropped in dependency order (children before parents) by reset_schema().
 TABLES = ("lineup_split_stats", "lineup_window_stats", "player_window_stats", "team_window_stats", "lineup_players", "lineups",
-          "team_games", "stat_windows", "players", "teams", "seasons", "ingestion_log", "etl_runs")
+          "team_games", "stat_windows", "players", "teams", "seasons", "ingestion_log", "etl_runs", "data_refreshes")
 
 
 def read_env_file(path: Path = PROJECT_ROOT / ".env") -> dict[str, str]:

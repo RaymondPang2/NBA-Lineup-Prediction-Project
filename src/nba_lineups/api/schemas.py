@@ -8,7 +8,7 @@ points ALLOWED per 100 opponent possessions, so lower is better. Net = off − d
 """
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime
 from typing import Generic, Literal, TypeVar
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -49,10 +49,35 @@ class Season(BaseModel):
     is_irregular: bool = Field(description="2019-20 (bubble) and 2020-21 (72 games)")
     first_game_date: date
     last_game_date: date
-    role: Literal["development", "held_out"] = Field(
-        description="development: used to train the frozen model; held_out: its final test seasons")
+    role: Literal["development", "held_out", "current"] = Field(
+        description="development: used to train the frozen model; held_out: its final test seasons; "
+                    "current: the season in progress, season to date (provisional; refreshed daily)")
     windows: list[Window]
     n_lineups: int
+
+
+class RefreshAttempt(BaseModel):
+    status: Literal["running", "success", "no_change", "failed"]
+    trigger: Literal["scheduled", "manual"]
+    started_at: datetime
+    finished_at: datetime | None
+    message: str | None
+
+
+class DataStatus(BaseModel):
+    """Freshness of the season in progress. Read-only: this API never triggers a refresh."""
+    season_id: str
+    data_version: int | None = Field(description="changes whenever a refresh loads new data (clients refetch)")
+    last_updated_at: datetime | None = Field(description="last successful refresh (new data or confirmed current)")
+    last_loaded_at: datetime | None = Field(description="last refresh that changed the data")
+    data_cutoff: date | None = Field(description="every game on or before this date is included, none after it")
+    last_game_date: date | None
+    games_total: int | None
+    expected_cutoff: date = Field(description="the cutoff the most recent scheduled 07:00 refresh would reach")
+    freshness: Literal["current", "stale", "unknown"]
+    stale_reason: str | None
+    last_attempt: RefreshAttempt | None
+    refresh_command: str = Field(description="run in a terminal on the machine holding the data")
 
 
 class Team(BaseModel):
@@ -262,6 +287,10 @@ class Prediction(BaseModel):
     contributions: list[Contribution]
     season_used_for_training: bool = Field(description="true: this season's post-break results were training "
                                                        "labels, so the prediction is in-sample")
+    provisional: bool = Field(False, description="true for the season in progress: inputs are season-to-date "
+                                                 "pre-break data up to data_cutoff, and accuracy at this point of "
+                                                 "a season has not been validated")
+    data_cutoff: date | None = Field(None, description="season in progress only: last game date the inputs include")
     observed_post_break: ObservedPostBreak | None = None
     notes: list[str]
 

@@ -22,6 +22,13 @@ PHASE1_SEASONS: tuple[str, ...] = ("2022-23", "2023-24")
 DEV_SEASONS: tuple[str, ...] = ALL_SEASONS[:6]          # 2018-19 .. 2023-24
 HELDOUT_SEASONS: tuple[str, ...] = ALL_SEASONS[6:]      # 2024-25 (validation), 2025-26 (final test)
 
+# The season in progress (local daily refresh, docs/refresh.md). It is NOT part of the modeling universe
+# above: it never trains, tunes or evaluates anything. The frozen model only scores it, provisionally,
+# from its season-to-date pre-break data. Its windows grow day by day up to the data cutoff.
+CURRENT_SEASON = "2026-27"
+LIVE_SEASONS: tuple[str, ...] = (CURRENT_SEASON,)
+DATA_SEASONS: tuple[str, ...] = ALL_SEASONS + LIVE_SEASONS     # every season the warehouse may hold
+
 # Phase 0 finding: stats.nba.com dashboard endpoints silently truncate at
 # 2,000 rows. A response of this size must be treated as incomplete.
 ROW_CAP = 2000

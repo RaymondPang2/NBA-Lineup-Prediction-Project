@@ -56,10 +56,23 @@ describe('contract', () => {
 })
 
 describe('data used by each page', () => {
-  it('seasons 2018-19 to 2025-26, with the two held-out seasons marked', async () => {
+  it('seasons 2018-19 to 2025-26 plus the season in progress, with the two held-out seasons marked', async () => {
     const seasons = await unwrap(api.GET('/api/v1/seasons'))
-    expect(seasons.map((s) => s.season_id)).toEqual(['2018-19', '2019-20', '2020-21', '2021-22', '2022-23', '2023-24', '2024-25', '2025-26'])
+    expect(seasons.map((s) => s.season_id).slice(0, 8)).toEqual(['2018-19', '2019-20', '2020-21', '2021-22', '2022-23', '2023-24', '2024-25', '2025-26'])
     expect(seasons.filter((s) => s.role === 'held_out').map((s) => s.season_id)).toEqual(['2024-25', '2025-26'])
+    expect(seasons.slice(8).every((s) => s.role === 'current')).toBe(true)
+  })
+
+  it('data status: cutoff, freshness and a version clients can watch', async () => {
+    const s = await unwrap(api.GET('/api/v1/data-status'))
+    expect(['current', 'stale', 'unknown']).toContain(s.freshness)
+    if (s.data_cutoff) {
+      expect(s.last_updated_at).toBeTruthy()
+      expect(typeof s.data_version).toBe('number')
+      const seasons = await unwrap(api.GET('/api/v1/seasons'))
+      const cur = seasons.find((x) => x.season_id === s.season_id)!
+      expect(cur.windows.every((w) => w.date_to <= s.data_cutoff!)).toBe(true)
+    }
   })
 
   it('overview: team ratings are reproducible from summed totals', async () => {

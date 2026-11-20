@@ -47,6 +47,15 @@ Filters are kept in the URL, so every view can be linked to, survives a reload, 
 - **Noise model.** The funnel band uses the backend's own K, recovered from the API's per-lineup sampling SDs (median of SD² ÷ (1/poss + 1/opp_poss) = 14,639). Nothing is re-estimated.
 
 
+## Season in progress and the "Last updated" status
+
+- **2026-27 is the default season**, labelled *in progress* in every selector. Pages show season-to-date pre-break numbers; post-break panels say the break is still ahead instead of showing zeros.
+- **Header:** "Data through ‹cutoff› · updated ‹time›", with a green (current) or amber (stale) dot, from `GET /data-status`. On a phone it shortens to the cutoff date. While the data is stale, a banner gives the reason and the terminal refresh command.
+- **Updates without a rebuild:** the status is polled every 60 s and on tab focus. When `data_version` changes, every cached API response is invalidated (`useRefetchOnNewData` in `src/lib/freshness.ts`), so open pages show the new numbers.
+- **Provisional predictions:** a 2026-27 prediction shows a *Provisional · season in progress* badge and a notice. The notice gives the cutoff and explains that the model was evaluated on completed pre-break windows, so this prediction is not independently validated. The team-prior baseline and both intervals are still shown.
+
+See [refresh.md](refresh.md) for the refresh itself.
+
 ## Team logos and licensing
 
 Teams are shown with one component, `TeamLogo` (`src/components/ui/TeamLogo.tsx`). Its URL logic is in `src/lib/teamLogo.ts`.
@@ -118,11 +127,11 @@ web/
 
 | Command | What it runs | Needs |
 |---|---|---|
-| `npm test` | 43 unit and component tests (Vitest, Testing Library, MSW): formatting; team logos (licensing-safe default, theme variant, load-failure fallback); pooled-rating arithmetic; K recovery; the API client's error handling; the prediction guarantees (baseline, intervals, estimand, withholding, in-sample flag); and every page — filters, server-side sort and pagination, player search, empty, error and not-found states, the build-a-five flow | Fixtures recorded by `npm run fixtures` |
-| `npm run test:integration` | 16 tests that run the app's own client against the **live** API: OpenAPI drift, health and the verified artifact, CORS for the app's origin, error shape, filter, sort and paging semantics, every-row paging for charts, prediction invariants (intervals = ŷ ± 1.96·SD, contributions sum to ŷ, estimand in the notes), the documented example (lineup 281112), hypothetical and recorded fives, consistency of the verdict with its CI | API + PostgreSQL |
-| `npm run test:e2e` | 14 Playwright tests in a real browser against the live stack: each page's rendered values equal the API's; sorting, paging and player filtering; the prediction flow and the realized-result toggle; the build-a-five flow; chart and table views; no horizontal scroll at phone width on every page; mobile navigation | API + PostgreSQL; starts Vite itself |
+| `npm test` | 50 unit and component tests (Vitest, Testing Library, MSW): formatting; team logos (licensing-safe default, theme variant, load-failure fallback); pooled-rating arithmetic; K recovery; the API client's error handling; the prediction guarantees (baseline, intervals, estimand, withholding, in-sample flag); and every page — filters, server-side sort and pagination, player search, empty, error and not-found states, the build-a-five flow | Fixtures recorded by `npm run fixtures` |
+| `npm run test:integration` | 17 tests that run the app's own client against the **live** API: OpenAPI drift, health and the verified artifact, CORS for the app's origin, error shape, filter, sort and paging semantics, every-row paging for charts, prediction invariants (intervals = ŷ ± 1.96·SD, contributions sum to ŷ, estimand in the notes), the documented example (lineup 281112), hypothetical and recorded fives, consistency of the verdict with its CI, data status of the season in progress | API + PostgreSQL |
+| `npm run test:e2e` | 15 Playwright tests in a real browser against the live stack: each page's rendered values equal the API's; sorting, paging and player filtering; the prediction flow and the realized-result toggle; the build-a-five flow; chart and table views; no horizontal scroll at phone width on every page; mobile navigation; the season in progress (status, provisional prediction) | API + PostgreSQL; starts Vite itself |
 
-All three suites pass (43 + 16 + 14).
+All three suites pass (50 + 17 + 15).
 
 **Fixtures are real API responses, and they are not committed.** `npm run fixtures` records 25 responses from the running API into `web/src/test/fixtures/`, with a manifest of each request. They are NBA-derived processed data, which the project never commits (see `.gitignore`), so the folder is git-ignored. If a fixture is missing, the tests fail with an instruction to record them. Phase 10's CI will need a way to provide them, for example by recording them from the API inside CI.
 

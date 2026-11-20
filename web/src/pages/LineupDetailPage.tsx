@@ -96,6 +96,7 @@ export default function LineupDetailPage() {
             <Badge>{l.team_abbreviation}</Badge>
             <span>{l.season_id}</span>
             {season?.role === 'held_out' && <Badge tone="accent">Held-out season</Badge>}
+            {season?.role === 'current' && <Badge tone="warn">Season in progress · provisional</Badge>}
             {season?.is_irregular && <Badge tone="warn">Irregular season</Badge>}
             <span className="text-muted">Lineup #{l.lineup_id}</span>
           </span>

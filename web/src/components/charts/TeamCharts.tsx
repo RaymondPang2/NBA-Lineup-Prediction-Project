@@ -6,8 +6,8 @@ import { C, TooltipBox } from './ChartFrame'
 /** Each team's net rating before vs after the break. Points above the diagonal improved. */
 export function TeamNetScatter({ teams, selectedTeamId, onSelect }: { teams: TeamSeason[]; selectedTeamId?: number; onSelect?: (id: number) => void }) {
   const data = teams
-    .filter((t) => t.pre_break.net_rating !== null && t.post_break.net_rating !== null)
-    .map((t) => ({ id: t.team_id, abbr: t.abbreviation, name: t.team_name, x: t.pre_break.net_rating as number, y: t.post_break.net_rating as number, t }))
+    .filter((t) => t.pre_break?.net_rating != null && t.post_break?.net_rating != null)
+    .map((t) => ({ id: t.team_id, abbr: t.abbreviation, name: t.team_name, x: t.pre_break!.net_rating as number, y: t.post_break!.net_rating as number, t }))
   const lim = Math.ceil(Math.max(5, ...data.flatMap((d) => [Math.abs(d.x), Math.abs(d.y)])) / 5) * 5
   const ticks = Array.from({ length: (2 * lim) / 5 + 1 }, (_, i) => -lim + i * 5)
   const selected = data.filter((d) => d.id === selectedTeamId)
@@ -42,7 +42,7 @@ export function TeamNetScatter({ teams, selectedTeamId, onSelect }: { teams: Tea
                     { label: 'Pre-break net', value: fmtSigned(d.x) },
                     { label: 'Post-break net', value: fmtSigned(d.y) },
                     { label: 'Change', value: fmtSigned(d.y - d.x) },
-                    { label: 'Record pre / post', value: `${fmtRecord(d.t.pre_break.wins, d.t.pre_break.losses)} / ${fmtRecord(d.t.post_break.wins, d.t.post_break.losses)}` },
+                    { label: 'Record pre / post', value: `${fmtRecord(d.t.pre_break?.wins, d.t.pre_break?.losses)} / ${fmtRecord(d.t.post_break?.wins, d.t.post_break?.losses)}` },
                   ]}
                 />
               )

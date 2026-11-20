@@ -66,13 +66,15 @@ CHECKS: tuple[Check, ...] = (
         FROM team_games g
         LEFT JOIN stat_windows w ON w.season_id = g.season_id AND g.game_date BETWEEN w.date_from AND w.date_to
         WHERE g.season_id = %(season)s GROUP BY 1, 2 HAVING count(w.window_type) <> 1"""),
-    Check("team_has_lineups_in_both_windows", ERROR, "all 30 teams have lineup stats in both windows", """
-        SELECT t.team_id, w.window_type
-        FROM (SELECT DISTINCT team_id FROM team_games WHERE season_id = %(season)s) t
-        CROSS JOIN stat_windows w
-        WHERE w.season_id = %(season)s AND NOT EXISTS (
+    # Every team that played a game in a window has lineup stats for it (for a completed season: all 30 teams
+    # in both windows; for a season in progress, a team that has not played since the break is excused).
+    Check("team_has_lineups_in_both_windows", ERROR, "every team with games in a window has lineup stats for it", """
+        SELECT DISTINCT g.team_id, w.window_type
+        FROM team_games g
+        JOIN stat_windows w ON w.season_id = g.season_id AND g.game_date BETWEEN w.date_from AND w.date_to
+        WHERE g.season_id = %(season)s AND NOT EXISTS (
             SELECT 1 FROM lineup_window_stats s JOIN lineups l USING (lineup_id, season_id)
-            WHERE s.season_id = w.season_id AND s.window_type = w.window_type AND l.team_id = t.team_id)"""),
+            WHERE s.season_id = w.season_id AND s.window_type = w.window_type AND l.team_id = g.team_id)"""),
     # Points: ERROR beyond a 2-point tolerance per team-window (a lost game or lineup would be tens of
     # points), WARNING for any non-zero difference so tiny source inconsistencies stay visible.
     # Known case: game 0022500704 (2026-02-01, BKN @ DET), where the box score has 1 BKN point that is not

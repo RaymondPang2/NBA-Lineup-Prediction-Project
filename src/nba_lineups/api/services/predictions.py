@@ -11,7 +11,10 @@ Leakage contract: features come only from raw.load_pre_break_tables (pre_asb row
 re-checks). The observed post-break result, when requested, is read by a SEPARATE query after the
 prediction is made, and returned in its own field.
 
-Per season, features and predictions for every lineup are computed once (< 1 s) and cached in memory.
+Per season, features and predictions for every lineup are computed once (< 1 s) and cached in memory. For the
+season in progress the cache is keyed by its data version (the id of the last refresh that loaded data), so a
+completed daily refresh is picked up on the next request: no restart, nothing pushed from the refresh job.
+Its predictions are PROVISIONAL: season-to-date pre-break inputs, not validated at that point of a season.
 """
 from __future__ import annotations
 
@@ -26,7 +29,8 @@ import numpy as np
 import pandas as pd
 import psycopg
 
-from ...config import HELDOUT_SEASONS
+from ...config import HELDOUT_SEASONS, LIVE_SEASONS
+from ...refresh.freshness import data_version
 from ...modeling import final, holdout, raw
 from ...modeling.models import FEATURES
 from .. import db
@@ -46,6 +50,7 @@ class SeasonData:
     tables: raw.PreBreakTables
     frame: pd.DataFrame                    # index lineup_id: features, auxiliaries, prediction, baselines
     by_key: dict[tuple[int, tuple[int, ...]], int]   # (team_id, sorted player ids) -> lineup_id
+    data_cutoff: object = None             # season in progress: last game date in its inputs
 
 
 def _f(x) -> float | None:
@@ -74,7 +79,7 @@ class FrozenPredictor:
         self.reports = ModelReports.load(model_dir, reports_dir)
         self.model_sd, self.model_sd_source = self.reports.model_error_sd()
         self._parameters_fingerprint = self.parameters_fingerprint()
-        self._cache: dict[str, SeasonData] = {}
+        self._cache: dict[tuple[str, int], SeasonData] = {}
         self._lock = threading.Lock()
 
     # ------------------------------------------------------------------ integrity
@@ -102,10 +107,12 @@ class FrozenPredictor:
         return frame.set_index("lineup_id")
 
     def season(self, conn: psycopg.Connection, season_id: str) -> SeasonData:
-        if season_id in self._cache:
-            return self._cache[season_id]
+        version = data_version(conn, season_id) if season_id in LIVE_SEASONS else 0
+        key = (season_id, version)
+        if key in self._cache:
+            return self._cache[key]
         with self._lock:
-            if season_id not in self._cache:
+            if key not in self._cache:
                 tables = raw.load_pre_break_tables(conn, [season_id], key=self._key)
                 if tables.lineups.empty:
                     raise NotFound(f"no pre-break data for season {season_id}")
@@ -115,8 +122,14 @@ class FrozenPredictor:
                 keys = tables.members.sort_values("player_id").groupby("lineup_id").agg(
                     team_id=("team_id", "first"), players=("player_id", tuple))
                 by_key = {(int(r.team_id), tuple(int(p) for p in r.players)): int(lid) for lid, r in keys.iterrows()}
-                self._cache[season_id] = SeasonData(tables, frame, by_key)
-        return self._cache[season_id]
+                cutoff = None
+                if season_id in LIVE_SEASONS:
+                    cutoff = conn.execute("SELECT date_to FROM stat_windows WHERE season_id = %s AND "
+                                          "window_type = 'pre_asb'", (season_id,)).fetchone()[0]
+                for old in [k for k in self._cache if k[0] == season_id]:     # superseded refreshes
+                    del self._cache[old]
+                self._cache[key] = SeasonData(tables, frame, by_key, cutoff)
+        return self._cache[key]
 
     def _custom_row(self, sd: SeasonData, season_id: str, team_id: int, players: list[int]) -> pd.Series:
         t = sd.tables
@@ -211,6 +224,16 @@ class FrozenPredictor:
             notes.append(f"In-sample: {season_id} is a training season, so lineups with ≥ 25 post-break possessions "
                          "per end were training labels. Use the held-out seasons "
                          f"({', '.join(HELDOUT_SEASONS)}) to judge accuracy.")
+        provisional = season_id in LIVE_SEASONS
+        if provisional:
+            notes.append(
+                f"PROVISIONAL: {season_id} is in progress. The inputs are its pre-All-Star-break games played so far "
+                f"(through {sd.data_cutoff}); nothing after that date is used and nothing is extrapolated.")
+            notes.append(
+                "The frozen model was developed and evaluated on COMPLETED pre-break windows (about 55 games per team). "
+                "Applied to a partial window it has not been independently validated: early-season inputs are far "
+                "noisier, so the prediction and its 95% intervals (calibrated on completed windows) are optimistic. "
+                "The team-prior baseline is computed from the same season-to-date data.")
         if r["lu_no_history"] == 1:
             notes.append("No pre-break minutes together: the prediction relies on team and player information only; "
                          "for such lineups the model adds nothing measurable over the team prior.")
@@ -228,7 +251,8 @@ class FrozenPredictor:
                           "reliability": float(r["lu_reliability"]),
                           "team_net_rating_excluding_lineup": _f(r["team_net_loo"])},
             "intercept": intercept, "contributions": contrib,
-            "season_used_for_training": in_sample, "notes": notes}
+            "season_used_for_training": in_sample, "provisional": provisional,
+            "data_cutoff": sd.data_cutoff if provisional else None, "notes": notes}
 
 
 def observed_post_break(conn: psycopg.Connection, lineup_id: int) -> dict | None:

@@ -22,7 +22,7 @@ const teamSortValue: Record<TeamSortKey, (t: TeamSeason) => number | string> = {
   pre_net: (t) => t.pre_break.net_rating ?? -Infinity,
   pre_off: (t) => t.pre_break.off_rating ?? -Infinity,
   pre_def: (t) => t.pre_break.def_rating ?? Infinity,
-  post_net: (t) => t.post_break.net_rating ?? -Infinity,
+  post_net: (t) => t.post_break?.net_rating ?? -Infinity,
   change: (t) => t.change?.net_rating ?? -Infinity,
   pre_win: (t) => (t.pre_break.games ? (t.pre_break.wins ?? 0) / t.pre_break.games : 0),
 }
@@ -76,8 +76,8 @@ function TeamTable({ teams, selected, onSelect }: { teams: TeamSeason[]; selecte
             <Td>{fmtRating(t.pre_break.off_rating)}</Td>
             <Td>{fmtRating(t.pre_break.def_rating)}</Td>
             <Td className="font-medium text-ink">{fmtSigned(t.pre_break.net_rating)}</Td>
-            <Td>{fmtRecord(t.post_break.wins, t.post_break.losses)}</Td>
-            <Td className="font-medium text-ink">{fmtSigned(t.post_break.net_rating)}</Td>
+            <Td>{fmtRecord(t.post_break?.wins, t.post_break?.losses)}</Td>
+            <Td className="font-medium text-ink">{fmtSigned(t.post_break?.net_rating)}</Td>
             <Td>
               <Delta value={t.change?.net_rating} format={fmtSigned} />
             </Td>
@@ -102,9 +102,12 @@ export default function OverviewPage() {
 
   const league = useMemo(() => {
     if (!stats.data) return null
-    const pick = (w: 'pre_break' | 'post_break') =>
-      pooledRatings(stats.data.map((t) => ({ pts: t[w].pts, poss: t[w].poss, opp_pts: t[w].opp_pts, opp_poss: t[w].opp_poss })))
-    return { pre: pick('pre_break'), post: pick('post_break'), poss: stats.data.reduce((a, t) => a + t.pre_break.poss + t.post_break.poss, 0) }
+    // Sum totals, then divide. A window not reached yet (season in progress) stays null rather than zero.
+    const pick = (w: 'pre_break' | 'post_break') => {
+      const rows = stats.data.flatMap((t) => (t[w] ? [{ pts: t[w].pts, poss: t[w].poss, opp_pts: t[w].opp_pts, opp_poss: t[w].opp_poss }] : []))
+      return rows.length ? pooledRatings(rows) : null
+    }
+    return { pre: pick('pre_break'), post: pick('post_break'), poss: stats.data.reduce((a, t) => a + (t.pre_break?.poss ?? 0) + (t.post_break?.poss ?? 0), 0) }
   }, [stats.data])
 
   if (seasonsQuery.error) return <ErrorState error={seasonsQuery.error} onRetry={() => seasonsQuery.refetch()} />
@@ -121,11 +124,22 @@ export default function OverviewPage() {
       >
         {seasonInfo && (
           <div className="flex flex-wrap items-center gap-2 text-sm text-ink-2">
-            <Badge tone={seasonInfo.role === 'held_out' ? 'accent' : 'neutral'}>{seasonInfo.role === 'held_out' ? 'Held-out season' : 'Development season'}</Badge>
+            {seasonInfo.role === 'current' ? (
+              <Badge tone="warn" title="Season to date, refreshed daily. Model predictions for it are provisional.">
+                Season in progress · provisional
+              </Badge>
+            ) : (
+              <Badge tone={seasonInfo.role === 'held_out' ? 'accent' : 'neutral'}>{seasonInfo.role === 'held_out' ? 'Held-out season' : 'Development season'}</Badge>
+            )}
             {seasonInfo.is_irregular && <Badge tone="warn">Irregular season</Badge>}
             {pre && post && (
               <span>
                 Pre-break {fmtDate(pre.date_from)} – {fmtDate(pre.date_to)} · Post-break {fmtDate(post.date_from)} – {fmtDate(post.date_to)}
+              </span>
+            )}
+            {pre && !post && (
+              <span data-testid="season-to-date">
+                Season to date {fmtDate(pre.date_from)} – {fmtDate(pre.date_to)} · all pre-break; the All-Star break is still ahead
               </span>
             )}
           </div>
@@ -148,16 +162,28 @@ export default function OverviewPage() {
       ) : team ? (
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4" data-testid="kpis">
           <Stat label="Pre-break net" value={fmtSigned(team.pre_break.net_rating)} detail={`${fmtRecord(team.pre_break.wins, team.pre_break.losses)} · ORtg ${fmtRating(team.pre_break.off_rating)} · DRtg ${fmtRating(team.pre_break.def_rating)}`} />
-          <Stat label="Post-break net" value={fmtSigned(team.post_break.net_rating)} detail={`${fmtRecord(team.post_break.wins, team.post_break.losses)} · ORtg ${fmtRating(team.post_break.off_rating)} · DRtg ${fmtRating(team.post_break.def_rating)}`} />
+          {team.post_break ? (
+            <Stat label="Post-break net" value={fmtSigned(team.post_break.net_rating)} detail={`${fmtRecord(team.post_break.wins, team.post_break.losses)} · ORtg ${fmtRating(team.post_break.off_rating)} · DRtg ${fmtRating(team.post_break.def_rating)}`} />
+          ) : (
+            <Stat label="Post-break net" value="—" detail={post ? 'No post-break games yet' : 'After the All-Star break'} />
+          )}
           <Stat label="Change in net" value={<Delta value={team.change?.net_rating} format={fmtSigned} />} detail="Post-break minus pre-break" />
-          <Stat label="Lineups used" value={fmtInt((team.pre_break.n_lineups ?? 0) + (team.post_break.n_lineups ?? 0))} detail={`${fmtInt(team.pre_break.n_lineups)} pre · ${fmtInt(team.post_break.n_lineups)} post`} />
+          <Stat
+            label="Lineups used"
+            value={fmtInt((team.pre_break?.n_lineups ?? 0) + (team.post_break?.n_lineups ?? 0))}
+            detail={team.post_break ? `${fmtInt(team.pre_break?.n_lineups)} pre · ${fmtInt(team.post_break.n_lineups)} post` : 'Pre-break, season to date'}
+          />
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4" data-testid="kpis">
           <Stat label="Lineups recorded" value={fmtInt(seasonInfo.n_lineups)} detail={`${stats.data.length} teams`} />
           <Stat label="Possessions" value={fmtInt(league?.poss)} detail="Lineup possessions, both windows" />
           <Stat label="League ORtg, pre-break" value={fmtRating(league?.pre?.off)} detail="Σ points / Σ possessions × 100" />
-          <Stat label="League ORtg, post-break" value={fmtRating(league?.post?.off)} detail={<Delta value={(league?.post?.off ?? NaN) - (league?.pre?.off ?? NaN)} goodWhen="none" format={fmtSigned} />} />
+          {league?.post ? (
+            <Stat label="League ORtg, post-break" value={fmtRating(league.post.off)} detail={<Delta value={league.post.off - (league.pre?.off ?? NaN)} goodWhen="none" format={fmtSigned} />} />
+          ) : (
+            <Stat label="League ORtg, post-break" value="—" detail="After the All-Star break" />
+          )}
         </div>
       )}
 
@@ -180,8 +206,8 @@ export default function OverviewPage() {
                   {stats.data.map((t) => (
                     <tr key={t.team_id}>
                       <Td align="left">{t.abbreviation}</Td>
-                      <Td>{fmtSigned(t.pre_break.net_rating)}</Td>
-                      <Td>{fmtSigned(t.post_break.net_rating)}</Td>
+                      <Td>{fmtSigned(t.pre_break?.net_rating)}</Td>
+                      <Td>{fmtSigned(t.post_break?.net_rating)}</Td>
                     </tr>
                   ))}
                 </tbody>
@@ -190,7 +216,16 @@ export default function OverviewPage() {
           }
         >
           <QueryState query={stats} loading={<LoadingBlock height="h-[340px]" />}>
-            {(teams) => <TeamNetScatter teams={teams} selectedTeamId={teamId} onSelect={(id) => set({ team: id })} />}
+            {(teams) =>
+              teams.some((t) => t.post_break) ? (
+                <TeamNetScatter teams={teams} selectedTeamId={teamId} onSelect={(id) => set({ team: id })} />
+              ) : (
+                <EmptyState title="No post-break games yet">
+                  {season} is in progress and the All-Star break is still ahead. This chart fills in once teams play after the break; until then the
+                  team table below ranks pre-break, season-to-date ratings.
+                </EmptyState>
+              )
+            }
           </QueryState>
         </ChartFrame>
 

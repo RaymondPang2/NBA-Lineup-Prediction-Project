@@ -12,7 +12,7 @@ from collections.abc import Iterable
 import pandas as pd
 
 from ..analysis.data import HeldOutDataError
-from ..config import ALL_SEASONS, DEV_SEASONS
+from ..config import ALL_SEASONS, DEV_SEASONS, LIVE_SEASONS
 
 _MINT = object()   # private token: only code that imports it deliberately can construct a key
 
@@ -27,7 +27,9 @@ class HoldoutKey:
 
 
 def allowed_seasons(key: HoldoutKey | None) -> tuple[str, ...]:
-    return ALL_SEASONS if isinstance(key, HoldoutKey) else DEV_SEASONS
+    """With a key (only the frozen model holds one): every evaluated season plus the season in progress,
+    which the frozen model may score provisionally but which never trains or evaluates anything."""
+    return ALL_SEASONS + LIVE_SEASONS if isinstance(key, HoldoutKey) else DEV_SEASONS
 
 
 def check_seasons(seasons: Iterable[str], key: HoldoutKey | None = None) -> list[str]:

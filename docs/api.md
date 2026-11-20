@@ -29,12 +29,17 @@ All configuration comes from environment variables, or from the git-ignored `.en
 | `NBA_API_POOL_TIMEOUT_S` | `5` | Wait for a free connection before answering 503. |
 | `NBA_API_STATEMENT_TIMEOUT_MS` | `10000` | Server-side limit per SQL statement. A timeout answers 504. |
 
+Pooled sessions are read-only and run without parallel query (`max_parallel_workers_per_gather=0`). The API's requests are many small concurrent reads. Parallel workers allocate shared memory, which exhausted Docker's default 64 MB `/dev/shm` under the dashboard's concurrent paging.
+
+Predictions for the season in progress (2026-27) carry `provisional: true` and `data_cutoff`, with notes explaining why. The model's per-season cache for that season is keyed by the data version, so the first request after a refresh recomputes them; no restart is needed.
+
 ## Endpoints
 Everything is under `/api/v1`. The version lives in the path so a breaking change can ship as `/api/v2` next to it.
 
 | Method and path | Purpose |
 |---|---|
-| `GET /seasons` | Seasons, their break windows, irregular flag, role (`development` or `held_out`) |
+| `GET /seasons` | Seasons, their break windows, irregular flag, role (`development`, `held_out`, or `current` for the season in progress) |
+| `GET /data-status` | Freshness of the season in progress: last update, data cutoff, `current`/`stale`, last attempt, `data_version`. Read-only; nothing in the API triggers a refresh ([refresh.md](refresh.md)) |
 | `GET /teams?season=` | Teams, optionally only those with lineups in a season |
 | `GET /lineups?season=&team_id=&player_id=&min_pre_poss=&min_post_poss=&sort=&order=&page=&page_size=` | Lineups with pre- and post-break ratings and the change |
 | `GET /lineups/{lineup_id}` | One lineup, plus its season total |

@@ -15,6 +15,7 @@ const notFound = (message: string) => HttpResponse.json({ error: { code: 'not_fo
 export const handlers = [
   http.get(`${ORIGIN}/health`, () => HttpResponse.json(fixture('health'))),
   http.get(`${V1}/seasons`, () => HttpResponse.json(fixture('seasons'))),
+  http.get(`${V1}/data-status`, () => HttpResponse.json(fixture('data-status'))),
   http.get(`${V1}/teams`, () => HttpResponse.json(fixture('teams'))),
   http.get(`${V1}/teams/stats`, ({ request }) => {
     const season = new URL(request.url).searchParams.get('season')

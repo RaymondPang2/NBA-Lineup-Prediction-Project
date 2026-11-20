@@ -4,6 +4,28 @@
  */
 
 export interface paths {
+    "/api/v1/data-status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Freshness of the season in progress
+         * @description When the season in progress was last refreshed, the data cutoff, and whether the data is current or
+         *     stale. Read-only: refreshes run only from the local scheduler or the terminal (`refresh_command`), never
+         *     from the API. `data_version` changes whenever a refresh loads new data, so clients know to refetch.
+         */
+        get: operations["data_status_api_v1_data_status_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/lineups": {
         parameters: {
             query?: never;
@@ -184,7 +206,8 @@ export interface paths {
         /**
          * Seasons in the database
          * @description Every loaded season with its pre/post All-Star-break windows, whether it is irregular, and its role:
-         *     `development` (used to train the frozen model) or `held_out` (its final test seasons).
+         *     `development` (used to train the frozen model), `held_out` (its final test seasons) or `current` (the season
+         *     in progress, season to date, refreshed daily on the local machine).
          */
         get: operations["list_seasons_api_v1_seasons_get"];
         put?: never;
@@ -370,6 +393,57 @@ export interface components {
              * @description raw feature value (null = missing, imputed with the training median)
              */
             value: number | null;
+        };
+        /**
+         * DataStatus
+         * @description Freshness of the season in progress. Read-only: this API never triggers a refresh.
+         */
+        DataStatus: {
+            /**
+             * Data Cutoff
+             * @description every game on or before this date is included, none after it
+             */
+            data_cutoff: string | null;
+            /**
+             * Data Version
+             * @description changes whenever a refresh loads new data (clients refetch)
+             */
+            data_version: number | null;
+            /**
+             * Expected Cutoff
+             * Format: date
+             * @description the cutoff the most recent scheduled 07:00 refresh would reach
+             */
+            expected_cutoff: string;
+            /**
+             * Freshness
+             * @enum {string}
+             */
+            freshness: "current" | "stale" | "unknown";
+            /** Games Total */
+            games_total: number | null;
+            last_attempt: components["schemas"]["RefreshAttempt"] | null;
+            /** Last Game Date */
+            last_game_date: string | null;
+            /**
+             * Last Loaded At
+             * @description last refresh that changed the data
+             */
+            last_loaded_at: string | null;
+            /**
+             * Last Updated At
+             * @description last successful refresh (new data or confirmed current)
+             */
+            last_updated_at: string | null;
+            /**
+             * Refresh Command
+             * @description run in a terminal on the machine holding the data
+             */
+            refresh_command: string;
+            /** Season Id */
+            season_id: string;
+            /** Stale Reason */
+            stale_reason: string | null;
         };
         /** ErrorBody */
         ErrorBody: {
@@ -713,6 +787,11 @@ export interface components {
             baselines: components["schemas"]["Baselines"];
             /** Contributions */
             contributions: components["schemas"]["Contribution"][];
+            /**
+             * Data Cutoff
+             * @description season in progress only: last game date the inputs include
+             */
+            data_cutoff?: string | null;
             /** Intercept */
             intercept: number;
             /**
@@ -733,6 +812,12 @@ export interface components {
              * @description frozen linear model, post-break net rating per 100 possessions
              */
             predicted_net_rating: number;
+            /**
+             * Provisional
+             * @description true for the season in progress: inputs are season-to-date pre-break data up to data_cutoff, and accuracy at this point of a season has not been validated
+             * @default false
+             */
+            provisional: boolean;
             /** Season Id */
             season_id: string;
             /**
@@ -796,6 +881,28 @@ export interface components {
             /** Team Id */
             team_id: number;
         };
+        /** RefreshAttempt */
+        RefreshAttempt: {
+            /** Finished At */
+            finished_at: string | null;
+            /** Message */
+            message: string | null;
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "running" | "success" | "no_change" | "failed";
+            /**
+             * Trigger
+             * @enum {string}
+             */
+            trigger: "scheduled" | "manual";
+        };
         /** Season */
         Season: {
             /**
@@ -817,10 +924,10 @@ export interface components {
             n_lineups: number;
             /**
              * Role
-             * @description development: used to train the frozen model; held_out: its final test seasons
+             * @description development: used to train the frozen model; held_out: its final test seasons; current: the season in progress, season to date (provisional; refreshed daily)
              * @enum {string}
              */
-            role: "development" | "held_out";
+            role: "development" | "held_out" | "current";
             /**
              * Season Id
              * @example 2025-26
@@ -986,6 +1093,26 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    data_status_api_v1_data_status_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DataStatus"];
+                };
+            };
+        };
+    };
     list_lineups_api_v1_lineups_get: {
         parameters: {
             query?: {

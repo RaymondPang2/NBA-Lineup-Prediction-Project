@@ -70,6 +70,13 @@ await record('prediction-five', '/api/v1/predictions', post({ season_id: SEASON,
 await record('team-predictions', `/api/v1/teams/${MIN}/predictions?season=${SEASON}&min_pre_poss=25&page=1&page_size=200`)
 await record('model', '/api/v1/model')
 await record('model-performance', '/api/v1/model/performance')
+// Season in progress (2026-27): freshness and one provisional prediction
+await record('data-status', '/api/v1/data-status')
+const current = seasons.find((s) => s.role === 'current')
+if (current) {
+  const top = await record('lineups-current', `/api/v1/lineups?season=${current.season_id}&sort=pre_poss&order=desc&page_size=1`)
+  await record('prediction-provisional', `/api/v1/lineups/${top.items[0].lineup_id}/prediction?possessions=100`)
+}
 
 writeFileSync(join(OUT, 'manifest.json'), JSON.stringify(manifest, null, 1) + '\n')
 console.log(`recorded ${Object.keys(manifest.files).length} fixtures from ${ORIGIN} into ${OUT}`)

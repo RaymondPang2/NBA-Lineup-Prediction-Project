@@ -1,6 +1,6 @@
 import { Link } from 'react-router'
 import type { Prediction } from '../../api/types'
-import { fmtInt, fmtInterval, fmtPct, fmtSigned, isNum } from '../../lib/format'
+import { fmtDate, fmtInt, fmtInterval, fmtPct, fmtSigned, isNum } from '../../lib/format'
 import { ChartFrame } from '../charts/ChartFrame'
 import { Badge, Callout, Card, CardBody, CardHeader, Stat } from '../ui/Card'
 import { TeamLogo } from '../ui/TeamLogo'
@@ -67,7 +67,11 @@ export function PredictionResult({ prediction }: { prediction: Prediction }) {
         ) : (
           <Badge>Hypothetical lineup (no shared history)</Badge>
         )}
-        {p.season_used_for_training ? (
+        {p.provisional ? (
+          <Badge tone="warn" title="Season in progress: season-to-date inputs, not independently validated">
+            Provisional · season in progress
+          </Badge>
+        ) : p.season_used_for_training ? (
           <Badge tone="warn" title="This season's post-break results were training labels">
             In-sample season
           </Badge>
@@ -89,6 +93,18 @@ export function PredictionResult({ prediction }: { prediction: Prediction }) {
       </ul>
 
       <EstimandNotice />
+
+      {p.provisional && (
+        <Callout tone="warn" title="Provisional prediction">
+          <span data-testid="provisional-notice">
+            {p.season_id} is in progress. The inputs are its pre-All-Star-break games played so far
+            {p.data_cutoff ? ` (through ${fmtDate(p.data_cutoff)})` : ''}; nothing after that date is used and no future statistics are
+            estimated. The frozen model was developed and evaluated on <strong>completed</strong> pre-break windows, so at this point of a season its
+            predictions are not independently validated and the 95% intervals below are likely too narrow. The target is unchanged: the expected
+            post-All-Star-break net rating if the lineup plays after the break.
+          </span>
+        </Callout>
+      )}
 
       {p.season_used_for_training && (
         <Callout tone="warn" title="Fitted value, not a test">

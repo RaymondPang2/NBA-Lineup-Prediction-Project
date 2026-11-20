@@ -13,7 +13,7 @@ test.beforeEach(async ({ page }) => {
 
 test('overview: live team table and API health', async ({ page, request }) => {
   const teams = await apiGet<Team[]>(request, '/teams/stats?season=2025-26')
-  await page.goto('/')
+  await page.goto('/?season=2025-26')
   await expect(page.getByTestId('api-health')).toHaveAttribute('data-state', 'online')
   const table = page.getByRole('region', { name: 'Team ratings' })
   await expect(table.getByRole('row')).toHaveCount(teams.length + 1)
@@ -102,4 +102,18 @@ test('model page: verdict and verified artifact hash', async ({ page, request })
   await expect(page.getByTestId('conclusion')).toContainText(perf.conclusion)
   await expect(page.getByTestId('artifact-sha')).toHaveText(card.artifact_sha256)
   await expect(page.getByText('✓ verified now')).toBeVisible()
+})
+
+test('season in progress: default season, last-updated status and a provisional prediction', async ({ page, request }) => {
+  const status = await apiGet<{ season_id: string; data_cutoff: string; freshness: string }>(request, '/data-status')
+  const top = await apiGet<{ items: { lineup_id: number; team_id: number }[] }>(request, `/lineups?season=${status.season_id}&sort=pre_poss&order=desc&page_size=1`)
+  await page.goto('/')
+  await expect(page.getByRole('heading', { level: 1 })).toContainText(status.season_id)
+  await expect(page.getByTestId('data-freshness')).toHaveAttribute('data-state', status.freshness)
+  await expect(page.getByText('Season in progress · provisional')).toBeVisible()
+  const l = top.items[0]
+  await page.goto(`/predict?season=${status.season_id}&team=${l.team_id}&lineup=${l.lineup_id}`)
+  await expect(page.getByTestId('provisional-notice')).toBeVisible()
+  await expect(page.getByTestId('team-prior')).toBeVisible()
+  await expect(page.getByTestId('predicted-net')).toBeVisible()
 })

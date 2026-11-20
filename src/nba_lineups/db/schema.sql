@@ -234,6 +234,29 @@ CREATE TABLE IF NOT EXISTS etl_runs (
     error        TEXT
 );
 
+-- One row per refresh of the season in progress (python -m nba_lineups.refresh; docs/refresh.md).
+-- 'success' = new data loaded; 'no_change' = the source had nothing new up to the cutoff (data confirmed
+-- current); 'failed' = nothing changed in the warehouse. The API reads this table for "Last updated".
+CREATE TABLE IF NOT EXISTS data_refreshes (
+    refresh_id        BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    run_id            TEXT NOT NULL,
+    season_id         TEXT NOT NULL,
+    trigger           TEXT NOT NULL CHECK (trigger IN ('scheduled', 'manual')),
+    started_at        TIMESTAMPTZ NOT NULL DEFAULT now(),
+    finished_at       TIMESTAMPTZ,
+    status            TEXT NOT NULL DEFAULT 'running' CHECK (status IN ('running', 'success', 'no_change', 'failed')),
+    data_cutoff       DATE,          -- every game on or before this date is included (and nothing after it)
+    last_game_date    DATE,          -- latest game date actually in the data
+    games_total       INT,
+    changed_teams     INT,           -- teams with new or corrected games since the previous refresh
+    full_sweep        BOOLEAN,
+    requests_fetched  INT,
+    requests_cached   INT,
+    requests_failed   INT,
+    message           TEXT
+);
+CREATE INDEX IF NOT EXISTS ix_data_refreshes_season ON data_refreshes (season_id, refresh_id DESC);
+
 -- ---------------------------------------------------------------- views (derived, never stored)
 
 -- per100: the single SQL definition of a per-100-possession rate (mirrors nba_lineups.metrics.per100).

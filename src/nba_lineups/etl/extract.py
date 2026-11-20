@@ -12,10 +12,13 @@ from pathlib import Path
 
 import pandas as pd
 
-from ..ingest.pipeline import gamelog_dates_and_teams
+from ..config import LIVE_SEASONS
+from ..ingest import live
+from ..ingest.pipeline import gamelog_dates_and_teams, read_live_state
 from ..ingest.specs import LINEUP_MEASURES, LINEUPS, PLAYERS, TEAMS, gamelog_spec, season_specs
 from ..ingest.storage import read_json, result_set
-from ..ingest.windows import WINDOW_NAMES, DateWindow
+from ..ingest.validate import validate_payload
+from ..ingest.windows import DateWindow
 
 
 class ExtractError(Exception):
@@ -44,21 +47,39 @@ def read_season(raw_dir: Path, season: str) -> BronzeSeason:
         raise ExtractError(f"{season}: game log or windows.json missing; run ingestion first")
     windows = {k: DateWindow(v["name"], date.fromisoformat(v["date_from"]), date.fromisoformat(v["date_to"]))
                for k, v in json.loads(windows_file.read_text()).items()}
-    _, team_ids = gamelog_dates_and_teams(gl_payload)
 
-    specs = season_specs(season, windows, team_ids)
+    if season in LIVE_SEASONS:
+        # Season in progress: re-derive the refresh's plan from the game log and the recorded cutoff, and
+        # accept the files only if they are exactly that plan (a refresh that stopped half-way is rejected).
+        state = read_live_state(raw_dir, season)
+        if state is None:
+            raise ExtractError(f"{season}: live_state.json missing; run the refresh")
+        p = live.plan(season, gl_payload, date.fromisoformat(state["data_cutoff"]))
+        if p.windows != windows:
+            raise ExtractError(f"{season}: windows.json does not match the game log up to the cutoff; rerun the refresh")
+        gamelog, specs = p.games, season_specs(season, windows, p.team_ids, p.team_last)
+    else:
+        _, team_ids = gamelog_dates_and_teams(gl_payload)
+        gamelog, specs = _frame(gl_payload), season_specs(season, windows, team_ids)
+
     missing = [s.key for s in specs if not s.cache_path(raw_dir).exists()]
     if missing:
         raise ExtractError(f"{season}: {len(missing)} raw files missing (e.g. {missing[0]}); rerun ingestion")
 
-    frames = {s: _frame(read_json(s.cache_path(raw_dir))) for s in specs}
+    payloads = {s: read_json(s.cache_path(raw_dir)) for s in specs}
+    if season in LIVE_SEASONS:
+        stale = [s.key for s, pl in payloads.items() if not validate_payload(s, pl).ok]
+        if stale:
+            raise ExtractError(f"{season}: {len(stale)} raw files do not match the current plan "
+                               f"(e.g. {stale[0]}); rerun the refresh")
+    frames = {s: _frame(pl) for s, pl in payloads.items()}
     by = lambda endpoint, window: next(f for s, f in frames.items() if s.endpoint == endpoint and s.window == window)
     lineups = {(w, m): pd.concat([f for s, f in frames.items()
                                   if s.endpoint == LINEUPS and s.window == w and s.measure == m], ignore_index=True)
-               for w in WINDOW_NAMES for m in LINEUP_MEASURES}
+               for w in windows for m in LINEUP_MEASURES}
     return BronzeSeason(
-        season=season, windows=windows, gamelog=_frame(gl_payload),
-        team_stats={w: by(TEAMS, w) for w in WINDOW_NAMES},
-        player_stats={w: by(PLAYERS, w) for w in WINDOW_NAMES},
+        season=season, windows=windows, gamelog=gamelog,
+        team_stats={w: by(TEAMS, w) for w in windows},
+        player_stats={w: by(PLAYERS, w) for w in windows},
         lineups=lineups,
     )

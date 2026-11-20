@@ -14,6 +14,7 @@ Key cleaning decisions (see docs/database.md):
 """
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 
 import numpy as np
@@ -31,8 +32,28 @@ ROW_KEY = ["TEAM_ID", "GROUP_ID", "GROUP_NAME"]   # unique per source row (name 
 LINEUP_KEY = ["TEAM_ID", "GROUP_ID"]             # unique per lineup
 
 
+log = logging.getLogger(__name__)
+
+
 class TransformError(Exception):
     pass
+
+
+def repair_game_minutes(gl: pd.DataFrame) -> pd.Series:
+    """Team minutes per game-log row, with a known source error repaired.
+
+    Both teams of a game play the same length of game, so their MIN must be equal. NBA.com occasionally
+    publishes one row short (seen: 2026-27 game 0022600231, DEN 168 vs NOP 240, while DEN's lineup and team
+    feeds both carry the full game). The game's minutes are then taken from the complete (larger) row. Only
+    the minutes field is touched; points and results come from the source unchanged.
+    """
+    full = gl.groupby("GAME_ID").MIN.transform("max")
+    bad = gl.MIN != full
+    if bad.any():
+        log.warning("game-log MIN repaired for %d row(s) whose opponent row has more minutes: %s", int(bad.sum()),
+                    ", ".join(f"{g} team {t}: {m} -> {f}" for g, t, m, f in
+                              zip(gl.GAME_ID[bad], gl.TEAM_ID[bad], gl.MIN[bad], full[bad])))
+    return full
 
 
 def player_key(group_id: str) -> str:
@@ -147,11 +168,13 @@ def transform_season(bronze: BronzeSeason) -> SilverSeason:
     team_games = pd.DataFrame({
         "game_id": gl.GAME_ID, "team_id": gl.TEAM_ID, "season_id": s, "game_date": gl.game_date,
         "is_home": home.astype(object).where(~neutral, None), "won": gl.WL.eq("W"),
-        "minutes": gl.MIN, "pts": gl.PTS, "plus_minus": gl.PLUS_MINUS,
+        "minutes": repair_game_minutes(gl), "pts": gl.PTS, "plus_minus": gl.PLUS_MINUS,
     })
 
     # Players: post window last so the most recent display name wins.
-    pstats = pd.concat([bronze.player_stats[w].assign(window_type=w) for w in ("pre_asb", "post_asb")], ignore_index=True)
+    # (a season in progress may have only the pre-break window so far)
+    present = [w for w in ("pre_asb", "post_asb") if w in bronze.windows]
+    pstats = pd.concat([bronze.player_stats[w].assign(window_type=w) for w in present], ignore_index=True)
     players = (pstats[["PLAYER_ID", "PLAYER_NAME"]].drop_duplicates("PLAYER_ID", keep="last")
                .rename(columns={"PLAYER_ID": "player_id", "PLAYER_NAME": "player_name"}))
     player_window = pd.DataFrame({
@@ -160,7 +183,7 @@ def transform_season(bronze: BronzeSeason) -> SilverSeason:
         "poss": pstats.POSS, "off_rating": pstats.OFF_RATING, "def_rating": pstats.DEF_RATING,
         "net_rating": pstats.NET_RATING, "usg_pct": pstats.USG_PCT, "ts_pct": pstats.TS_PCT,
     })
-    tstats = pd.concat([bronze.team_stats[w].assign(window_type=w) for w in ("pre_asb", "post_asb")], ignore_index=True)
+    tstats = pd.concat([bronze.team_stats[w].assign(window_type=w) for w in present], ignore_index=True)
     team_window = pd.DataFrame({
         "team_id": tstats.TEAM_ID, "season_id": s, "window_type": tstats.window_type, "gp": tstats.GP,
         "minutes": tstats.MIN, "poss": tstats.POSS, "off_rating": tstats.OFF_RATING,
@@ -171,7 +194,7 @@ def transform_season(bronze: BronzeSeason) -> SilverSeason:
     as_int(player_window, ["gp", "poss"], "player_window_stats")
     as_int(team_window, ["gp", "poss"], "team_window_stats")
 
-    lineup_window = pd.concat([_lineup_window_frame(bronze, w) for w in ("pre_asb", "post_asb")], ignore_index=True)
+    lineup_window = pd.concat([_lineup_window_frame(bronze, w) for w in present], ignore_index=True)
     lineups = lineup_window[["season_id", "team_id", "player_key"]].drop_duplicates(ignore_index=True)
     lineup_players = lineups.assign(player_id=lineups.player_key.str.split("-")).explode("player_id")
     lineup_players["player_id"] = lineup_players.player_id.astype(int)

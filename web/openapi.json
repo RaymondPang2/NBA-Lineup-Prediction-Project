@@ -169,6 +169,146 @@
         "title": "Contribution",
         "type": "object"
       },
+      "DataStatus": {
+        "description": "Freshness of the season in progress. Read-only: this API never triggers a refresh.",
+        "properties": {
+          "data_cutoff": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "every game on or before this date is included, none after it",
+            "title": "Data Cutoff"
+          },
+          "data_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "changes whenever a refresh loads new data (clients refetch)",
+            "title": "Data Version"
+          },
+          "expected_cutoff": {
+            "description": "the cutoff the most recent scheduled 07:00 refresh would reach",
+            "format": "date",
+            "title": "Expected Cutoff",
+            "type": "string"
+          },
+          "freshness": {
+            "enum": [
+              "current",
+              "stale",
+              "unknown"
+            ],
+            "title": "Freshness",
+            "type": "string"
+          },
+          "games_total": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Games Total"
+          },
+          "last_attempt": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RefreshAttempt"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "last_game_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Game Date"
+          },
+          "last_loaded_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "last refresh that changed the data",
+            "title": "Last Loaded At"
+          },
+          "last_updated_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "last successful refresh (new data or confirmed current)",
+            "title": "Last Updated At"
+          },
+          "refresh_command": {
+            "description": "run in a terminal on the machine holding the data",
+            "title": "Refresh Command",
+            "type": "string"
+          },
+          "season_id": {
+            "title": "Season Id",
+            "type": "string"
+          },
+          "stale_reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stale Reason"
+          }
+        },
+        "required": [
+          "season_id",
+          "data_version",
+          "last_updated_at",
+          "last_loaded_at",
+          "data_cutoff",
+          "last_game_date",
+          "games_total",
+          "expected_cutoff",
+          "freshness",
+          "stale_reason",
+          "last_attempt",
+          "refresh_command"
+        ],
+        "title": "DataStatus",
+        "type": "object"
+      },
       "ErrorBody": {
         "properties": {
           "code": {
@@ -1201,6 +1341,19 @@
             "title": "Contributions",
             "type": "array"
           },
+          "data_cutoff": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "season in progress only: last game date the inputs include",
+            "title": "Data Cutoff"
+          },
           "intercept": {
             "title": "Intercept",
             "type": "number"
@@ -1252,6 +1405,12 @@
             "description": "frozen linear model, post-break net rating per 100 possessions",
             "title": "Predicted Net Rating",
             "type": "number"
+          },
+          "provisional": {
+            "default": false,
+            "description": "true for the season in progress: inputs are season-to-date pre-break data up to data_cutoff, and accuracy at this point of a season has not been validated",
+            "title": "Provisional",
+            "type": "boolean"
           },
           "season_id": {
             "title": "Season Id",
@@ -1377,6 +1536,65 @@
         "title": "PredictionRequest",
         "type": "object"
       },
+      "RefreshAttempt": {
+        "properties": {
+          "finished_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finished At"
+          },
+          "message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message"
+          },
+          "started_at": {
+            "format": "date-time",
+            "title": "Started At",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "running",
+              "success",
+              "no_change",
+              "failed"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "trigger": {
+            "enum": [
+              "scheduled",
+              "manual"
+            ],
+            "title": "Trigger",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "trigger",
+          "started_at",
+          "finished_at",
+          "message"
+        ],
+        "title": "RefreshAttempt",
+        "type": "object"
+      },
       "Season": {
         "properties": {
           "first_game_date": {
@@ -1399,10 +1617,11 @@
             "type": "integer"
           },
           "role": {
-            "description": "development: used to train the frozen model; held_out: its final test seasons",
+            "description": "development: used to train the frozen model; held_out: its final test seasons; current: the season in progress, season to date (provisional; refreshed daily)",
             "enum": [
               "development",
-              "held_out"
+              "held_out",
+              "current"
             ],
             "title": "Role",
             "type": "string"
@@ -1839,12 +2058,34 @@
     }
   },
   "info": {
-    "description": "\nRead-only API over eight NBA regular seasons (2018-19 to 2025-26) of five-man lineup data, split at the\nAll-Star break, and the **frozen** Phase 6 model that predicts a lineup's post-break net rating.\n\n**Read before using predictions**\n* A prediction is **conditional**: the expected post-break net rating *if* the lineup plays after the break.\n* It uses **pre-break data only**.\n* It is **not statistically better than the team-prior baseline**, which is returned with every prediction\n  (see `GET /api/v1/model/performance`).\n* Uncertainty is large and has two parts: the model's error about the lineup's true quality, and the sampling\n  noise of a rating measured over a few dozen to a few hundred possessions.\n\nRatings are points per 100 possessions. Errors share one shape: `{\"error\": {\"code\", \"message\", \"details\"}}`.\n",
+    "description": "\nRead-only API over eight completed NBA regular seasons (2018-19 to 2025-26) plus the season in progress\n(2026-27, season to date, refreshed daily on the local machine) of five-man lineup data, split at the\nAll-Star break, and the **frozen** Phase 6 model that predicts a lineup's post-break net rating.\nPredictions for the season in progress are **provisional** (see `GET /api/v1/data-status` for freshness).\n\n**Read before using predictions**\n* A prediction is **conditional**: the expected post-break net rating *if* the lineup plays after the break.\n* It uses **pre-break data only**.\n* It is **not statistically better than the team-prior baseline**, which is returned with every prediction\n  (see `GET /api/v1/model/performance`).\n* Uncertainty is large and has two parts: the model's error about the lineup's true quality, and the sampling\n  noise of a rating measured over a few dozen to a few hundred possessions.\n\nRatings are points per 100 possessions. Errors share one shape: `{\"error\": {\"code\", \"message\", \"details\"}}`.\n",
     "title": "NBA Lineup Analytics API",
     "version": "1.0.0"
   },
   "openapi": "3.1.0",
   "paths": {
+    "/api/v1/data-status": {
+      "get": {
+        "description": "When the season in progress was last refreshed, the data cutoff, and whether the data is current or\nstale. Read-only: refreshes run only from the local scheduler or the terminal (`refresh_command`), never\nfrom the API. `data_version` changes whenever a refresh loads new data, so clients know to refetch.",
+        "operationId": "data_status_api_v1_data_status_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Freshness of the season in progress",
+        "tags": [
+          "catalog"
+        ]
+      }
+    },
     "/api/v1/lineups": {
       "get": {
         "description": "Filter by season, team, player(s) and minimum possessions. Each lineup carries its pre-break and\npost-break ratings, the change, and how large a change sampling noise alone would produce.\n\nPossession thresholds apply to BOTH ends (own and opponent possessions), as in the model's target sample\n(≥ 25 post-break possessions per end).",
@@ -2491,7 +2732,7 @@
     },
     "/api/v1/seasons": {
       "get": {
-        "description": "Every loaded season with its pre/post All-Star-break windows, whether it is irregular, and its role:\n`development` (used to train the frozen model) or `held_out` (its final test seasons).",
+        "description": "Every loaded season with its pre/post All-Star-break windows, whether it is irregular, and its role:\n`development` (used to train the frozen model), `held_out` (its final test seasons) or `current` (the season\nin progress, season to date, refreshed daily on the local machine).",
         "operationId": "list_seasons_api_v1_seasons_get",
         "responses": {
           "200": {
@@ -2850,7 +3091,7 @@
   },
   "tags": [
     {
-      "description": "Seasons and teams.",
+      "description": "Seasons, teams and data freshness.",
       "name": "catalog"
     },
     {

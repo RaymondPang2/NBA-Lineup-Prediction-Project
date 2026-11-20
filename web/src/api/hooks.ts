@@ -1,6 +1,7 @@
 /**
  * Data hooks. Every number on screen comes through one of these, from the FastAPI service.
- * The warehouse is static between ETL runs, so responses are cached for the session.
+ * Completed seasons are static, so responses are cached for the session. When the daily refresh loads new data
+ * for the season in progress, useDataStatus sees a new data_version and useRefetchOnNewData invalidates the cache.
  */
 import { keepPreviousData, useQueries, useQuery } from '@tanstack/react-query'
 import { api, unwrap } from './client'
@@ -185,5 +186,16 @@ export function usePlayer(playerId: number | undefined, season?: string) {
       unwrap(api.GET('/api/v1/players/{player_id}', { params: { path: { player_id: playerId! }, query: { season } }, signal })),
     enabled: playerId !== undefined,
     ...STATIC,
+  })
+}
+
+/** Freshness of the season in progress. Polled, and refetched when the tab regains focus. */
+export function useDataStatus() {
+  return useQuery({
+    queryKey: ['data-status'],
+    queryFn: ({ signal }) => unwrap(api.GET('/api/v1/data-status', { signal })),
+    refetchInterval: 60_000,
+    refetchOnWindowFocus: true,
+    retry: false,
   })
 }

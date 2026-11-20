@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  Lineup Lab daily refresh (per-user LaunchAgent). Installed by scripts/refresh/install_schedule.sh, which fills in
+  __PROJECT__. See docs/refresh.md.
+
+  launchd starts the job at 07:00 local time, every hour, and when the agent loads (login / install). The job
+  itself (in its if-due mode) only works when no refresh has succeeded since 07:00 America/Toronto, so the hourly and
+  login starts are cheap no-ops on a normal day and catch-ups after sleep, shutdown or a failure.
+  A 07:00 start missed while the Mac sleeps is run by launchd on wake.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.lineuplab.daily-refresh</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__PROJECT__/.venv/bin/python</string>
+    <string>-m</string>
+    <string>nba_lineups.refresh</string>
+    <string>--if-due</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>__PROJECT__</string>
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>
+    <integer>7</integer>
+    <key>Minute</key>
+    <integer>0</integer>
+  </dict>
+  <key>StartInterval</key>
+  <integer>3600</integer>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>ProcessType</key>
+  <string>Background</string>
+  <key>LowPriorityIO</key>
+  <true/>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin</string>
+    <key>PYTHONUNBUFFERED</key>
+    <string>1</string>
+  </dict>
+  <key>StandardOutPath</key>
+  <string>__PROJECT__/data/logs/launchd-refresh.out.log</string>
+  <key>StandardErrorPath</key>
+  <string>__PROJECT__/data/logs/launchd-refresh.err.log</string>
+</dict>
+</plist>

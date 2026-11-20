@@ -57,6 +57,21 @@ def find_all_star_break(game_dates: Iterable[date], season: str) -> tuple[date, 
     return last_pre, first_post
 
 
+def live_windows(season: str, game_dates: Iterable[date]) -> dict[str, DateWindow]:
+    """Windows of a season IN PROGRESS, from the games played up to the data cutoff.
+
+    Before the All-Star break (or during it) only `pre_asb` exists, ending at the last game played. Once a
+    game has been played after the break, both windows exist and `post_asb` grows day by day.
+    """
+    days = sorted(set(game_dates))
+    if not days:
+        raise ValueError(f"{season}: no completed games yet")
+    try:
+        return build_windows(season, days)
+    except ValueError:
+        return {PRE: DateWindow(PRE, days[0], days[-1])}
+
+
 def build_windows(season: str, game_dates: Iterable[date]) -> dict[str, DateWindow]:
     days = sorted(set(game_dates))
     last_pre, first_post = find_all_star_break(days, season)

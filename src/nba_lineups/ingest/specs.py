@@ -7,7 +7,8 @@ touching the network.
 from __future__ import annotations
 
 from collections.abc import Iterable, Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -79,14 +80,30 @@ def _dashboard_params(season: str, window: DateWindow, measure: str) -> dict[str
     }
 
 
-def lineup_specs(season: str, windows: Mapping[str, DateWindow], team_ids: Iterable[int]) -> list[RequestSpec]:
-    """One request per (window, measure, team). Per-team requests avoid the 2,000-row cap."""
+# (window name, team_id) -> that team's last game date inside the window. Given for a season in progress.
+TeamLastDates = Mapping[tuple[str, int], date]
+
+
+def lineup_specs(season: str, windows: Mapping[str, DateWindow], team_ids: Iterable[int],
+                 team_last: TeamLastDates | None = None) -> list[RequestSpec]:
+    """One request per (window, measure, team). Per-team requests avoid the 2,000-row cap.
+
+    `team_last` (seasons in progress only): each team's request ends at ITS last game in the window, which
+    returns exactly the same totals as ending at the window's end. So a team that has not played since the
+    previous refresh produces an identical request, and its cached file is reused instead of refetched.
+    A team with no game in a window yet gets no request for it."""
     team_ids = sorted(team_ids)
     specs = []
     for window in windows.values():
         for measure in LINEUP_MEASURES:
             for tid in team_ids:
-                params = _dashboard_params(season, window, measure) | {"group_quantity": 5, "team_id_nullable": tid}
+                w = window
+                if team_last is not None:
+                    last = team_last.get((window.name, tid))
+                    if last is None:
+                        continue
+                    w = replace(window, date_to=last)
+                params = _dashboard_params(season, w, measure) | {"group_quantity": 5, "team_id_nullable": tid}
                 specs.append(RequestSpec.make(LINEUPS, season, params, window=window.name, measure=measure, team_id=tid))
     return specs
 
@@ -120,7 +137,9 @@ def team_specs(season: str, windows: Mapping[str, DateWindow]) -> list[RequestSp
             for w in windows.values()]
 
 
-def season_specs(season: str, windows: Mapping[str, DateWindow], team_ids: Iterable[int]) -> list[RequestSpec]:
+def season_specs(season: str, windows: Mapping[str, DateWindow], team_ids: Iterable[int],
+                 team_last: TeamLastDates | None = None) -> list[RequestSpec]:
     """Every request for a season once its windows are known (the game log comes first)."""
     team_ids = list(team_ids)
-    return team_specs(season, windows) + player_specs(season, windows) + lineup_specs(season, windows, team_ids)
+    return (team_specs(season, windows) + player_specs(season, windows)
+            + lineup_specs(season, windows, team_ids, team_last))

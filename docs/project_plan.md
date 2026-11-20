@@ -42,6 +42,7 @@ Post-All-Star-break lineup net rating (per 100 possessions). Features come from 
 | 8 | React + TypeScript + Tailwind + Recharts dashboard (`web/`; `docs/dashboard.md`) | Done (approved 2026-11-19) |
 | 9 | Power BI datasets + report (`powerbi/`, `sql/powerbi/`; `docs/powerbi.md`) | Done, awaiting review (report not yet opened in Power BI: manual step) |
 | 10 | CI/CD, deployment, documentation | |
+| — | Local update: 2026-27 season to date, daily launchd refresh, provisional predictions (`docs/refresh.md`) | Done, awaiting review (2026-11-20) |
 
 ## Power BI report requirements
 **(Phase 9)** Decided: Power BI Service in the browser (Excel dataset) as the macOS route, and the generated Power BI Project for Desktop on any Windows machine. Both need a work or school Microsoft account to publish. See `docs/powerbi.md`. The report must show:

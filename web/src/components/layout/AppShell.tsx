@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useLocation, useSearchParams } from 'react-router'
 import { useHealth } from '../../api/hooks'
+import { DataFreshness, StaleBanner } from './DataFreshness'
 
 const NAV = [
   { to: '/', label: 'Overview', end: true },
@@ -120,7 +121,7 @@ export function AppShell() {
       </a>
       <header className="sticky top-0 z-40 border-b border-line bg-surface/90 backdrop-blur supports-[backdrop-filter]:bg-surface/75">
         <div className="mx-auto flex h-14 max-w-7xl items-center gap-4 px-4 sm:px-6">
-          <NavLink to={withSeason('/')} className="flex items-center gap-2 font-semibold tracking-tight text-ink">
+          <NavLink to={withSeason('/')} className="flex shrink-0 items-center gap-2 font-semibold tracking-tight whitespace-nowrap text-ink">
             <svg viewBox="0 0 32 32" className="size-7" aria-hidden>
               <rect width="32" height="32" rx="7" fill="var(--accent)" />
               <circle cx="16" cy="16" r="9" fill="none" stroke="var(--accent-ink)" strokeWidth="2" />
@@ -135,7 +136,8 @@ export function AppShell() {
               </NavLink>
             ))}
           </nav>
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex min-w-0 items-center gap-3">
+            <DataFreshness />
             <HealthDot />
             <ThemeToggle />
             <button
@@ -164,6 +166,7 @@ export function AppShell() {
           </nav>
         )}
       </header>
+      <StaleBanner />
 
       <main id="main" className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
         <Outlet />
@@ -173,10 +176,13 @@ export function AppShell() {
         <div className="mx-auto max-w-7xl space-y-1 px-4 py-6 text-xs text-muted sm:px-6">
           <p>
             Statistics from <a className="underline-offset-2 hover:underline" href="https://www.nba.com/stats" target="_blank" rel="noreferrer">NBA.com/stats</a> via the
-            open-source nba_api client, regular seasons 2018-19 to 2025-26. Ratings are points per 100 possessions, computed from summed totals. Personal, non-commercial
+            open-source nba_api client: regular seasons 2018-19 to 2025-26, plus 2026-27 season to date (refreshed daily on this machine). Ratings are points per 100 possessions, computed from summed totals. Personal, non-commercial
             educational project; NBA data is owned by the NBA.
           </p>
-          <p>Predictions are conditional on a lineup playing after the All-Star break and are always shown with the team-prior baseline and 95% intervals.</p>
+          <p>
+            Predictions are conditional on a lineup playing after the All-Star break and are always shown with the team-prior baseline and 95% intervals.
+            Predictions for the season in progress are provisional.
+          </p>
         </div>
       </footer>
     </div>

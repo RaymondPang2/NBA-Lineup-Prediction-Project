@@ -59,6 +59,8 @@ def _typed(df: pd.DataFrame, t: bim.Table) -> pd.DataFrame:
 
 
 def read_views(conn: psycopg.Connection) -> dict[str, pd.DataFrame]:
+    """The bi.* views, limited to the eight evaluated seasons (ALL_SEASONS). The season in progress lives in
+    the same warehouse for the dashboard, but the Power BI report is the evaluated-seasons snapshot."""
     out = {}
     for t in bim.TABLES:
         if t.source != "sql":
@@ -66,7 +68,13 @@ def read_views(conn: psycopg.Connection) -> dict[str, pd.DataFrame]:
         with conn.cursor() as cur:
             cur.execute(f"SELECT * FROM bi.{t.name}")  # names come from the fixed model definition
             cols = [d.name for d in cur.description]
-            out[t.name] = _typed(pd.DataFrame(cur.fetchall(), columns=cols), t)
+            df = pd.DataFrame(cur.fetchall(), columns=cols)
+        if "season_id" in df.columns:
+            df = df[df.season_id.isin(ALL_SEASONS)].reset_index(drop=True)
+        out[t.name] = _typed(df, t)
+    if "bridge_lineup_player" in out and "dim_lineup" in out:
+        b = out["bridge_lineup_player"]
+        out["bridge_lineup_player"] = b[b.lineup_id.isin(out["dim_lineup"].lineup_id)].reset_index(drop=True)
     return out
 
 

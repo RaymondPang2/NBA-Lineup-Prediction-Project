@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import psycopg
 
-from ...config import HELDOUT_SEASONS
+from ...config import HELDOUT_SEASONS, LIVE_SEASONS
 from .. import db
 from ..errors import NotFound
 
@@ -18,7 +18,8 @@ def seasons(conn: psycopg.Connection) -> list[dict]:
         FROM seasons s LEFT JOIN stat_windows w USING (season_id)
         GROUP BY s.season_id ORDER BY s.season_id""")
     for r in rows:
-        r["role"] = "held_out" if r["season_id"] in HELDOUT_SEASONS else "development"
+        r["role"] = ("held_out" if r["season_id"] in HELDOUT_SEASONS
+                     else "current" if r["season_id"] in LIVE_SEASONS else "development")
     return rows
 
 

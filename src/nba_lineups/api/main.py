@@ -25,8 +25,10 @@ log = logging.getLogger("nba_lineups.api")
 API_PREFIX = "/api/v1"
 
 DESCRIPTION = """
-Read-only API over eight NBA regular seasons (2018-19 to 2025-26) of five-man lineup data, split at the
+Read-only API over eight completed NBA regular seasons (2018-19 to 2025-26) plus the season in progress
+(2026-27, season to date, refreshed daily on the local machine) of five-man lineup data, split at the
 All-Star break, and the **frozen** Phase 6 model that predicts a lineup's post-break net rating.
+Predictions for the season in progress are **provisional** (see `GET /api/v1/data-status` for freshness).
 
 **Read before using predictions**
 * A prediction is **conditional**: the expected post-break net rating *if* the lineup plays after the break.
@@ -40,7 +42,7 @@ Ratings are points per 100 possessions. Errors share one shape: `{"error": {"cod
 """
 
 TAGS = [
-    {"name": "catalog", "description": "Seasons and teams."},
+    {"name": "catalog", "description": "Seasons, teams and data freshness."},
     {"name": "lineups", "description": "Five-man lineups with pre- vs post-break ratings."},
     {"name": "players", "description": "Player on-court, on/off and usage statistics."},
     {"name": "teams", "description": "Team ratings and records; model predictions for a team's lineups."},

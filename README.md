@@ -16,6 +16,7 @@ Analyzes historical NBA five-player lineup performance and predicts post-All-Sta
 | [docs/model_card.md](docs/model_card.md) | Model card: estimand, performance, appropriate use, limitations |
 | [docs/api.md](docs/api.md) | REST API: endpoints, examples, prediction uncertainty, architecture, tests, frontend setup |
 | [docs/dashboard.md](docs/dashboard.md) | Web dashboard: pages, how the analytical contract is kept in the UI, architecture, tests |
+| [docs/refresh.md](docs/refresh.md) | Season in progress (2026-27): daily 07:00 refresh with launchd, manual refresh, freshness, provisional predictions, troubleshooting |
 | [docs/powerbi.md](docs/powerbi.md) | Power BI: macOS workflow, star schema, DAX measures, five report pages, validation, interview notes ([reference](docs/powerbi_reference.md)) |
 
 ## Setup (macOS)
@@ -42,6 +43,9 @@ npm run fixtures && npm test               # unit/component tests on fixtures re
 npm run test:integration && npm run test:e2e   # live API integration + Playwright end-to-end
 
 cd ..
+.venv/bin/python -m nba_lineups.refresh                   # 2026-27 season to date: refresh now (docs/refresh.md)
+scripts/refresh/install_schedule.sh                       # daily 07:00 refresh via launchd; check: scripts/refresh/schedule_status.sh
+
 .venv/bin/python scripts/phase9/export_powerbi.py         # Phase 9: bi.* views + Power BI dataset (data/powerbi/)
 .venv/bin/python scripts/phase9/build_powerbi_project.py  # Power BI Project (powerbi/), DAX script, reference docs
 .venv/bin/python -m pytest tests/powerbi                  # schema validation + reconciliation
@@ -49,4 +53,4 @@ cd ..
 Run ingestion from a non-cloud IP, because stats.nba.com blocks many datacenter ranges.
 
 ## Data & attribution
-The statistics come from [NBA.com/stats](https://www.nba.com/stats) through the open-source [`nba_api`](https://github.com/swar/nba_api) client. This is a personal, non-commercial educational project. Raw data isn't committed to this repository. NBA data is owned by the NBA and subject to the [NBA.com Terms of Use](https://www.nba.com/terms).
+The statistics come from [NBA.com/stats](https://www.nba.com/stats) through the open-source [`nba_api`](https://github.com/swar/nba_api) client. This is a personal, non-commercial educational project. Raw data isn't committed to this repository. NBA data is owned by the NBA and subject to the [NBA.com Terms of Use](https://www.nba.com/terms). Their statistics clause allows private, non-commercial use with attribution to NBA.com, but not a service featuring a regularly updated statistics database without NBA consent. So the daily-refreshed 2026-27 data is for local, private use only (docs/refresh.md).

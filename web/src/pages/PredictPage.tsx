@@ -209,7 +209,7 @@ export default function PredictPage() {
     <div>
       <PageHeader
         title="Predict a lineup’s post-break net rating"
-        description="The frozen linear-regression model, trained on 2018-19 to 2023-24 and evaluated once on the held-out 2024-25 and 2025-26 seasons. Every prediction comes with the team-prior baseline and two 95% intervals."
+        description="The frozen linear-regression model, trained on 2018-19 to 2023-24 and evaluated once on the held-out 2024-25 and 2025-26 seasons. Every prediction comes with the team-prior baseline and two 95% intervals. Predictions for the 2026-27 season in progress are provisional."
       />
 
       <div className="mb-6">

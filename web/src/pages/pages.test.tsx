@@ -13,7 +13,7 @@ const label = (l: LineupSummary) => l.players.map((p) => lastName(p.player_name)
 
 describe('Overview', () => {
   it('shows every team of the season from the API, sortable, and reports API health', async () => {
-    renderApp('/')
+    renderApp('/?season=2025-26')
     const teams = fixture<TeamSeason[]>('team-stats-2025-26')
     const table = await screen.findByRole('region', { name: 'Team ratings' })
     for (const t of teams) expect(within(table).getByText(t.team_name)).toBeInTheDocument()

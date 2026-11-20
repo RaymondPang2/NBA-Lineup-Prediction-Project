@@ -14,7 +14,7 @@ from typing import Any
 
 import pandas as pd
 
-from ..config import N_TEAMS, ROW_CAP
+from ..config import LIVE_SEASONS, N_TEAMS, ROW_CAP
 from .specs import GAMELOG, LINEUPS, PLAYERS, TEAMS, RequestSpec
 from .storage import result_set
 
@@ -100,8 +100,10 @@ def _check_gamelog(spec: RequestSpec, df: pd.DataFrame, report: ValidationReport
     per_game = df.groupby("GAME_ID").size()
     if (per_game != 2).any():
         report.errors.append(f"{int((per_game != 2).sum())} games do not have exactly 2 team rows")
-    if df.TEAM_ID.nunique() != N_TEAMS:
-        report.errors.append(f"expected {N_TEAMS} teams, found {df.TEAM_ID.nunique()}")
+    # A season in progress may not have every team in it yet (opening days); a completed one must.
+    n = df.TEAM_ID.nunique()
+    if (n > N_TEAMS) if spec.season in LIVE_SEASONS else (n != N_TEAMS):
+        report.errors.append(f"expected {N_TEAMS} teams, found {n}")
 
 
 def parse_group_id(group_id: str) -> list[int]:
@@ -169,5 +171,11 @@ def _check_players(spec: RequestSpec, df: pd.DataFrame, report: ValidationReport
 
 
 def _check_teams(spec: RequestSpec, df: pd.DataFrame, report: ValidationReport) -> None:
+    if spec.season in LIVE_SEASONS:
+        # Season in progress: only teams that have played in the window are listed (e.g. the first days
+        # after the All-Star break). Still no duplicates and never more than 30.
+        if df.empty or len(df) > N_TEAMS or df.TEAM_ID.duplicated().any():
+            report.errors.append(f"expected 1-{N_TEAMS} unique teams, found {len(df)} rows / {df.TEAM_ID.nunique()} ids")
+        return
     if len(df) != N_TEAMS or df.TEAM_ID.nunique() != N_TEAMS:
         report.errors.append(f"expected {N_TEAMS} unique teams, found {len(df)} rows / {df.TEAM_ID.nunique()} ids")

@@ -8,13 +8,14 @@ Includes the two central checks of Phase 7:
 from __future__ import annotations
 
 import json
+from datetime import date
 
 import pandas as pd
 import psycopg
 import pytest
 
 from nba_lineups.analysis.data import HeldOutDataError
-from nba_lineups.config import DEV_SEASONS, HELDOUT_SEASONS, PROJECT_ROOT
+from nba_lineups.config import CURRENT_SEASON, DEV_SEASONS, HELDOUT_SEASONS, LIVE_SEASONS, PROJECT_ROOT
 from nba_lineups.modeling import final, raw
 from nba_lineups.modeling.features import FeatureBuilder
 from nba_lineups.modeling.models import weighted_rmse
@@ -40,11 +41,41 @@ def lineup(client):
 
 def test_seasons(client):
     s = get(client, "/seasons")
-    assert [x["season_id"] for x in s] == list(DEV_SEASONS + HELDOUT_SEASONS)
+    ids = [x["season_id"] for x in s]
+    assert ids[:8] == list(DEV_SEASONS + HELDOUT_SEASONS) and set(ids[8:]) <= set(LIVE_SEASONS)
     assert {x["season_id"] for x in s if x["role"] == "held_out"} == set(HELDOUT_SEASONS)
+    assert {x["season_id"] for x in s if x["role"] == "current"} == set(ids[8:])
     assert {x["season_id"] for x in s if x["is_irregular"]} == {"2019-20", "2020-21"}
-    for x in s:
+    for x in s[:8]:
         assert [w["window_type"] for w in x["windows"]] == ["pre_asb", "post_asb"] and x["n_lineups"] > 10_000
+
+
+def test_data_status_is_read_only_and_describes_the_season_in_progress(client):
+    d = get(client, "/data-status")
+    assert d["season_id"] == CURRENT_SEASON and d["freshness"] in ("current", "stale", "unknown")
+    assert d["refresh_command"] == "python -m nba_lineups.refresh"
+    if d["data_cutoff"]:
+        with psycopg.connect(client.app.state.settings.database_url) as c:
+            last = c.execute("SELECT max(game_date) FROM team_games WHERE season_id = %s", (CURRENT_SEASON,)).fetchone()[0]
+            windows = c.execute("SELECT max(date_to) FROM stat_windows WHERE season_id = %s", (CURRENT_SEASON,)).fetchone()[0]
+        assert last <= date.fromisoformat(d["data_cutoff"]) and windows <= date.fromisoformat(d["data_cutoff"])
+    # no route can trigger a refresh: nothing but GET exists for it
+    assert client.post("/api/v1/data-status").status_code == 405
+    assert not [r for r in client.app.routes if "refresh" in getattr(r, "path", "")]
+
+
+def test_current_season_predictions_are_provisional_with_baseline_and_intervals(client):
+    page = get(client, f"/lineups?season={CURRENT_SEASON}&sort=pre_poss&order=desc&page_size=1")
+    if not page["items"]:
+        pytest.skip(f"{CURRENT_SEASON} not loaded")
+    lid = page["items"][0]["lineup_id"]
+    p = get(client, f"/lineups/{lid}/prediction")
+    assert p["provisional"] is True and p["data_cutoff"] and p["season_used_for_training"] is False
+    assert p["baselines"]["team_prior"] is not None and p["uncertainty"]["true_rating_interval_95"]
+    assert any(n.startswith("PROVISIONAL") for n in p["notes"])
+    assert get(client, f"/lineups/{lid}/prediction") == p                # reproducible
+    old = get(client, "/lineups?season=2025-26&sort=pre_poss&order=desc&page_size=1")["items"][0]["lineup_id"]
+    assert get(client, f"/lineups/{old}/prediction")["provisional"] is False
 
 
 def test_teams(client):
@@ -254,12 +285,17 @@ class RecordingConnection:
         return C()
 
 
-def test_prediction_features_read_pre_break_only(client, predictor):
-    """Rebuild a season's predictions through a recording connection: no statement may touch post-break rows."""
+@pytest.mark.parametrize("season", ["2024-25", CURRENT_SEASON])
+def test_prediction_features_read_pre_break_only(client, predictor, season):
+    """Rebuild a season's predictions through a recording connection: no statement may touch post-break rows.
+    Includes the season in progress (provisional predictions)."""
     with psycopg.connect(client.app.state.settings.database_url) as c:
+        if c.execute("SELECT 1 FROM seasons WHERE season_id = %s", (season,)).fetchone() is None:
+            pytest.skip(f"{season} not loaded")
         rec = RecordingConnection(c)
-        predictor._cache.pop("2024-25", None)
-        sd = predictor.season(rec, "2024-25")
+        for k in [k for k in predictor._cache if k[0] == season]:
+            predictor._cache.pop(k)
+        sd = predictor.season(rec, season)
     stats_sql = [q for q in rec.sql if "window_stats" in q]
     assert stats_sql and all("pre_asb" in q and "post_asb" not in q for q in stats_sql)
     assert not any("last_team_id" in q or "v_lineup_window_ratings" in q for q in rec.sql)

@@ -26,7 +26,8 @@ import pandas as pd
 from ..config import IngestSettings
 from .client import FetchFailed, RateLimiter, Transport, fetch_with_retries
 from .manifest import FAILED, INVALID, SUCCESS, IngestionRecord, Manifest
-from .specs import RequestSpec, gamelog_spec, location_split_specs, season_specs
+from . import live
+from .specs import PLAYERS, TEAMS, RequestSpec, gamelog_spec, location_split_specs, season_specs
 from .storage import atomic_write_json, read_json, result_set
 from .validate import validate_payload
 from .windows import DateWindow, build_windows
@@ -73,7 +74,7 @@ class Ingestor:
             if cached is not None and validate_payload(spec, cached).ok:
                 summary.cached += 1
                 return cached
-            log.warning("%s: cached file is corrupt or no longer valid; refetching", spec.key)
+            log.info("%s: cached file is corrupt or no longer matches the request; refetching", spec.key)
             summary.refetched_corrupt += 1
 
         start = self._clock()
@@ -145,6 +146,39 @@ class Ingestor:
                 log.info("%s location splits: %d/%d (cached=%d fetched=%d failed=%d invalid=%d)",
                          season, i, len(specs), summary.cached, summary.fetched, summary.failed, summary.invalid)
 
+    def live_plan(self, season: str, cutoff: date, summary: RunSummary) -> live.LivePlan | None:
+        """Season in progress: refetch its game log (always one request) and plan the season up to `cutoff`."""
+        gamelog = self.ingest_one(gamelog_spec(season), summary, force=True)
+        if gamelog is None:
+            summary.problems.append(f"{season}: game log unavailable")
+            return None
+        try:
+            return live.plan(season, gamelog, cutoff)
+        except ValueError as exc:
+            summary.problems.append(str(exc))
+            return None
+
+    def ingest_live_season(self, p: live.LivePlan, summary: RunSummary, *, force_all: bool = False,
+                           force_league: bool = True, force_teams: Iterable[int] = ()) -> None:
+        """Fetch what the plan needs. A team's lineup files are reused when its request is unchanged (it has
+        not played since the last refresh) unless the team is in `force_teams` (its earlier games changed:
+        a stat correction). The league-wide team and player tables are refetched when `force_league`;
+        `force_all` refetches everything (the periodic correction sweep). Writes no plan files:
+        `commit_live_plan` does that, after a complete success."""
+        forced = set(force_teams)
+        specs = season_specs(p.season, p.windows, p.team_ids, p.team_last)
+        for i, spec in enumerate(specs, 1):
+            force = force_all or (spec.endpoint in (TEAMS, PLAYERS) and force_league) or spec.team_id in forced
+            self.ingest_one(spec, summary, force)
+            if i % 25 == 0 or i == len(specs):
+                log.info("%s: %d/%d requests processed (cached=%d fetched=%d failed=%d invalid=%d)",
+                         p.season, i, len(specs), summary.cached, summary.fetched, summary.failed, summary.invalid)
+
+    def commit_live_plan(self, p: live.LivePlan, state: dict[str, Any]) -> None:
+        """Record the plan the files on disk now satisfy (written last, so a partial refresh is never 'current')."""
+        self._write_windows(p.season, p.windows)
+        atomic_write_json(self.raw_dir / p.season / "live_state.json", state | {"data_cutoff": p.cutoff.isoformat()})
+
     def ingest_seasons(self, seasons: Iterable[str], force: bool = False) -> RunSummary:
         summary = RunSummary(self.run_id)
         for season in seasons:
@@ -153,6 +187,10 @@ class Ingestor:
 
     def _write_windows(self, season: str, windows: dict[str, DateWindow]) -> None:
         atomic_write_json(self.raw_dir / season / "windows.json", {k: w.to_dict() for k, w in windows.items()})
+
+
+def read_live_state(raw_dir: Path, season: str) -> dict[str, Any] | None:
+    return read_json(raw_dir / season / "live_state.json")
 
 
 def read_windows(raw_dir: Path, season: str) -> dict[str, DateWindow] | None:

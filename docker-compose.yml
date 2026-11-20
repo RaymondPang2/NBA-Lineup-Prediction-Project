@@ -4,6 +4,7 @@ services:
   db:
     image: postgres:17.6
     container_name: nba_lineups_db
+    shm_size: 256mb          # Docker's 64 MB /dev/shm is too small for PostgreSQL parallel queries
     environment:
       POSTGRES_USER: nba
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}

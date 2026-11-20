@@ -23,6 +23,7 @@ export type EvaluationSummary = S['EvaluationSummary']
 export type Estimate = S['Estimate']
 export type Coefficient = S['Coefficient']
 export type Health = S['Health']
+export type DataStatus = S['DataStatus']
 export type Page<T> = { items: T[]; page: number; page_size: number; total: number; total_pages: number }
 
 export type LineupQuery = NonNullable<operations['list_lineups_api_v1_lineups_get']['parameters']['query']>

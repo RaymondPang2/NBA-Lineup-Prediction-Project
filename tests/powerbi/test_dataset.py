@@ -23,7 +23,7 @@ import pytest
 from nba_lineups.bi import model as bim
 from nba_lineups.bi.export import DEFAULT_OUT, WORKBOOK
 from nba_lineups.bi.reference import Filter, Model, load
-from nba_lineups.config import DEV_SEASONS, HELDOUT_SEASONS, PROJECT_ROOT
+from nba_lineups.config import ALL_SEASONS, DEV_SEASONS, HELDOUT_SEASONS, PROJECT_ROOT
 from nba_lineups.db.connection import database_url
 
 CSV = DEFAULT_OUT / "csv"
@@ -93,9 +93,14 @@ def test_every_lineup_has_exactly_five_players(data):
 
 
 def test_row_counts_match_the_warehouse(data, conn):
-    counts = q(conn, """SELECT (SELECT count(*) FROM lineups) l, (SELECT count(*) FROM lineup_players) lp,
-                               (SELECT count(*) FROM lineup_window_stats) lws, (SELECT count(*) FROM teams) t,
-                               (SELECT count(*) FROM seasons) s""").iloc[0]
+    # The Power BI snapshot covers the eight evaluated seasons; the season in progress is dashboard-only.
+    counts = q(conn, """SELECT (SELECT count(*) FROM lineups WHERE season_id = ANY(%(s)s)) l,
+                               (SELECT count(*) FROM lineup_players JOIN lineups USING (lineup_id)
+                                WHERE season_id = ANY(%(s)s)) lp,
+                               (SELECT count(*) FROM lineup_window_stats WHERE season_id = ANY(%(s)s)) lws,
+                               (SELECT count(*) FROM teams) t,
+                               (SELECT count(*) FROM seasons WHERE season_id = ANY(%(s)s)) s""",
+               {"s": list(ALL_SEASONS)}).iloc[0]
     assert len(data["dim_lineup"]) == counts.l and len(data["bridge_lineup_player"]) == counts.lp
     assert len(data["fact_lineup_window"]) == counts.lws and len(data["dim_team"]) == counts.t and len(data["dim_season"]) == counts.s
 
@@ -127,7 +132,8 @@ def test_excel_workbook_holds_every_table_as_an_excel_table(data):
 
 def test_team_ratings_equal_the_warehouse_view_for_every_team_season_window(m, conn):
     v = q(conn, """SELECT season_id, window_type, team_id, poss, pts, off_rating::float8 o, def_rating::float8 d,
-                          net_rating::float8 n FROM v_team_window_ratings""")
+                          net_rating::float8 n FROM v_team_window_ratings WHERE season_id = ANY(%(s)s)""",
+          {"s": list(ALL_SEASONS)})
     assert len(v) == 480
     for r in v.itertuples():
         f = Filter(seasons=[r.season_id], teams=[r.team_id], window=r.window_type)
@@ -151,7 +157,8 @@ def test_every_lineup_window_rating_equals_the_warehouse_including_missing_oppon
 
 def test_season_totals(m, conn):
     v = q(conn, """SELECT l.season_id, sum(s.poss) poss, sum(s.pts) pts, sum(s.seconds)/60.0 minutes
-                   FROM lineup_window_stats s JOIN lineups l USING (lineup_id, season_id) GROUP BY 1""")
+                   FROM lineup_window_stats s JOIN lineups l USING (lineup_id, season_id)
+                   WHERE l.season_id = ANY(%(s)s) GROUP BY 1""", {"s": list(ALL_SEASONS)})
     for r in v.itertuples():
         x = m.flw(Filter(seasons=[r.season_id]))
         assert x.poss.sum() == r.poss and x.pts.sum() == r.pts
@@ -160,7 +167,7 @@ def test_season_totals(m, conn):
 
 def test_win_loss_records_match_game_logs(m, conn):
     v = q(conn, """SELECT g.season_id, g.team_id, count(*) games, count(*) FILTER (WHERE g.won) wins
-                   FROM team_games g GROUP BY 1, 2""")
+                   FROM team_games g WHERE g.season_id = ANY(%(s)s) GROUP BY 1, 2""", {"s": list(ALL_SEASONS)})
     for r in v.itertuples():
         games, wins, losses = m.record(Filter(seasons=[r.season_id], teams=[r.team_id]))
         # the two windows exclude only All-Star-break days, which have no games
