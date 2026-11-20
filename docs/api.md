@@ -50,6 +50,8 @@ Everything is under `/api/v1`. The version lives in the path so a breaking chang
 | `GET /teams/stats?season=` | All teams: pre- and post-break ORtg, DRtg, net and win-loss |
 | `GET /teams/{team_id}/stats?season=` | One team |
 | `GET /teams/{team_id}/predictions?season=&min_pre_poss=` | A team's lineups ranked by prediction, each with its baseline |
+| `GET /rankings/lineups?season=&team_id=&window=season\|pre\|post&metric=net\|off\|def\|poss&min_poss=&page=&page_size=` | Lineups ranked by actual results. Every qualifying lineup is ranked in SQL (`rank()` over the whole filtered set) before paging, so ranks are global; ties share a rank (1, 2, 2, 4). `def` ranks the lowest first. Each row has minutes, possessions, ratings, a sampling SD, a reliability (τ²/(τ²+K·h)) and a small-sample flag. The window label says *Full season*, *Season to date* (season in progress) or a pre/post-break window |
+| `GET /rankings/predictions?season=&team_id=&min_pre_poss=&possessions=&page=&page_size=` | Recorded lineups ranked by the frozen model's predicted post-break net rating, league-wide or for one team, from the predictor's cached season scores (pre-break inputs only; up to the data cutoff for the season in progress). Each row has the team-prior baseline, the difference, both 95% intervals and pre-break possessions; the response carries the verdict, the interval half-width, the spread of the ranked predictions and `provisional`. Hypothetical fives are never ranked |
 | `GET /model` | Model card: features, coefficients, artifact hash (re-verified on every call), use and limitations |
 | `GET /model/performance` | Development CV and held-out results with CIs; the pre-registered verdict |
 

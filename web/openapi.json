@@ -605,6 +605,101 @@
         "title": "LineupDetail",
         "type": "object"
       },
+      "LineupRanking": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RankedLineup"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "metric": {
+            "enum": [
+              "net",
+              "off",
+              "def",
+              "poss"
+            ],
+            "title": "Metric",
+            "type": "string"
+          },
+          "metric_label": {
+            "title": "Metric Label",
+            "type": "string"
+          },
+          "min_poss": {
+            "title": "Min Poss",
+            "type": "integer"
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "page_size": {
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "provisional": {
+            "description": "true for the season in progress (season to date)",
+            "title": "Provisional",
+            "type": "boolean"
+          },
+          "season_id": {
+            "title": "Season Id",
+            "type": "string"
+          },
+          "team_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Team Id"
+          },
+          "total": {
+            "description": "qualifying lineups over all pages",
+            "title": "Total",
+            "type": "integer"
+          },
+          "total_pages": {
+            "title": "Total Pages",
+            "type": "integer"
+          },
+          "window": {
+            "enum": [
+              "season",
+              "pre",
+              "post"
+            ],
+            "title": "Window",
+            "type": "string"
+          },
+          "window_info": {
+            "$ref": "#/components/schemas/RankingWindow"
+          }
+        },
+        "required": [
+          "items",
+          "page",
+          "page_size",
+          "total",
+          "total_pages",
+          "season_id",
+          "team_id",
+          "window",
+          "metric",
+          "metric_label",
+          "min_poss",
+          "window_info",
+          "provisional"
+        ],
+        "title": "LineupRanking",
+        "type": "object"
+      },
       "LineupSummary": {
         "properties": {
           "change": {
@@ -1482,6 +1577,125 @@
         "title": "PredictionPlayer",
         "type": "object"
       },
+      "PredictionRanking": {
+        "properties": {
+          "data_cutoff": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data Cutoff"
+          },
+          "interval_half_width": {
+            "description": "1.96 x model_sd: every prediction's 95% true-quality half-width",
+            "title": "Interval Half Width",
+            "type": "number"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/RankedPrediction"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "min_pre_poss": {
+            "title": "Min Pre Poss",
+            "type": "integer"
+          },
+          "model_sd": {
+            "title": "Model Sd",
+            "type": "number"
+          },
+          "notes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Notes",
+            "type": "array"
+          },
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "page_size": {
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "possessions": {
+            "description": "post-break possessions per end the observed-rating interval assumes",
+            "title": "Possessions",
+            "type": "integer"
+          },
+          "prediction_spread": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "10th-90th percentile range of the ranked predictions",
+            "title": "Prediction Spread"
+          },
+          "provisional": {
+            "title": "Provisional",
+            "type": "boolean"
+          },
+          "season_id": {
+            "title": "Season Id",
+            "type": "string"
+          },
+          "season_used_for_training": {
+            "title": "Season Used For Training",
+            "type": "boolean"
+          },
+          "team_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Team Id"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "total_pages": {
+            "title": "Total Pages",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "items",
+          "page",
+          "page_size",
+          "total",
+          "total_pages",
+          "season_id",
+          "team_id",
+          "min_pre_poss",
+          "possessions",
+          "provisional",
+          "data_cutoff",
+          "season_used_for_training",
+          "model_sd",
+          "interval_half_width",
+          "prediction_spread",
+          "notes"
+        ],
+        "title": "PredictionRanking",
+        "type": "object"
+      },
       "PredictionRequest": {
         "description": "A lineup to predict: five players of one team in one season. The lineup need not have played together.",
         "examples": [
@@ -1534,6 +1748,329 @@
           "player_ids"
         ],
         "title": "PredictionRequest",
+        "type": "object"
+      },
+      "RankedLineup": {
+        "properties": {
+          "def_rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Def Rating"
+          },
+          "gp": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "games (null for the full-season window)",
+            "title": "Gp"
+          },
+          "lineup_id": {
+            "title": "Lineup Id",
+            "type": "integer"
+          },
+          "minutes": {
+            "title": "Minutes",
+            "type": "number"
+          },
+          "net_rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Net Rating"
+          },
+          "net_rating_sampling_sd": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "SD of the net rating from sampling noise alone",
+            "title": "Net Rating Sampling Sd"
+          },
+          "off_rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Off Rating"
+          },
+          "opp_poss": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Opp Poss"
+          },
+          "players": {
+            "items": {
+              "$ref": "#/components/schemas/Player"
+            },
+            "title": "Players",
+            "type": "array"
+          },
+          "poss": {
+            "title": "Poss",
+            "type": "integer"
+          },
+          "rank": {
+            "description": "position across ALL qualifying lineups; ties share a rank (1, 2, 2, 4)",
+            "title": "Rank",
+            "type": "integer"
+          },
+          "reliability": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "share of the net rating's deviation from its team that is signal rather than sampling noise: τ²/(τ² + K·h), frozen-model constants",
+            "title": "Reliability"
+          },
+          "reliability_tier": {
+            "anyOf": [
+              {
+                "enum": [
+                  "low",
+                  "limited",
+                  "moderate",
+                  "high"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "low < 0.25 ≤ limited < 0.5 ≤ moderate < 0.75 ≤ high",
+            "title": "Reliability Tier"
+          },
+          "season_id": {
+            "title": "Season Id",
+            "type": "string"
+          },
+          "small_sample": {
+            "description": "fewer than 100 possessions on either end",
+            "title": "Small Sample",
+            "type": "boolean"
+          },
+          "team_abbreviation": {
+            "title": "Team Abbreviation",
+            "type": "string"
+          },
+          "team_id": {
+            "title": "Team Id",
+            "type": "integer"
+          },
+          "team_name": {
+            "title": "Team Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "rank",
+          "lineup_id",
+          "season_id",
+          "team_id",
+          "team_abbreviation",
+          "team_name",
+          "players",
+          "gp",
+          "minutes",
+          "poss",
+          "opp_poss",
+          "off_rating",
+          "def_rating",
+          "net_rating",
+          "net_rating_sampling_sd",
+          "reliability",
+          "reliability_tier",
+          "small_sample"
+        ],
+        "title": "RankedLineup",
+        "type": "object"
+      },
+      "RankedPrediction": {
+        "properties": {
+          "kind": {
+            "const": "recorded",
+            "description": "only recorded lineups are ranked, never hypothetical fives",
+            "title": "Kind",
+            "type": "string"
+          },
+          "lineup_id": {
+            "title": "Lineup Id",
+            "type": "integer"
+          },
+          "model_minus_team_prior": {
+            "title": "Model Minus Team Prior",
+            "type": "number"
+          },
+          "no_pre_break_history": {
+            "title": "No Pre Break History",
+            "type": "boolean"
+          },
+          "observed_rating_interval_95": {
+            "$ref": "#/components/schemas/Interval"
+          },
+          "players": {
+            "items": {
+              "$ref": "#/components/schemas/Player"
+            },
+            "title": "Players",
+            "type": "array"
+          },
+          "pre_break_net_rating": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pre Break Net Rating"
+          },
+          "pre_break_opp_poss": {
+            "title": "Pre Break Opp Poss",
+            "type": "integer"
+          },
+          "pre_break_poss": {
+            "title": "Pre Break Poss",
+            "type": "integer"
+          },
+          "pre_break_reliability": {
+            "title": "Pre Break Reliability",
+            "type": "number"
+          },
+          "predicted_net_rating": {
+            "title": "Predicted Net Rating",
+            "type": "number"
+          },
+          "rank": {
+            "title": "Rank",
+            "type": "integer"
+          },
+          "season_id": {
+            "title": "Season Id",
+            "type": "string"
+          },
+          "team_abbreviation": {
+            "title": "Team Abbreviation",
+            "type": "string"
+          },
+          "team_id": {
+            "title": "Team Id",
+            "type": "integer"
+          },
+          "team_name": {
+            "title": "Team Name",
+            "type": "string"
+          },
+          "team_prior": {
+            "title": "Team Prior",
+            "type": "number"
+          },
+          "true_rating_interval_95": {
+            "$ref": "#/components/schemas/Interval"
+          }
+        },
+        "required": [
+          "rank",
+          "lineup_id",
+          "kind",
+          "season_id",
+          "team_id",
+          "team_abbreviation",
+          "team_name",
+          "players",
+          "predicted_net_rating",
+          "team_prior",
+          "model_minus_team_prior",
+          "true_rating_interval_95",
+          "observed_rating_interval_95",
+          "pre_break_poss",
+          "pre_break_opp_poss",
+          "pre_break_net_rating",
+          "pre_break_reliability",
+          "no_pre_break_history"
+        ],
+        "title": "RankedPrediction",
+        "type": "object"
+      },
+      "RankingWindow": {
+        "properties": {
+          "available": {
+            "description": "false when the season has no data for this window yet (e.g. post-break before the All-Star break)",
+            "title": "Available",
+            "type": "boolean"
+          },
+          "date_from": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date From"
+          },
+          "date_to": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date To"
+          },
+          "label": {
+            "description": "e.g. 'Full season', 'Season to date', 'Pre-All-Star break'",
+            "title": "Label",
+            "type": "string"
+          }
+        },
+        "required": [
+          "label",
+          "available",
+          "date_from",
+          "date_to"
+        ],
+        "title": "RankingWindow",
         "type": "object"
       },
       "RefreshAttempt": {
@@ -2730,6 +3267,289 @@
         ]
       }
     },
+    "/api/v1/rankings/lineups": {
+      "get": {
+        "description": "Every qualifying lineup of the season (or team) is ranked before paging, so ranks are global.\n`def` ranks the LOWEST defensive rating first; `poss` ranks by own possessions (most used).\nEach row carries a sampling SD and a reliability (signal share) so small samples are visible.",
+        "operationId": "rank_lineups_api_v1_rankings_lineups_get",
+        "parameters": [
+          {
+            "description": "season id, e.g. 2025-26",
+            "in": "query",
+            "name": "season",
+            "required": true,
+            "schema": {
+              "description": "season id, e.g. 2025-26",
+              "examples": [
+                "2025-26"
+              ],
+              "pattern": "^\\d{4}-\\d{2}$",
+              "title": "Season",
+              "type": "string"
+            }
+          },
+          {
+            "description": "one team; omit for league-wide",
+            "in": "query",
+            "name": "team_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "exclusiveMinimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "one team; omit for league-wide",
+              "title": "Team Id"
+            }
+          },
+          {
+            "description": "season = full season (season to date for the season in progress)",
+            "in": "query",
+            "name": "window",
+            "required": false,
+            "schema": {
+              "default": "season",
+              "description": "season = full season (season to date for the season in progress)",
+              "enum": [
+                "season",
+                "pre",
+                "post"
+              ],
+              "title": "Window",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "metric",
+            "required": false,
+            "schema": {
+              "default": "net",
+              "enum": [
+                "net",
+                "off",
+                "def",
+                "poss"
+              ],
+              "title": "Metric",
+              "type": "string"
+            }
+          },
+          {
+            "description": "minimum possessions on EACH end in the window",
+            "in": "query",
+            "name": "min_poss",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "description": "minimum possessions on EACH end in the window",
+              "maximum": 5000,
+              "minimum": 0,
+              "title": "Min Poss",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "1-based page number",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "description": "1-based page number",
+              "minimum": 1,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "rows per page (max 200)",
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "description": "rows per page (max 200)",
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Page Size",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LineupRanking"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "season or team not found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Lineups ranked by actual results",
+        "tags": [
+          "rankings"
+        ]
+      }
+    },
+    "/api/v1/rankings/predictions": {
+      "get": {
+        "description": "Recorded lineups ranked by predicted post-All-Star-break net rating (pre-break inputs only; for the season\nin progress, up to the data cutoff), each with the team-prior baseline and 95% intervals. The model is NOT\nshown to beat the team-prior baseline, and neighbouring ranks differ by far less than the interval width:\nread the order as weak evidence. It predicts quality if played, not playing time.",
+        "operationId": "rank_predictions_api_v1_rankings_predictions_get",
+        "parameters": [
+          {
+            "description": "season id, e.g. 2025-26",
+            "in": "query",
+            "name": "season",
+            "required": true,
+            "schema": {
+              "description": "season id, e.g. 2025-26",
+              "examples": [
+                "2025-26"
+              ],
+              "pattern": "^\\d{4}-\\d{2}$",
+              "title": "Season",
+              "type": "string"
+            }
+          },
+          {
+            "description": "one team; omit for league-wide",
+            "in": "query",
+            "name": "team_id",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "exclusiveMinimum": 0,
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "one team; omit for league-wide",
+              "title": "Team Id"
+            }
+          },
+          {
+            "description": "minimum pre-break possessions per end",
+            "in": "query",
+            "name": "min_pre_poss",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "description": "minimum pre-break possessions per end",
+              "maximum": 5000,
+              "minimum": 0,
+              "title": "Min Pre Poss",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "possessions",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 3000,
+              "minimum": 10,
+              "title": "Possessions",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "1-based page number",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "description": "1-based page number",
+              "minimum": 1,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "rows per page (max 200)",
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "description": "rows per page (max 200)",
+              "maximum": 200,
+              "minimum": 1,
+              "title": "Page Size",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PredictionRanking"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description": "season or team not found"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Recorded lineups ranked by the frozen model's prediction",
+        "tags": [
+          "rankings"
+        ]
+      }
+    },
     "/api/v1/seasons": {
       "get": {
         "description": "Every loaded season with its pre/post All-Star-break windows, whether it is irregular, and its role:\n`development` (used to train the frozen model), `held_out` (its final test seasons) or `current` (the season\nin progress, season to date, refreshed daily on the local machine).",
@@ -3105,6 +3925,10 @@
     {
       "description": "Team ratings and records; model predictions for a team's lineups.",
       "name": "teams"
+    },
+    {
+      "description": "Global lineup rankings: actual results, or frozen-model predictions.",
+      "name": "rankings"
     },
     {
       "description": "Frozen-model predictions for any five players of a team.",

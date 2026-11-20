@@ -117,3 +117,33 @@ test('season in progress: default season, last-updated status and a provisional 
   await expect(page.getByTestId('team-prior')).toBeVisible()
   await expect(page.getByTestId('predicted-net')).toBeVisible()
 })
+
+test('rankings: global ranking from the live API, re-rank, and navigate to a lineup', async ({ page, request }) => {
+  type R = { items: { rank: number; lineup_id: number; net_rating: number; def_rating: number }[]; total: number }
+  const net = await apiGet<R>(request, '/rankings/lineups?season=2025-26&window=season&metric=net&min_poss=100&page_size=25')
+  const def = await apiGet<R>(request, '/rankings/lineups?season=2025-26&window=season&metric=def&min_poss=100&page_size=25')
+  await page.goto('/rankings?season=2025-26')
+  const rows = page.getByRole('region', { name: 'Lineup ranking' }).getByTestId('rank-row')
+  await expect(rows).toHaveCount(25)
+  await expect(rows.first()).toContainText(signed(net.items[0].net_rating))
+  await page.getByRole('radio', { name: 'Defense' }).click()
+  await expect(page).toHaveURL(/metric=def/)
+  await expect(rows.first()).toContainText(def.items[0].def_rating.toFixed(1))
+  await page.getByRole('button', { name: 'Next page' }).click()
+  await expect(rows.first()).toContainText('26')
+  await rows.first().getByRole('link').first().click()
+  await expect(page).toHaveURL(/\/lineups\/\d+$/)
+})
+
+test('rankings: predictions keep the baseline, intervals and the provisional label', async ({ page, request }) => {
+  const status = await apiGet<{ season_id: string }>(request, '/data-status')
+  type P = { items: { predicted_net_rating: number; team_prior: number }[] }
+  const r = await apiGet<P>(request, `/rankings/predictions?season=${status.season_id}&min_pre_poss=50&page_size=10`)
+  await page.goto(`/rankings?mode=predicted&top=10`)
+  const rows = page.getByRole('region', { name: 'Prediction ranking' }).getByTestId('rank-row')
+  await expect(rows).toHaveCount(r.items.length)
+  await expect(rows.first()).toContainText(signed(r.items[0].predicted_net_rating))
+  await expect(rows.first()).toContainText(signed(r.items[0].team_prior))
+  await expect(page.getByTestId('provisional-notice')).toBeVisible()
+  await expect(page.getByTestId('estimand-notice')).toContainText('not statistically better than the team-prior baseline')
+})

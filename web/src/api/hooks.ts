@@ -5,7 +5,7 @@
  */
 import { keepPreviousData, useQueries, useQuery } from '@tanstack/react-query'
 import { api, unwrap } from './client'
-import type { LineupQuery, LineupSummary, Page, PlayerQuery, PredictionRequest, TeamSeason } from './types'
+import type { LineupQuery, LineupSummary, Page, PlayerQuery, PredictionRankingQuery, PredictionRequest, RankingQuery, TeamSeason } from './types'
 
 const STATIC = { staleTime: Infinity, gcTime: 60 * 60 * 1000 } as const
 
@@ -197,5 +197,27 @@ export function useDataStatus() {
     refetchInterval: 60_000,
     refetchOnWindowFocus: true,
     retry: false,
+  })
+}
+
+/** Global lineup rankings by actual results (every qualifying lineup is ranked server-side before paging). */
+export function useLineupRanking(query: RankingQuery, enabled = true) {
+  return useQuery({
+    queryKey: ['rank-lineups', query],
+    queryFn: ({ signal }) => unwrap(api.GET('/api/v1/rankings/lineups', { params: { query }, signal })),
+    enabled,
+    placeholderData: keepPreviousData,
+    ...STATIC,
+  })
+}
+
+/** Recorded lineups ranked by the frozen model's prediction, with baseline and intervals. */
+export function usePredictionRanking(query: PredictionRankingQuery, enabled = true) {
+  return useQuery({
+    queryKey: ['rank-predictions', query],
+    queryFn: ({ signal }) => unwrap(api.GET('/api/v1/rankings/predictions', { params: { query }, signal })),
+    enabled,
+    placeholderData: keepPreviousData,
+    ...STATIC,
   })
 }

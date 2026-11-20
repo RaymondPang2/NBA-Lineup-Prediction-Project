@@ -9,6 +9,7 @@ import { NotFoundPage } from './pages/NotFoundPage'
 const OverviewPage = lazy(() => import('./pages/OverviewPage'))
 const LineupsPage = lazy(() => import('./pages/LineupsPage'))
 const LineupDetailPage = lazy(() => import('./pages/LineupDetailPage'))
+const RankingsPage = lazy(() => import('./pages/RankingsPage'))
 const PredictPage = lazy(() => import('./pages/PredictPage'))
 const InsightsPage = lazy(() => import('./pages/InsightsPage'))
 const ModelPage = lazy(() => import('./pages/ModelPage'))
@@ -23,6 +24,7 @@ export const routes: RouteObject[] = [
       { index: true, element: page(<OverviewPage />) },
       { path: 'lineups', element: page(<LineupsPage />) },
       { path: 'lineups/:lineupId', element: page(<LineupDetailPage />) },
+      { path: 'rankings', element: page(<RankingsPage />) },
       { path: 'predict', element: page(<PredictPage />) },
       { path: 'insights', element: page(<InsightsPage />) },
       { path: 'model', element: page(<ModelPage />) },

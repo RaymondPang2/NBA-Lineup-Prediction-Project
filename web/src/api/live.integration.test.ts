@@ -63,6 +63,17 @@ describe('data used by each page', () => {
     expect(seasons.slice(8).every((s) => s.role === 'current')).toBe(true)
   })
 
+  it('rankings: global server-side order matches /lineups, and page 2 continues it', async () => {
+    const q = { season: SEASON, window: 'pre' as const, metric: 'net' as const, min_poss: 100 }
+    const r1 = await unwrap(api.GET('/api/v1/rankings/lineups', { params: { query: { ...q, page: 1, page_size: 25 } } }))
+    const r2 = await unwrap(api.GET('/api/v1/rankings/lineups', { params: { query: { ...q, page: 2, page_size: 25 } } }))
+    const lu = await unwrap(api.GET('/api/v1/lineups', { params: { query: { season: SEASON, min_pre_poss: 100, sort: 'pre_net', order: 'desc', page_size: 50 } } }))
+    expect(r1.total).toBe(lu.total)
+    const ranked = [...r1.items, ...r2.items].map((i) => i.net_rating)
+    expect(ranked).toEqual(lu.items.map((i) => i.pre_break!.net_rating))
+    expect(r2.items[0].rank).toBeGreaterThan(r1.items[24].rank - 1)
+  })
+
   it('data status: cutoff, freshness and a version clients can watch', async () => {
     const s = await unwrap(api.GET('/api/v1/data-status'))
     expect(['current', 'stale', 'unknown']).toContain(s.freshness)

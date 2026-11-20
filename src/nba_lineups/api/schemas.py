@@ -295,6 +295,100 @@ class Prediction(BaseModel):
     notes: list[str]
 
 
+# ---------------------------------------------------------------- rankings
+
+class Interval(BaseModel):
+    lo: float
+    hi: float
+
+
+class RankingWindow(BaseModel):
+    label: str = Field(description="e.g. 'Full season', 'Season to date', 'Pre-All-Star break'")
+    available: bool = Field(description="false when the season has no data for this window yet (e.g. "
+                                        "post-break before the All-Star break)")
+    date_from: date | None
+    date_to: date | None
+
+
+class RankedLineup(BaseModel):
+    rank: int = Field(description="position across ALL qualifying lineups; ties share a rank (1, 2, 2, 4)")
+    lineup_id: int
+    season_id: str
+    team_id: int
+    team_abbreviation: str
+    team_name: str
+    players: list[Player]
+    gp: int | None = Field(description="games (null for the full-season window)")
+    minutes: float
+    poss: int
+    opp_poss: int | None
+    off_rating: float | None
+    def_rating: float | None
+    net_rating: float | None
+    net_rating_sampling_sd: float | None = Field(description="SD of the net rating from sampling noise alone")
+    reliability: float | None = Field(description="share of the net rating's deviation from its team that is signal "
+                                                  "rather than sampling noise: τ²/(τ² + K·h), frozen-model constants")
+    reliability_tier: Literal["low", "limited", "moderate", "high"] | None = Field(
+        description="low < 0.25 ≤ limited < 0.5 ≤ moderate < 0.75 ≤ high")
+    small_sample: bool = Field(description="fewer than 100 possessions on either end")
+
+
+class LineupRanking(BaseModel):
+    items: list[RankedLineup]
+    page: int
+    page_size: int
+    total: int = Field(description="qualifying lineups over all pages")
+    total_pages: int
+    season_id: str
+    team_id: int | None
+    window: Literal["season", "pre", "post"]
+    metric: Literal["net", "off", "def", "poss"]
+    metric_label: str
+    min_poss: int
+    window_info: RankingWindow
+    provisional: bool = Field(description="true for the season in progress (season to date)")
+
+
+class RankedPrediction(BaseModel):
+    rank: int
+    lineup_id: int
+    kind: Literal["recorded"] = Field(description="only recorded lineups are ranked, never hypothetical fives")
+    season_id: str
+    team_id: int
+    team_abbreviation: str
+    team_name: str
+    players: list[Player]
+    predicted_net_rating: float
+    team_prior: float
+    model_minus_team_prior: float
+    true_rating_interval_95: Interval
+    observed_rating_interval_95: Interval
+    pre_break_poss: int
+    pre_break_opp_poss: int
+    pre_break_net_rating: float | None
+    pre_break_reliability: float
+    no_pre_break_history: bool
+
+
+class PredictionRanking(BaseModel):
+    items: list[RankedPrediction]
+    page: int
+    page_size: int
+    total: int
+    total_pages: int
+    season_id: str
+    team_id: int | None
+    min_pre_poss: int
+    possessions: int = Field(description="post-break possessions per end the observed-rating interval assumes")
+    provisional: bool
+    data_cutoff: date | None
+    season_used_for_training: bool
+    model_sd: float
+    interval_half_width: float = Field(description="1.96 x model_sd: every prediction's 95% true-quality half-width")
+    prediction_spread: float | None = Field(description="10th-90th percentile range of the ranked predictions")
+    notes: list[str]
+
+
 # ---------------------------------------------------------------- model card
 
 class Coefficient(BaseModel):

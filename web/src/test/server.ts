@@ -51,6 +51,17 @@ export const handlers = [
   }),
   http.get(`${V1}/players/:id`, () => HttpResponse.json(fixture('player-edwards'))),
   http.post(`${V1}/predictions`, () => HttpResponse.json(fixture('prediction-five'))),
+  http.get(`${V1}/rankings/lineups`, ({ request }) => {
+    const q = new URL(request.url).searchParams
+    if (q.get('window') === 'post' && q.get('season') !== '2025-26') return HttpResponse.json(fixture('rank-lineups-current-post'))
+    const base = fixture<{ metric: string; min_poss: number }>('rank-lineups')
+    // echo the requested category/threshold so the page's labels follow the URL; rows are the recorded ones
+    return HttpResponse.json({ ...base, metric: q.get('metric') ?? base.metric, min_poss: Number(q.get('min_poss') ?? base.min_poss) })
+  }),
+  http.get(`${V1}/rankings/predictions`, ({ request }) => {
+    const season = new URL(request.url).searchParams.get('season')
+    return HttpResponse.json(fixture(season === '2025-26' ? 'rank-predictions' : 'rank-predictions-current'))
+  }),
   http.get(`${V1}/model`, () => HttpResponse.json(fixture('model'))),
   http.get(`${V1}/model/performance`, () => HttpResponse.json(fixture('model-performance'))),
 ]

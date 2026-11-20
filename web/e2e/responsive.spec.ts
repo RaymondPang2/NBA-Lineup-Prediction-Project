@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-const PAGES = ['/', '/lineups', '/lineups/281112', '/predict?season=2025-26&team=1610612750&lineup=281112', '/insights', '/model']
+const PAGES = ['/', '/lineups', '/rankings', '/rankings?mode=predicted&season=2025-26', '/lineups/281112', '/predict?season=2025-26&team=1610612750&lineup=281112', '/insights', '/model']
 
 for (const path of PAGES) {
   test(`no horizontal page scroll on a phone: ${path}`, async ({ page }) => {

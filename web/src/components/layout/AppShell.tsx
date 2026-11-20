@@ -7,6 +7,7 @@ import { DataFreshness, StaleBanner } from './DataFreshness'
 const NAV = [
   { to: '/', label: 'Overview', end: true },
   { to: '/lineups', label: 'Lineups' },
+  { to: '/rankings', label: 'Rankings' },
   { to: '/predict', label: 'Predict' },
   { to: '/insights', label: 'Insights' },
   { to: '/model', label: 'Model' },

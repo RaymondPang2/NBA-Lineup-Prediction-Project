@@ -17,7 +17,7 @@ from fastapi.middleware.gzip import GZipMiddleware
 
 from . import errors
 from .db import make_pool
-from .routers import catalog, health, lineups, model, players, predictions, teams
+from .routers import catalog, health, lineups, model, players, predictions, rankings, teams
 from .services.predictions import FrozenPredictor
 from .settings import Settings
 
@@ -46,6 +46,7 @@ TAGS = [
     {"name": "lineups", "description": "Five-man lineups with pre- vs post-break ratings."},
     {"name": "players", "description": "Player on-court, on/off and usage statistics."},
     {"name": "teams", "description": "Team ratings and records; model predictions for a team's lineups."},
+    {"name": "rankings", "description": "Global lineup rankings: actual results, or frozen-model predictions."},
     {"name": "predictions", "description": "Frozen-model predictions for any five players of a team."},
     {"name": "model", "description": "Model card and evaluation results."},
     {"name": "health", "description": "Liveness / readiness."},
@@ -79,7 +80,7 @@ def create_app(settings: Settings | None = None, *, load_model: bool = True) -> 
                        allow_headers=["Content-Type"])
     errors.install(app)
     app.include_router(health.router)
-    for r in (catalog, lineups, players, teams, predictions, model):
+    for r in (catalog, lineups, players, teams, predictions, rankings, model):
         app.include_router(r.router, prefix=API_PREFIX)
     return app
 

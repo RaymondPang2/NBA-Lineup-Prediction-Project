@@ -196,6 +196,51 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/rankings/lineups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Lineups ranked by actual results
+         * @description Every qualifying lineup of the season (or team) is ranked before paging, so ranks are global.
+         *     `def` ranks the LOWEST defensive rating first; `poss` ranks by own possessions (most used).
+         *     Each row carries a sampling SD and a reliability (signal share) so small samples are visible.
+         */
+        get: operations["rank_lineups_api_v1_rankings_lineups_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/rankings/predictions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Recorded lineups ranked by the frozen model's prediction
+         * @description Recorded lineups ranked by predicted post-All-Star-break net rating (pre-break inputs only; for the season
+         *     in progress, up to the data cutoff), each with the team-prior baseline and 95% intervals. The model is NOT
+         *     shown to beat the team-prior baseline, and neighbouring ranks differ by far less than the interval width:
+         *     read the order as weak evidence. It predicts quality if played, not playing time.
+         */
+        get: operations["rank_predictions_api_v1_rankings_predictions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/seasons": {
         parameters: {
             query?: never;
@@ -535,6 +580,46 @@ export interface components {
             /** Team Id */
             team_id: number;
         };
+        /** LineupRanking */
+        LineupRanking: {
+            /** Items */
+            items: components["schemas"]["RankedLineup"][];
+            /**
+             * Metric
+             * @enum {string}
+             */
+            metric: "net" | "off" | "def" | "poss";
+            /** Metric Label */
+            metric_label: string;
+            /** Min Poss */
+            min_poss: number;
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
+            /**
+             * Provisional
+             * @description true for the season in progress (season to date)
+             */
+            provisional: boolean;
+            /** Season Id */
+            season_id: string;
+            /** Team Id */
+            team_id: number | null;
+            /**
+             * Total
+             * @description qualifying lineups over all pages
+             */
+            total: number;
+            /** Total Pages */
+            total_pages: number;
+            /**
+             * Window
+             * @enum {string}
+             */
+            window: "season" | "pre" | "post";
+            window_info: components["schemas"]["RankingWindow"];
+        };
         /** LineupSummary */
         LineupSummary: {
             change: components["schemas"]["Change"] | null;
@@ -848,6 +933,50 @@ export interface components {
             /** Player Name */
             player_name: string;
         };
+        /** PredictionRanking */
+        PredictionRanking: {
+            /** Data Cutoff */
+            data_cutoff: string | null;
+            /**
+             * Interval Half Width
+             * @description 1.96 x model_sd: every prediction's 95% true-quality half-width
+             */
+            interval_half_width: number;
+            /** Items */
+            items: components["schemas"]["RankedPrediction"][];
+            /** Min Pre Poss */
+            min_pre_poss: number;
+            /** Model Sd */
+            model_sd: number;
+            /** Notes */
+            notes: string[];
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
+            /**
+             * Possessions
+             * @description post-break possessions per end the observed-rating interval assumes
+             */
+            possessions: number;
+            /**
+             * Prediction Spread
+             * @description 10th-90th percentile range of the ranked predictions
+             */
+            prediction_spread: number | null;
+            /** Provisional */
+            provisional: boolean;
+            /** Season Id */
+            season_id: string;
+            /** Season Used For Training */
+            season_used_for_training: boolean;
+            /** Team Id */
+            team_id: number | null;
+            /** Total */
+            total: number;
+            /** Total Pages */
+            total_pages: number;
+        };
         /**
          * PredictionRequest
          * @description A lineup to predict: five players of one team in one season. The lineup need not have played together.
@@ -880,6 +1009,121 @@ export interface components {
             season_id: string;
             /** Team Id */
             team_id: number;
+        };
+        /** RankedLineup */
+        RankedLineup: {
+            /** Def Rating */
+            def_rating: number | null;
+            /**
+             * Gp
+             * @description games (null for the full-season window)
+             */
+            gp: number | null;
+            /** Lineup Id */
+            lineup_id: number;
+            /** Minutes */
+            minutes: number;
+            /** Net Rating */
+            net_rating: number | null;
+            /**
+             * Net Rating Sampling Sd
+             * @description SD of the net rating from sampling noise alone
+             */
+            net_rating_sampling_sd: number | null;
+            /** Off Rating */
+            off_rating: number | null;
+            /** Opp Poss */
+            opp_poss: number | null;
+            /** Players */
+            players: components["schemas"]["Player"][];
+            /** Poss */
+            poss: number;
+            /**
+             * Rank
+             * @description position across ALL qualifying lineups; ties share a rank (1, 2, 2, 4)
+             */
+            rank: number;
+            /**
+             * Reliability
+             * @description share of the net rating's deviation from its team that is signal rather than sampling noise: τ²/(τ² + K·h), frozen-model constants
+             */
+            reliability: number | null;
+            /**
+             * Reliability Tier
+             * @description low < 0.25 ≤ limited < 0.5 ≤ moderate < 0.75 ≤ high
+             */
+            reliability_tier: ("low" | "limited" | "moderate" | "high") | null;
+            /** Season Id */
+            season_id: string;
+            /**
+             * Small Sample
+             * @description fewer than 100 possessions on either end
+             */
+            small_sample: boolean;
+            /** Team Abbreviation */
+            team_abbreviation: string;
+            /** Team Id */
+            team_id: number;
+            /** Team Name */
+            team_name: string;
+        };
+        /** RankedPrediction */
+        RankedPrediction: {
+            /**
+             * Kind
+             * @description only recorded lineups are ranked, never hypothetical fives
+             * @constant
+             */
+            kind: "recorded";
+            /** Lineup Id */
+            lineup_id: number;
+            /** Model Minus Team Prior */
+            model_minus_team_prior: number;
+            /** No Pre Break History */
+            no_pre_break_history: boolean;
+            observed_rating_interval_95: components["schemas"]["Interval"];
+            /** Players */
+            players: components["schemas"]["Player"][];
+            /** Pre Break Net Rating */
+            pre_break_net_rating: number | null;
+            /** Pre Break Opp Poss */
+            pre_break_opp_poss: number;
+            /** Pre Break Poss */
+            pre_break_poss: number;
+            /** Pre Break Reliability */
+            pre_break_reliability: number;
+            /** Predicted Net Rating */
+            predicted_net_rating: number;
+            /** Rank */
+            rank: number;
+            /** Season Id */
+            season_id: string;
+            /** Team Abbreviation */
+            team_abbreviation: string;
+            /** Team Id */
+            team_id: number;
+            /** Team Name */
+            team_name: string;
+            /** Team Prior */
+            team_prior: number;
+            true_rating_interval_95: components["schemas"]["Interval"];
+        };
+        /** RankingWindow */
+        RankingWindow: {
+            /**
+             * Available
+             * @description false when the season has no data for this window yet (e.g. post-break before the All-Star break)
+             */
+            available: boolean;
+            /** Date From */
+            date_from: string | null;
+            /** Date To */
+            date_to: string | null;
+            /**
+             * Label
+             * @description e.g. 'Full season', 'Season to date', 'Pre-All-Star break'
+             */
+            label: string;
         };
         /** RefreshAttempt */
         RefreshAttempt: {
@@ -1399,6 +1643,108 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description season or team not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    rank_lineups_api_v1_rankings_lineups_get: {
+        parameters: {
+            query: {
+                /** @description season id, e.g. 2025-26 */
+                season: string;
+                /** @description one team; omit for league-wide */
+                team_id?: number | null;
+                /** @description season = full season (season to date for the season in progress) */
+                window?: "season" | "pre" | "post";
+                metric?: "net" | "off" | "def" | "poss";
+                /** @description minimum possessions on EACH end in the window */
+                min_poss?: number;
+                /** @description 1-based page number */
+                page?: number;
+                /** @description rows per page (max 200) */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LineupRanking"];
+                };
+            };
+            /** @description season or team not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    rank_predictions_api_v1_rankings_predictions_get: {
+        parameters: {
+            query: {
+                /** @description season id, e.g. 2025-26 */
+                season: string;
+                /** @description one team; omit for league-wide */
+                team_id?: number | null;
+                /** @description minimum pre-break possessions per end */
+                min_pre_poss?: number;
+                possessions?: number;
+                /** @description 1-based page number */
+                page?: number;
+                /** @description rows per page (max 200) */
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PredictionRanking"];
                 };
             };
             /** @description season or team not found */

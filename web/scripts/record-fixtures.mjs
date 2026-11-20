@@ -70,12 +70,17 @@ await record('prediction-five', '/api/v1/predictions', post({ season_id: SEASON,
 await record('team-predictions', `/api/v1/teams/${MIN}/predictions?season=${SEASON}&min_pre_poss=25&page=1&page_size=200`)
 await record('model', '/api/v1/model')
 await record('model-performance', '/api/v1/model/performance')
+// Rankings (global, server-side)
+await record('rank-lineups', `/api/v1/rankings/lineups?season=${SEASON}&window=season&metric=net&min_poss=100&page=1&page_size=25`)
+await record('rank-predictions', `/api/v1/rankings/predictions?season=${SEASON}&min_pre_poss=50&page=1&page_size=25`)
 // Season in progress (2026-27): freshness and one provisional prediction
 await record('data-status', '/api/v1/data-status')
 const current = seasons.find((s) => s.role === 'current')
 if (current) {
   const top = await record('lineups-current', `/api/v1/lineups?season=${current.season_id}&sort=pre_poss&order=desc&page_size=1`)
   await record('prediction-provisional', `/api/v1/lineups/${top.items[0].lineup_id}/prediction?possessions=100`)
+  await record('rank-predictions-current', `/api/v1/rankings/predictions?season=${current.season_id}&min_pre_poss=50&page=1&page_size=25`)
+  await record('rank-lineups-current-post', `/api/v1/rankings/lineups?season=${current.season_id}&window=post&metric=net&min_poss=100&page=1&page_size=25`)
 }
 
 writeFileSync(join(OUT, 'manifest.json'), JSON.stringify(manifest, null, 1) + '\n')
