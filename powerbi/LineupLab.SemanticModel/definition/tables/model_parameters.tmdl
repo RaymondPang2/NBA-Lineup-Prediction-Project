@@ -1,0 +1,78 @@
+/// Constants of the frozen model (one row).
+table model_parameters
+	lineageTag: b7ce5015-f26e-5673-be25-90da1ba09843
+
+	/// Sampling-noise constant K: Var(net) = K·(1/poss + 1/opp_poss)
+	column k_noise
+		dataType: double
+		isHidden
+		lineageTag: 47451d30-02de-592a-8ebf-a91080f59463
+		summarizeBy: none
+		sourceColumn: k_noise
+
+	/// Variance of true lineup quality around the team prior (reliability)
+	column lineup_tau2
+		dataType: double
+		isHidden
+		lineageTag: c50d4bdf-2a1e-54ad-abbb-cdcad3c2417f
+		summarizeBy: none
+		sourceColumn: lineup_tau2
+
+	column lineup_mu
+		dataType: double
+		isHidden
+		lineageTag: 3be1584a-59b4-522b-ad48-01e360f64db1
+		summarizeBy: none
+		sourceColumn: lineup_mu
+
+	/// Model error about true quality (held-out estimate)
+	column model_sd
+		dataType: double
+		isHidden
+		lineageTag: 4cad1334-e251-5fa4-af31-8fc592a8110d
+		summarizeBy: none
+		sourceColumn: model_sd
+
+	column z95
+		dataType: double
+		isHidden
+		lineageTag: a7e94aca-795e-51b3-b581-1e6b9e0c94e3
+		summarizeBy: none
+		sourceColumn: z95
+
+	column min_target_poss
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 4334684f-1825-5fbd-9982-838f36557c44
+		summarizeBy: none
+		sourceColumn: min_target_poss
+
+	/// SHA-256 of the frozen model file
+	column artifact_sha256
+		dataType: string
+		lineageTag: 9f7b93b1-bdf2-5ca0-9966-d6ae5fb428cc
+		summarizeBy: none
+		sourceColumn: artifact_sha256
+
+	column frozen_at_utc
+		dataType: string
+		lineageTag: 9adba917-6359-596e-b8f8-3b1757ed1143
+		summarizeBy: none
+		sourceColumn: frozen_at_utc
+
+	column exported_at_utc
+		dataType: string
+		lineageTag: 2cf64a17-4327-52fe-90ab-a58555df4471
+		summarizeBy: none
+		sourceColumn: exported_at_utc
+
+	partition model_parameters = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "model_parameters.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Headers, {{"k_noise", type number}, {"lineup_tau2", type number}, {"lineup_mu", type number}, {"model_sd", type number}, {"z95", type number}, {"min_target_poss", Int64.Type}, {"artifact_sha256", type text}, {"frozen_at_utc", type text}, {"exported_at_utc", type text}}, "en-US")
+				in
+				    Typed

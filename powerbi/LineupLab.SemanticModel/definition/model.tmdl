@@ -1,0 +1,19 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: en-US
+
+annotation PBI_QueryOrder = ["DataFolder", "dim_season", "dim_team", "dim_player", "dim_window", "dim_lineup", "bridge_lineup_player", "fact_lineup_window", "fact_team_window", "fact_prediction", "model_parameters", "_Measures"]
+
+ref table dim_season
+ref table dim_team
+ref table dim_player
+ref table dim_window
+ref table dim_lineup
+ref table bridge_lineup_player
+ref table fact_lineup_window
+ref table fact_team_window
+ref table fact_prediction
+ref table model_parameters
+ref table _Measures

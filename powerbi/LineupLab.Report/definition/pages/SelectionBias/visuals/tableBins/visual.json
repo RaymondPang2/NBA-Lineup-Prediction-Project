@@ -1,0 +1,129 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "tableBins",
+  "position": {
+    "x": 24,
+    "y": 470,
+    "z": 10000,
+    "width": 830,
+    "height": 234,
+    "tabOrder": 10000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_lineup"
+                    }
+                  },
+                  "Property": "pre_poss_bin"
+                }
+              },
+              "queryRef": "dim_lineup.pre_poss_bin",
+              "nativeQueryRef": "pre_poss_bin"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Population Lineups"
+                }
+              },
+              "queryRef": "_Measures.Population Lineups",
+              "nativeQueryRef": "Population Lineups"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Continuing Lineups"
+                }
+              },
+              "queryRef": "_Measures.Continuing Lineups",
+              "nativeQueryRef": "Continuing Lineups"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Continuation Rate"
+                }
+              },
+              "queryRef": "_Measures.Continuation Rate",
+              "nativeQueryRef": "Continuation Rate"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Pre Net (continuing)"
+                }
+              },
+              "queryRef": "_Measures.Pre Net (continuing)",
+              "nativeQueryRef": "Pre Net (continuing)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Pre Net (dropped)"
+                }
+              },
+              "queryRef": "_Measures.Pre Net (dropped)",
+              "nativeQueryRef": "Pre Net (dropped)"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Continuation by sample size'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

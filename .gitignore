@@ -18,3 +18,7 @@ data/
 # Node (web/ added in Phase 8)
 node_modules/
 dist/
+
+# Power BI Project: per-user state and the local data cache that Power BI Desktop creates
+powerbi/**/.pbi/localSettings.json
+powerbi/**/.pbi/cache.abf

@@ -1,0 +1,59 @@
+/// Team games, wins and losses per season and window (from game logs).
+table fact_team_window
+	lineageTag: 4b78dabf-dbaf-5968-8662-17e9bbc6202c
+
+	column season_id
+		dataType: string
+		isHidden
+		lineageTag: ec82cc1c-9564-5dfa-aa41-6fdb84bcc732
+		summarizeBy: none
+		sourceColumn: season_id
+
+	column team_id
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 2858ddd0-4020-5ae8-8fa0-519fde407102
+		summarizeBy: none
+		sourceColumn: team_id
+
+	column window_type
+		dataType: string
+		isHidden
+		lineageTag: 98bd6d54-f397-5168-b928-7037b2d3a6a2
+		summarizeBy: none
+		sourceColumn: window_type
+
+	column games
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 6b003777-d09d-5f91-b4d5-e7ea6f2d825f
+		summarizeBy: none
+		sourceColumn: games
+
+	column wins
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 050066cd-b5c1-5975-a7f8-b0ee6b40f1a4
+		summarizeBy: none
+		sourceColumn: wins
+
+	column losses
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 96b3ae43-86fd-5560-852e-83e344135bf1
+		summarizeBy: none
+		sourceColumn: losses
+
+	partition fact_team_window = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "fact_team_window.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Headers, {{"season_id", type text}, {"team_id", Int64.Type}, {"window_type", type text}, {"games", Int64.Type}, {"wins", Int64.Type}, {"losses", Int64.Type}}, "en-US")
+				in
+				    Typed

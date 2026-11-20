@@ -1,0 +1,155 @@
+/// Frozen-model predictions for every lineup that played after the break, scored from PRE-break data only; the observed post-break rating is the outcome, never an input.
+table fact_prediction
+	lineageTag: c2b920b2-9446-5e57-9139-058672035f63
+
+	column lineup_id
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 2725fd96-0cb8-537d-8cae-0295b2d73e50
+		summarizeBy: none
+		sourceColumn: lineup_id
+
+	column season_id
+		dataType: string
+		isHidden
+		lineageTag: 52625480-08be-56e6-be11-479c615a89ab
+		summarizeBy: none
+		sourceColumn: season_id
+
+	column team_id
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 48a23a22-8648-569d-8505-3e5f96007709
+		summarizeBy: none
+		sourceColumn: team_id
+
+	/// Frozen linear model: expected post-break net rating, given the lineup plays
+	column predicted_net
+		dataType: double
+		formatString: +0.0;-0.0;0.0
+		lineageTag: 74a76e12-020a-5e56-bf67-9e1f965f31de
+		summarizeBy: none
+		sourceColumn: predicted_net
+
+	/// Team-prior baseline (team's other lineups + constant)
+	column team_prior_net
+		dataType: double
+		formatString: +0.0;-0.0;0.0
+		lineageTag: 35bf9239-7cd1-560c-9232-6207139efa4e
+		summarizeBy: none
+		sourceColumn: team_prior_net
+
+	/// League-mean baseline (constant)
+	column league_mean_net
+		dataType: double
+		formatString: +0.0;-0.0;0.0
+		lineageTag: 1261739b-c008-52c4-b652-4ca8f15c22ef
+		summarizeBy: none
+		sourceColumn: league_mean_net
+
+	/// Lineup history shrunk toward the team prior
+	column eb_lineup_net
+		dataType: double
+		formatString: +0.0;-0.0;0.0
+		lineageTag: 3d7c5c0e-3f77-5852-ae45-e55fd1fbce8b
+		summarizeBy: none
+		sourceColumn: eb_lineup_net
+
+	column model_minus_team_prior
+		dataType: double
+		formatString: +0.00;-0.00;0.00
+		lineageTag: 16c2bb1e-4f78-59ad-81f6-2fa887540a72
+		summarizeBy: none
+		sourceColumn: model_minus_team_prior
+
+	/// Share of the lineup's pre-break net rating that is signal (0 without history)
+	column pre_reliability
+		dataType: double
+		formatString: 0%
+		lineageTag: 02accd9a-efb2-5399-b5bc-ad3411b6f419
+		summarizeBy: none
+		sourceColumn: pre_reliability
+
+	/// 1 = no pre-break possessions together
+	column pre_no_history
+		dataType: int64
+		formatString: 0
+		lineageTag: 988eac17-7558-55f8-9ccb-6d54b7e63104
+		summarizeBy: none
+		sourceColumn: pre_no_history
+
+	/// Realized post-break net rating (outcome)
+	column observed_post_net
+		dataType: double
+		formatString: +0.0;-0.0;0.0
+		lineageTag: 73119cdb-6078-597c-866d-65b8cb3ecd15
+		summarizeBy: none
+		sourceColumn: observed_post_net
+
+	/// Post-break possessions (evaluation weight)
+	column post_poss
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: c8be7f43-882b-545d-90d6-ae7a36cc0005
+		summarizeBy: none
+		sourceColumn: post_poss
+
+	column post_opp_poss
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 3a81c261-6c2c-56bf-bdf3-7c95096fece1
+		summarizeBy: none
+		sourceColumn: post_opp_poss
+
+	/// Sampling variance of the observed rating: K·(1/post_poss + 1/post_opp_poss)
+	column noise_var
+		dataType: double
+		isHidden
+		lineageTag: a8ebf204-369f-51b2-9c08-2648363d601a
+		summarizeBy: none
+		sourceColumn: noise_var
+
+	/// 1 = at least 25 post-break possessions on each end
+	column in_evaluation_sample
+		dataType: int64
+		formatString: 0
+		lineageTag: f321a218-0fc2-56f0-a58d-a06fc8f11e1c
+		summarizeBy: none
+		sourceColumn: in_evaluation_sample
+
+	/// 1 = season used to train the model (in-sample fitted value)
+	column is_training_season
+		dataType: int64
+		formatString: 0
+		lineageTag: 55484d19-e64a-50af-a085-95a7f3fdc7ca
+		summarizeBy: none
+		sourceColumn: is_training_season
+
+	/// Held-out test or In-sample (training season)
+	column evaluation_set
+		dataType: string
+		lineageTag: d09e2cb8-3180-5085-93eb-3f54c4c5b0ae
+		summarizeBy: none
+		sourceColumn: evaluation_set
+
+	/// Decile of the prediction within its season's evaluation sample (calibration)
+	column predicted_decile
+		dataType: int64
+		formatString: 0
+		lineageTag: 0a93b0e4-abe1-5674-9d61-b39b8f18863f
+		summarizeBy: none
+		sourceColumn: predicted_decile
+
+	partition fact_prediction = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "fact_prediction.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Headers, {{"lineup_id", Int64.Type}, {"season_id", type text}, {"team_id", Int64.Type}, {"predicted_net", type number}, {"team_prior_net", type number}, {"league_mean_net", type number}, {"eb_lineup_net", type number}, {"model_minus_team_prior", type number}, {"pre_reliability", type number}, {"pre_no_history", Int64.Type}, {"observed_post_net", type number}, {"post_poss", Int64.Type}, {"post_opp_poss", Int64.Type}, {"noise_var", type number}, {"in_evaluation_sample", Int64.Type}, {"is_training_season", Int64.Type}, {"evaluation_set", type text}, {"predicted_decile", Int64.Type}}, "en-US")
+				in
+				    Typed

@@ -1,0 +1,91 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "lineWinPct",
+  "position": {
+    "x": 858,
+    "y": 196,
+    "z": 12000,
+    "width": 398,
+    "height": 300,
+    "tabOrder": 12000
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_season"
+                    }
+                  },
+                  "Property": "season_id"
+                }
+              },
+              "queryRef": "dim_season.season_id",
+              "nativeQueryRef": "season_id"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Net Rating Pre"
+                }
+              },
+              "queryRef": "_Measures.Net Rating Pre",
+              "nativeQueryRef": "Net Rating Pre"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Net Rating Post"
+                }
+              },
+              "queryRef": "_Measures.Net Rating Post",
+              "nativeQueryRef": "Net Rating Post"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Net rating by season (pre vs post)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

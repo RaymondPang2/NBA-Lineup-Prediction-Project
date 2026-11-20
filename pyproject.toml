@@ -18,10 +18,11 @@ dependencies = [
     "fastapi==0.163.0",        # Phase 7: REST API (brings pydantic and starlette)
     "uvicorn==0.54.0",         # Phase 7: ASGI server that runs the API
     "psycopg-pool==3.3.3",     # Phase 7: connection pool (the psycopg project's own)
+    "xlsxwriter==3.3.2",       # Phase 9: Excel workbook for Power BI Service
 ]
 
 [project.optional-dependencies]
-dev = ["pytest==8.4.2", "httpx2==2.16.0"]   # httpx2: FastAPI/Starlette TestClient
+dev = ["pytest==8.4.2", "httpx2==2.16.0", "jsonschema==4.26.0"]   # httpx2: FastAPI TestClient; jsonschema: PBIR schema tests
 
 [tool.setuptools.packages.find]
 where = ["src"]

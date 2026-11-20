@@ -1,0 +1,59 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "cardNetDrop",
+  "position": {
+    "x": 1028,
+    "y": 88,
+    "z": 7000,
+    "width": 228,
+    "height": 88,
+    "tabOrder": 7000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Pre Net (dropped)"
+                }
+              },
+              "queryRef": "_Measures.Pre Net (dropped)",
+              "nativeQueryRef": "Pre Net (dropped)"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Pre-break net: dropped'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

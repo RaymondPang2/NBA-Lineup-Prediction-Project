@@ -1,0 +1,166 @@
+/// One row per five-man lineup (a season, a team and five players). Filtered by players through the bridge.
+table dim_lineup
+	lineageTag: ec4fc7c4-1f19-547f-b30b-1b1760d710cc
+
+	/// Lineup key
+	column lineup_id
+		dataType: int64
+		formatString: 0
+		lineageTag: 318aaad6-3010-578f-9a4c-cdf2f37b76b8
+		summarizeBy: none
+		sourceColumn: lineup_id
+
+	/// Season (attribute only: slice seasons with dim_season)
+	column season_id
+		dataType: string
+		isHidden
+		lineageTag: 9961fa63-e7a6-5321-bacb-7c3aeb6e9cf5
+		summarizeBy: none
+		sourceColumn: season_id
+
+	/// Team (attribute only: slice teams with dim_team)
+	column team_id
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 9a7ba076-d83d-5588-9cb2-ae5cf18c7390
+		summarizeBy: none
+		sourceColumn: team_id
+
+	/// The five player ids, numeric order
+	column player_key
+		dataType: string
+		isHidden
+		lineageTag: ec4ccbce-2ad1-5dd7-beef-777f7d125c8d
+		summarizeBy: none
+		sourceColumn: player_key
+
+	/// Five last names
+	column lineup_label
+		dataType: string
+		lineageTag: 73d56b21-1ec5-5e60-b5b5-8d5c09591efe
+		summarizeBy: none
+		sourceColumn: lineup_label
+
+	/// Five full names
+	column lineup_players
+		dataType: string
+		lineageTag: 88707650-b248-50ec-8489-d6c7a0d99599
+		summarizeBy: none
+		sourceColumn: lineup_players
+
+	/// Pre-break possessions (own)
+	column pre_poss
+		dataType: int64
+		formatString: #,0
+		lineageTag: 8d58b7f3-6f08-5db9-9bef-849ed301816f
+		summarizeBy: none
+		sourceColumn: pre_poss
+
+	/// Pre-break opponent possessions
+	column pre_opp_poss
+		dataType: int64
+		formatString: #,0
+		lineageTag: 859079c5-c56a-57f3-96db-dfe86ba6845c
+		summarizeBy: none
+		sourceColumn: pre_opp_poss
+
+	/// Post-break possessions (own)
+	column post_poss
+		dataType: int64
+		formatString: #,0
+		lineageTag: 069afc38-73e7-56f9-9c90-f6f56d209deb
+		summarizeBy: none
+		sourceColumn: post_poss
+
+	/// Post-break opponent possessions
+	column post_opp_poss
+		dataType: int64
+		formatString: #,0
+		lineageTag: fb048395-812b-5f8d-8e73-c676e462659e
+		summarizeBy: none
+		sourceColumn: post_opp_poss
+
+	/// Minutes played together, whole season
+	column season_minutes
+		dataType: double
+		formatString: #,0.0
+		lineageTag: 1e51fa6e-bb8f-5ba9-afc7-3dfe4c6a8a10
+		summarizeBy: none
+		sourceColumn: season_minutes
+
+	/// Pre-break sample size (smaller end): 0, 1-24, 25-99, 100-299, 300+
+	column pre_sample_tier
+		dataType: string
+		lineageTag: 8924de74-9e6f-5696-bd9c-69e5537cf61a
+		summarizeBy: none
+		sourceColumn: pre_sample_tier
+		sortByColumn: pre_sample_tier_order
+
+	/// Sort key
+	column pre_sample_tier_order
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: f86e65b4-3be7-5400-9b9b-03dd5875944f
+		summarizeBy: none
+		sourceColumn: pre_sample_tier_order
+
+	/// 1 = at least 25 pre-break possessions on each end (selection analysis population)
+	column in_continuation_population
+		dataType: int64
+		formatString: 0
+		lineageTag: 6a584ce7-65d3-5c00-a1cf-ec0ffc1ded5e
+		summarizeBy: none
+		sourceColumn: in_continuation_population
+
+	/// 1 = any post-break possession
+	column appears_post_break
+		dataType: int64
+		formatString: 0
+		lineageTag: 8e265db3-1728-54b1-a78b-d81f3b5f351c
+		summarizeBy: none
+		sourceColumn: appears_post_break
+
+	/// 1 = at least 25 post-break possessions (Phase 4 'continues')
+	column continues_post_break
+		dataType: int64
+		formatString: 0
+		lineageTag: cccd7aa3-276e-55b9-aac4-8b7c4e098c2e
+		summarizeBy: none
+		sourceColumn: continues_post_break
+
+	/// Pre-break possession bin of the selection analysis
+	column pre_poss_bin
+		dataType: string
+		lineageTag: 684d694d-82b6-53f5-a31f-398bf46b939b
+		summarizeBy: none
+		sourceColumn: pre_poss_bin
+		sortByColumn: pre_poss_bin_order
+
+	/// Sort key
+	column pre_poss_bin_order
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: b7e5a7de-7660-546d-966d-e155b7620171
+		summarizeBy: none
+		sourceColumn: pre_poss_bin_order
+
+	/// 1 = at least 25 post-break possessions on each end (the model's target sample)
+	column in_target_sample
+		dataType: int64
+		formatString: 0
+		lineageTag: 091a5769-2e14-5420-b21e-64f49bea68af
+		summarizeBy: none
+		sourceColumn: in_target_sample
+
+	partition dim_lineup = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_lineup.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Headers, {{"lineup_id", Int64.Type}, {"season_id", type text}, {"team_id", Int64.Type}, {"player_key", type text}, {"lineup_label", type text}, {"lineup_players", type text}, {"pre_poss", Int64.Type}, {"pre_opp_poss", Int64.Type}, {"post_poss", Int64.Type}, {"post_opp_poss", Int64.Type}, {"season_minutes", type number}, {"pre_sample_tier", type text}, {"pre_sample_tier_order", Int64.Type}, {"in_continuation_population", Int64.Type}, {"appears_post_break", Int64.Type}, {"continues_post_break", Int64.Type}, {"pre_poss_bin", type text}, {"pre_poss_bin_order", Int64.Type}, {"in_target_sample", Int64.Type}}, "en-US")
+				in
+				    Typed

@@ -2,7 +2,7 @@
 
 Analyzes historical NBA five-player lineup performance and predicts post-All-Star-break lineup net rating with leak-free, chronologically validated models.
 
-**Status:** Phase 8 (React + TypeScript dashboard over the API, [docs/dashboard.md](docs/dashboard.md)) complete, awaiting review. Phase 7 provides the read-only FastAPI service over the warehouse and the frozen model ([docs/api.md](docs/api.md)). Phase 6 headline: on the held-out 2024-25 and 2025-26 seasons the frozen model beats the league mean but is statistically indistinguishable from a simple team-strength baseline, because the target is dominated by measurement noise (see the [model card](docs/model_card.md)). See [docs/project_plan.md](docs/project_plan.md).
+**Status:** Phase 9 (Power BI semantic model and report, [docs/powerbi.md](docs/powerbi.md)) complete, awaiting review: the dataset, model, DAX and report are generated and reconciled; opening the report in Power BI is a manual step (Power BI does not run on macOS). Phase 8 is the React dashboard ([docs/dashboard.md](docs/dashboard.md)); Phase 7 provides the read-only FastAPI service over the warehouse and the frozen model ([docs/api.md](docs/api.md)). Phase 6 headline: on the held-out 2024-25 and 2025-26 seasons the frozen model beats the league mean but is statistically indistinguishable from a simple team-strength baseline, because the target is dominated by measurement noise (see the [model card](docs/model_card.md)). See [docs/project_plan.md](docs/project_plan.md).
 
 | Doc | Contents |
 |---|---|
@@ -16,6 +16,7 @@ Analyzes historical NBA five-player lineup performance and predicts post-All-Sta
 | [docs/model_card.md](docs/model_card.md) | Model card: estimand, performance, appropriate use, limitations |
 | [docs/api.md](docs/api.md) | REST API: endpoints, examples, prediction uncertainty, architecture, tests, frontend setup |
 | [docs/dashboard.md](docs/dashboard.md) | Web dashboard: pages, how the analytical contract is kept in the UI, architecture, tests |
+| [docs/powerbi.md](docs/powerbi.md) | Power BI: macOS workflow, star schema, DAX measures, five report pages, validation, interview notes ([reference](docs/powerbi_reference.md)) |
 
 ## Setup (macOS)
 ```bash
@@ -39,6 +40,11 @@ cd web && npm install && cp .env.example .env.local   # Phase 8 dashboard (Node 
 npm run dev                                # http://localhost:5173 (needs the API on :8000)
 npm run fixtures && npm test               # unit/component tests on fixtures recorded from the live API
 npm run test:integration && npm run test:e2e   # live API integration + Playwright end-to-end
+
+cd ..
+.venv/bin/python scripts/phase9/export_powerbi.py         # Phase 9: bi.* views + Power BI dataset (data/powerbi/)
+.venv/bin/python scripts/phase9/build_powerbi_project.py  # Power BI Project (powerbi/), DAX script, reference docs
+.venv/bin/python -m pytest tests/powerbi                  # schema validation + reconciliation
 ```
 Run ingestion from a non-cloud IP, because stats.nba.com blocks many datacenter ranges.
 

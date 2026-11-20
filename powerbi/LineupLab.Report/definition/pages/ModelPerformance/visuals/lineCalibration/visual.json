@@ -1,0 +1,91 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "lineCalibration",
+  "position": {
+    "x": 646,
+    "y": 188,
+    "z": 10000,
+    "width": 610,
+    "height": 260,
+    "tabOrder": 10000
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_prediction"
+                    }
+                  },
+                  "Property": "predicted_decile"
+                }
+              },
+              "queryRef": "fact_prediction.predicted_decile",
+              "nativeQueryRef": "predicted_decile"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Mean Predicted"
+                }
+              },
+              "queryRef": "_Measures.Mean Predicted",
+              "nativeQueryRef": "Mean Predicted"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Mean Observed"
+                }
+              },
+              "queryRef": "_Measures.Mean Observed",
+              "nativeQueryRef": "Mean Observed"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Calibration: predicted vs observed by prediction decile'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

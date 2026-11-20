@@ -1,0 +1,112 @@
+/// Additive totals per lineup and window. Ratings are measures, never stored.
+table fact_lineup_window
+	lineageTag: ccb44391-5e96-5c80-bedb-90fa8a4990fe
+
+	column lineup_id
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 9e423e63-9e65-522c-bf69-fadce6f07054
+		summarizeBy: none
+		sourceColumn: lineup_id
+
+	column season_id
+		dataType: string
+		isHidden
+		lineageTag: 8e70ebfe-8cf3-5e9c-9b6c-5b164e214543
+		summarizeBy: none
+		sourceColumn: season_id
+
+	column team_id
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: bc283e7e-e411-5ef8-86ac-631bd2f6f3ef
+		summarizeBy: none
+		sourceColumn: team_id
+
+	column window_type
+		dataType: string
+		isHidden
+		lineageTag: 9ee4cb4e-fc09-5772-93a3-e3de0939e472
+		summarizeBy: none
+		sourceColumn: window_type
+
+	/// Games in which the lineup played
+	column gp
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 17fea506-3a76-52fc-8483-2bf7644c2167
+		summarizeBy: none
+		sourceColumn: gp
+
+	column minutes
+		dataType: double
+		isHidden
+		lineageTag: 5839a7a7-15a9-5a5c-b502-385f97aaf8af
+		summarizeBy: none
+		sourceColumn: minutes
+
+	/// Own (offensive) possessions
+	column poss
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 0f06d13a-ccd6-59a5-a828-902b02ad5e23
+		summarizeBy: none
+		sourceColumn: poss
+
+	/// Opponent possessions (0 where unknown)
+	column opp_poss
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: d5aa6143-4928-5730-a8ba-032db9696976
+		summarizeBy: none
+		sourceColumn: opp_poss
+
+	/// Points scored
+	column pts
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 21cc59cc-e5db-5bac-a755-38d4b7233d00
+		summarizeBy: none
+		sourceColumn: pts
+
+	/// Points allowed
+	column opp_pts
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: aa951f03-c918-5365-9504-ae88d5369437
+		summarizeBy: none
+		sourceColumn: opp_pts
+
+	/// Points allowed where opponent possessions are known (DRtg numerator)
+	column opp_pts_rated
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 7a0ec810-a0ec-560e-ad81-456e06fad373
+		summarizeBy: none
+		sourceColumn: opp_pts_rated
+
+	column plus_minus
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: bc846933-560a-5110-b177-9209ac40ee19
+		summarizeBy: none
+		sourceColumn: plus_minus
+
+	partition fact_lineup_window = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "fact_lineup_window.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Headers, {{"lineup_id", Int64.Type}, {"season_id", type text}, {"team_id", Int64.Type}, {"window_type", type text}, {"gp", Int64.Type}, {"minutes", type number}, {"poss", Int64.Type}, {"opp_poss", Int64.Type}, {"pts", Int64.Type}, {"opp_pts", Int64.Type}, {"opp_pts_rated", Int64.Type}, {"plus_minus", Int64.Type}}, "en-US")
+				in
+				    Typed

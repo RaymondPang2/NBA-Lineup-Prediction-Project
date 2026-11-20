@@ -1,0 +1,119 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "colRmseBySeason",
+  "position": {
+    "x": 24,
+    "y": 188,
+    "z": 9000,
+    "width": 610,
+    "height": 260,
+    "tabOrder": 9000
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_season"
+                    }
+                  },
+                  "Property": "season_id"
+                }
+              },
+              "queryRef": "dim_season.season_id",
+              "nativeQueryRef": "season_id"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Model RMSE"
+                }
+              },
+              "queryRef": "_Measures.Model RMSE",
+              "nativeQueryRef": "Model RMSE"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Team Prior RMSE"
+                }
+              },
+              "queryRef": "_Measures.Team Prior RMSE",
+              "nativeQueryRef": "Team Prior RMSE"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "League Mean RMSE"
+                }
+              },
+              "queryRef": "_Measures.League Mean RMSE",
+              "nativeQueryRef": "League Mean RMSE"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Noise Floor RMSE"
+                }
+              },
+              "queryRef": "_Measures.Noise Floor RMSE",
+              "nativeQueryRef": "Noise Floor RMSE"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'RMSE by season: model vs baselines vs noise floor'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

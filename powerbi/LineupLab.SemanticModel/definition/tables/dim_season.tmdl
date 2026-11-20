@@ -1,0 +1,85 @@
+/// One row per season (2018-19 to 2025-26). Held-out seasons were never used to train or tune the model.
+table dim_season
+	lineageTag: cbccf964-b84e-52bc-9c08-ce9bd6d20261
+
+	/// Season, e.g. 2025-26
+	column season_id
+		dataType: string
+		lineageTag: 709d0c00-f318-59a6-9722-98e6832f3e04
+		summarizeBy: none
+		sourceColumn: season_id
+		sortByColumn: season_order
+
+	/// Calendar year the season starts
+	column start_year
+		dataType: int64
+		formatString: 0
+		lineageTag: 6a6283f5-a88c-5c79-aa00-6a121af694bf
+		summarizeBy: none
+		sourceColumn: start_year
+
+	/// 1 = 2019-20 (bubble) or 2020-21 (72 games)
+	column is_irregular
+		dataType: int64
+		formatString: 0
+		lineageTag: 5a426424-1cdd-57b3-8460-a526e4b8112d
+		summarizeBy: none
+		sourceColumn: is_irregular
+
+	/// Development (training/CV) or Held-out (final test only)
+	column season_role
+		dataType: string
+		lineageTag: fc00a221-7d65-5b52-9fdc-a3c82b82e88d
+		summarizeBy: none
+		sourceColumn: season_role
+
+	/// First day of the pre-All-Star-break window
+	column pre_break_from
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: d2f97422-2218-5172-88f4-660005f0100a
+		summarizeBy: none
+		sourceColumn: pre_break_from
+
+	/// Last day of the pre-break window
+	column pre_break_to
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 934e14a6-0a04-5994-a0f0-f52009c93205
+		summarizeBy: none
+		sourceColumn: pre_break_to
+
+	/// First day of the post-break window
+	column post_break_from
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 4691b900-132d-5a12-985f-6e14e9908e99
+		summarizeBy: none
+		sourceColumn: post_break_from
+
+	/// Last day of the post-break window
+	column post_break_to
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 4824f866-9579-5135-a0fc-34a0a61c2f5a
+		summarizeBy: none
+		sourceColumn: post_break_to
+
+	/// Sort key
+	column season_order
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 86aae924-097f-5687-b576-89c2482ea41e
+		summarizeBy: none
+		sourceColumn: season_order
+
+	partition dim_season = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_season.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Headers, {{"season_id", type text}, {"start_year", Int64.Type}, {"is_irregular", Int64.Type}, {"season_role", type text}, {"pre_break_from", type date}, {"pre_break_to", type date}, {"post_break_from", type date}, {"post_break_to", type date}, {"season_order", Int64.Type}}, "en-US")
+				in
+				    Typed

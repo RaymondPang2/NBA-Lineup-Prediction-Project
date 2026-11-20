@@ -1,0 +1,49 @@
+relationship e9c6eb64-98e1-519c-8162-c0f6206aee3e
+	fromColumn: fact_lineup_window.lineup_id
+	toColumn: dim_lineup.lineup_id
+
+relationship c76694a9-f470-51ab-8b3f-60d341487deb
+	fromColumn: fact_lineup_window.season_id
+	toColumn: dim_season.season_id
+
+relationship e96af7af-32fa-5889-a1f4-9701fdb13aaf
+	fromColumn: fact_lineup_window.team_id
+	toColumn: dim_team.team_id
+
+relationship b54b6727-595b-579e-93ef-e5d91e399787
+	fromColumn: fact_lineup_window.window_type
+	toColumn: dim_window.window_type
+
+relationship be29a428-1c8f-5779-9edd-29a459502206
+	fromColumn: fact_team_window.season_id
+	toColumn: dim_season.season_id
+
+relationship 1c0d749c-2c65-5941-828c-e29d99c81eb7
+	fromColumn: fact_team_window.team_id
+	toColumn: dim_team.team_id
+
+relationship d9c37e07-9273-5b80-85e0-cc992049d671
+	fromColumn: fact_team_window.window_type
+	toColumn: dim_window.window_type
+
+relationship 04e450a2-7d82-5780-8204-88dfabbe86d6
+	fromColumn: fact_prediction.lineup_id
+	toColumn: dim_lineup.lineup_id
+
+relationship e505e195-c2ff-5d1b-8f52-e537b4f041e5
+	fromColumn: fact_prediction.season_id
+	toColumn: dim_season.season_id
+
+relationship 4c7925be-ceb2-5a56-908a-967bb85989c1
+	fromColumn: fact_prediction.team_id
+	toColumn: dim_team.team_id
+
+relationship 18c3fd38-5b3c-528a-94a0-a05a6cf6df3e
+	fromColumn: bridge_lineup_player.player_id
+	toColumn: dim_player.player_id
+
+relationship 08533b4e-5af1-5449-bca4-df709c3b4bf9
+	crossFilteringBehavior: bothDirections
+	fromColumn: bridge_lineup_player.lineup_id
+	toColumn: dim_lineup.lineup_id
+

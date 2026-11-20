@@ -1,0 +1,59 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "cardShare",
+  "position": {
+    "x": 648,
+    "y": 88,
+    "z": 5000,
+    "width": 300,
+    "height": 88,
+    "tabOrder": 5000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Share of Possessions in Lineups ≥ 100"
+                }
+              },
+              "queryRef": "_Measures.Share of Possessions in Lineups ≥ 100",
+              "nativeQueryRef": "Share of Possessions in Lineups ≥ 100"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Share of possessions in those lineups'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

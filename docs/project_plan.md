@@ -39,12 +39,12 @@ Post-All-Star-break lineup net rating (per 100 possessions). Features come from 
 | 5 | Features + baselines + chronological splits | Done (approved 2026-11-13) |
 | 6 | Linear / Ridge / Random Forest, evaluation, model card | Done (approved 2026-11-14) |
 | 7 | FastAPI (read-only API over the warehouse and the frozen model; `docs/api.md`) | Done (approved 2026-11-18) |
-| 8 | React + TypeScript + Tailwind + Recharts dashboard (`web/`; `docs/dashboard.md`) | Done, awaiting review |
-| 9 | Power BI datasets + report | |
+| 8 | React + TypeScript + Tailwind + Recharts dashboard (`web/`; `docs/dashboard.md`) | Done (approved 2026-11-19) |
+| 9 | Power BI datasets + report (`powerbi/`, `sql/powerbi/`; `docs/powerbi.md`) | Done, awaiting review (report not yet opened in Power BI: manual step) |
 | 10 | CI/CD, deployment, documentation | |
 
 ## Power BI report requirements
-The authoring environment is still to be decided: Power BI Service in the browser, a Windows lab PC, or a Windows 11 ARM VM on this Apple Silicon Mac. The report must show:
+**(Phase 9)** Decided: Power BI Service in the browser (Excel dataset) as the macOS route, and the generated Power BI Project for Desktop on any Windows machine. Both need a work or school Microsoft account to publish. See `docs/powerbi.md`. The report must show:
 - **Star schema:** `fact_lineup_window` (grain: one lineup in one window) and `fact_prediction` (grain: one lineup in one model run). Dimensions are `dim_team`, `dim_player`, `dim_season`, `dim_window` and `dim_lineup`. A `bridge_lineup_player` table handles the many-to-many link between lineups and players.
 - **DAX measures:** possession-weighted ORtg, DRtg and net rating calculated from summed totals (`DIVIDE(SUM(pts), SUM(poss)) * 100`, never an average of ratings), the standard error of net rating, a reliability flag based on possession thresholds, prediction error (MAE), and pre-vs-post change.
 - **Interactive filters:** season, team, player (through the bridge table), minimum-possession slider, window, and model.

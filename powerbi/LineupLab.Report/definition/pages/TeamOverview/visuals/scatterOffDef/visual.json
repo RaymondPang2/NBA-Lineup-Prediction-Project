@@ -1,0 +1,95 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "scatterOffDef",
+  "position": {
+    "x": 446,
+    "y": 196,
+    "z": 10000,
+    "width": 400,
+    "height": 300,
+    "tabOrder": 10000
+  },
+  "visual": {
+    "visualType": "scatterChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_team"
+                    }
+                  },
+                  "Property": "abbreviation"
+                }
+              },
+              "queryRef": "dim_team.abbreviation",
+              "nativeQueryRef": "abbreviation"
+            }
+          ]
+        },
+        "X": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "ORtg"
+                }
+              },
+              "queryRef": "_Measures.ORtg",
+              "nativeQueryRef": "ORtg"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "DRtg"
+                }
+              },
+              "queryRef": "_Measures.DRtg",
+              "nativeQueryRef": "DRtg"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Offense vs defense (lower DRtg is better)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

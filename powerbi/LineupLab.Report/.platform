@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "LineupLab"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "686ae2d3-b4cf-5cf0-8f7f-6445e9726be6"
+  }
+}

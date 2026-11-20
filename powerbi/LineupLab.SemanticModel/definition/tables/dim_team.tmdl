@@ -1,0 +1,36 @@
+/// One row per NBA team.
+table dim_team
+	lineageTag: f0cf2deb-d94f-5a9d-9055-0d656a949f30
+
+	/// NBA team id
+	column team_id
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: 4d0594fd-9dfd-5bf2-a0e2-08a6782a1c20
+		summarizeBy: none
+		sourceColumn: team_id
+
+	/// Three-letter code
+	column abbreviation
+		dataType: string
+		lineageTag: 9a94ae72-c8e3-58d3-a7a5-a6edcd7ad139
+		summarizeBy: none
+		sourceColumn: abbreviation
+
+	/// Full team name
+	column team_name
+		dataType: string
+		lineageTag: 9be58c02-810f-5fe7-862e-101c7f8abc96
+		summarizeBy: none
+		sourceColumn: team_name
+
+	partition dim_team = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_team.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Headers, {{"team_id", Int64.Type}, {"abbreviation", type text}, {"team_name", type text}}, "en-US")
+				in
+				    Typed

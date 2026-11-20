@@ -1,0 +1,189 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "tableLineups",
+  "position": {
+    "x": 256,
+    "y": 188,
+    "z": 10000,
+    "width": 1000,
+    "height": 316,
+    "tabOrder": 10000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_lineup"
+                    }
+                  },
+                  "Property": "lineup_label"
+                }
+              },
+              "queryRef": "dim_lineup.lineup_label",
+              "nativeQueryRef": "lineup_label"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Minutes"
+                }
+              },
+              "queryRef": "_Measures.Minutes",
+              "nativeQueryRef": "Minutes"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Possessions"
+                }
+              },
+              "queryRef": "_Measures.Possessions",
+              "nativeQueryRef": "Possessions"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "ORtg"
+                }
+              },
+              "queryRef": "_Measures.ORtg",
+              "nativeQueryRef": "ORtg"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "DRtg"
+                }
+              },
+              "queryRef": "_Measures.DRtg",
+              "nativeQueryRef": "DRtg"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Net Rating"
+                }
+              },
+              "queryRef": "_Measures.Net Rating",
+              "nativeQueryRef": "Net Rating"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Net Rating SE"
+                }
+              },
+              "queryRef": "_Measures.Net Rating SE",
+              "nativeQueryRef": "Net Rating SE"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Reliability"
+                }
+              },
+              "queryRef": "_Measures.Reliability",
+              "nativeQueryRef": "Reliability"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Net Change"
+                }
+              },
+              "queryRef": "_Measures.Net Change",
+              "nativeQueryRef": "Net Change"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "_Measures"
+                  }
+                },
+                "Property": "Possessions"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": false
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Lineup rankings (sort any column)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

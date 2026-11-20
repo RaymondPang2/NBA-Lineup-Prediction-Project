@@ -1,0 +1,91 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "colByPoss",
+  "position": {
+    "x": 24,
+    "y": 188,
+    "z": 8000,
+    "width": 610,
+    "height": 270,
+    "tabOrder": 8000
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_lineup"
+                    }
+                  },
+                  "Property": "pre_poss_bin"
+                }
+              },
+              "queryRef": "dim_lineup.pre_poss_bin",
+              "nativeQueryRef": "pre_poss_bin"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Continuation Rate"
+                }
+              },
+              "queryRef": "_Measures.Continuation Rate",
+              "nativeQueryRef": "Continuation Rate"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Appearance Rate"
+                }
+              },
+              "queryRef": "_Measures.Appearance Rate",
+              "nativeQueryRef": "Appearance Rate"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Continuation by pre-break possessions'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "cardCeiling",
+  "position": {
+    "x": 1074,
+    "y": 88,
+    "z": 8000,
+    "width": 182,
+    "height": 88,
+    "tabOrder": 8000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "R² Ceiling"
+                }
+              },
+              "queryRef": "_Measures.R² Ceiling",
+              "nativeQueryRef": "R² Ceiling"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'R² ceiling'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

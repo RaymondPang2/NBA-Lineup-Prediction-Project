@@ -1,0 +1,91 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "colTierSpread",
+  "position": {
+    "x": 848,
+    "y": 188,
+    "z": 9000,
+    "width": 408,
+    "height": 250,
+    "tabOrder": 9000
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_lineup"
+                    }
+                  },
+                  "Property": "pre_sample_tier"
+                }
+              },
+              "queryRef": "dim_lineup.pre_sample_tier",
+              "nativeQueryRef": "pre_sample_tier"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Lineup Net SD (possession-weighted)"
+                }
+              },
+              "queryRef": "_Measures.Lineup Net SD (possession-weighted)",
+              "nativeQueryRef": "Lineup Net SD (possession-weighted)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Noise SD (possession-weighted)"
+                }
+              },
+              "queryRef": "_Measures.Noise SD (possession-weighted)",
+              "nativeQueryRef": "Noise SD (possession-weighted)"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Spread of lineup net ratings vs pure noise'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

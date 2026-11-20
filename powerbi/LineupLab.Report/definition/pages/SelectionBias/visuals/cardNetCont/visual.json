@@ -1,0 +1,59 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "cardNetCont",
+  "position": {
+    "x": 780,
+    "y": 88,
+    "z": 6000,
+    "width": 236,
+    "height": 88,
+    "tabOrder": 6000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Pre Net (continuing)"
+                }
+              },
+              "queryRef": "_Measures.Pre Net (continuing)",
+              "nativeQueryRef": "Pre Net (continuing)"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Pre-break net: continued'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

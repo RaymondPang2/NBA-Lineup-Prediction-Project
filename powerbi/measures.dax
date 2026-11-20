@@ -1,0 +1,315 @@
+// Lineup Lab · every measure of the semantic model (generated from src/nba_lineups/bi/model.py).
+// Power BI Service: semantic model → Open data model / DAX query view → paste → Run →
+// 'Update model with changes'. Then set each measure's format string as listed in docs/powerbi.md.
+DEFINE
+	-- 1 Volume · Own (offensive) possessions.
+	MEASURE '_Measures'[Possessions] =
+		SUM ( fact_lineup_window[poss] )
+
+	-- 1 Volume · Opponent possessions (separate denominator for DRtg).
+	MEASURE '_Measures'[Opp Possessions] =
+		SUM ( fact_lineup_window[opp_poss] )
+
+	-- 1 Volume · Points scored.
+	MEASURE '_Measures'[Points] =
+		SUM ( fact_lineup_window[pts] )
+
+	-- 1 Volume · Points allowed.
+	MEASURE '_Measures'[Opp Points] =
+		SUM ( fact_lineup_window[opp_pts] )
+
+	-- 1 Volume · Minutes played by the lineup(s).
+	MEASURE '_Measures'[Minutes] =
+		SUM ( fact_lineup_window[minutes] )
+
+	-- 1 Volume · Distinct lineups with any minutes in the filter context.
+	MEASURE '_Measures'[Lineups] =
+		DISTINCTCOUNT ( fact_lineup_window[lineup_id] )
+
+	-- 1 Volume · Possessions before the break.
+	MEASURE '_Measures'[Possessions Pre] =
+		CALCULATE ( [Possessions], dim_window[window_type] = "pre_asb" )
+
+	-- 1 Volume · Possessions after the break.
+	MEASURE '_Measures'[Possessions Post] =
+		CALCULATE ( [Possessions], dim_window[window_type] = "post_asb" )
+
+	-- 2 Ratings · Offensive rating: 100 × Σ points ÷ Σ own possessions.
+	MEASURE '_Measures'[ORtg] =
+		DIVIDE ( SUM ( fact_lineup_window[pts] ), SUM ( fact_lineup_window[poss] ) ) * 100
+
+	-- 2 Ratings · Defensive rating: 100 × Σ opponent points ÷ Σ opponent possessions (lower is better).
+	MEASURE '_Measures'[DRtg] =
+		DIVIDE ( SUM ( fact_lineup_window[opp_pts_rated] ), SUM ( fact_lineup_window[opp_poss] ) ) * 100
+
+	-- 2 Ratings · ORtg − DRtg. Blank unless both are defined.
+	MEASURE '_Measures'[Net Rating] =
+		VAR o = [ORtg]
+		VAR d = [DRtg]
+		RETURN IF ( NOT ISBLANK ( o ) && NOT ISBLANK ( d ), o - d )
+
+	-- 2 Ratings · Possession-weighted average of the lineups' own net ratings. Close to, but not identical with, the pooled Net Rating.
+	MEASURE '_Measures'[Lineup Net Avg (possession-weighted)] =
+		VAR t = FILTER ( ADDCOLUMNS ( VALUES ( dim_lineup[lineup_id] ), "@n", [Net Rating], "@w", [Possessions] ), NOT ISBLANK ( [@n] ) )
+		RETURN DIVIDE ( SUMX ( t, [@w] * [@n] ), SUMX ( t, [@w] ) )
+
+	-- 2 Ratings · Simple mean of lineup net ratings. Shown only to demonstrate why ratings must not be averaged: tiny samples dominate.
+	MEASURE '_Measures'[Lineup Net Avg (unweighted, misleading)] =
+		AVERAGEX ( FILTER ( ADDCOLUMNS ( VALUES ( dim_lineup[lineup_id] ), "@n", [Net Rating] ), NOT ISBLANK ( [@n] ) ), [@n] )
+
+	-- 3 Pre vs Post · Offensive rating before the break.
+	MEASURE '_Measures'[ORtg Pre] =
+		CALCULATE ( [ORtg], dim_window[window_type] = "pre_asb" )
+
+	-- 3 Pre vs Post · Offensive rating after the break.
+	MEASURE '_Measures'[ORtg Post] =
+		CALCULATE ( [ORtg], dim_window[window_type] = "post_asb" )
+
+	-- 3 Pre vs Post · Defensive rating before the break.
+	MEASURE '_Measures'[DRtg Pre] =
+		CALCULATE ( [DRtg], dim_window[window_type] = "pre_asb" )
+
+	-- 3 Pre vs Post · Defensive rating after the break.
+	MEASURE '_Measures'[DRtg Post] =
+		CALCULATE ( [DRtg], dim_window[window_type] = "post_asb" )
+
+	-- 3 Pre vs Post · Net rating before the break.
+	MEASURE '_Measures'[Net Rating Pre] =
+		CALCULATE ( [Net Rating], dim_window[window_type] = "pre_asb" )
+
+	-- 3 Pre vs Post · Net rating after the break.
+	MEASURE '_Measures'[Net Rating Post] =
+		CALCULATE ( [Net Rating], dim_window[window_type] = "post_asb" )
+
+	-- 3 Pre vs Post · Post-break minus pre-break net rating.
+	MEASURE '_Measures'[Net Change] =
+		VAR a = [Net Rating Pre]
+		VAR b = [Net Rating Post]
+		RETURN IF ( NOT ISBLANK ( a ) && NOT ISBLANK ( b ), b - a )
+
+	-- 3 Pre vs Post · Post minus pre offensive rating.
+	MEASURE '_Measures'[ORtg Change] =
+		VAR a = [ORtg Pre]
+		VAR b = [ORtg Post]
+		RETURN IF ( NOT ISBLANK ( a ) && NOT ISBLANK ( b ), b - a )
+
+	-- 3 Pre vs Post · Post minus pre defensive rating (negative = better defense).
+	MEASURE '_Measures'[DRtg Change] =
+		VAR a = [DRtg Pre]
+		VAR b = [DRtg Post]
+		RETURN IF ( NOT ISBLANK ( a ) && NOT ISBLANK ( b ), b - a )
+
+	-- 4 Reliability · Sampling-noise constant of the frozen model (≈ 14,639).
+	MEASURE '_Measures'[K (noise constant)] =
+		MAX ( model_parameters[k_noise] )
+
+	-- 4 Reliability · Sampling standard error of the net rating: √(K·(1/poss + 1/opp_poss)).
+	MEASURE '_Measures'[Net Rating SE] =
+		VAR p = [Possessions]
+		VAR q = [Opp Possessions]
+		RETURN IF ( p > 0 && q > 0, SQRT ( [K (noise constant)] * ( 1 / p + 1 / q ) ) )
+
+	-- 4 Reliability · Lower end of the 95% sampling interval.
+	MEASURE '_Measures'[Net Rating 95% Low] =
+		VAR n = [Net Rating]
+		VAR se = [Net Rating SE]
+		RETURN IF ( NOT ISBLANK ( n ) && NOT ISBLANK ( se ), n - 1.959964 * se )
+
+	-- 4 Reliability · Upper end of the 95% sampling interval.
+	MEASURE '_Measures'[Net Rating 95% High] =
+		VAR n = [Net Rating]
+		VAR se = [Net Rating SE]
+		RETURN IF ( NOT ISBLANK ( n ) && NOT ISBLANK ( se ), n + 1.959964 * se )
+
+	-- 4 Reliability · Standard error of the pre→post change (independent windows).
+	MEASURE '_Measures'[Net Change SE] =
+		VAR a = CALCULATE ( [Net Rating SE], dim_window[window_type] = "pre_asb" )
+		VAR b = CALCULATE ( [Net Rating SE], dim_window[window_type] = "post_asb" )
+		RETURN IF ( NOT ISBLANK ( a ) && NOT ISBLANK ( b ), SQRT ( a ^ 2 + b ^ 2 ) )
+
+	-- 4 Reliability · 1 if |change| > 1.96 SE (larger than sampling noise alone).
+	MEASURE '_Measures'[Change Exceeds Noise] =
+		VAR c = [Net Change]
+		VAR se = [Net Change SE]
+		RETURN IF ( NOT ISBLANK ( c ) && NOT ISBLANK ( se ), IF ( ABS ( c ) > 1.959964 * se, 1, 0 ) )
+
+	-- 4 Reliability · Share of the net rating's variance that is signal (vs the team prior): τ² / (τ² + K·h). With the pre-break window in context it equals the model's per-lineup reliability.
+	MEASURE '_Measures'[Reliability] =
+		VAR p = [Possessions]
+		VAR q = [Opp Possessions]
+		VAR tau2 = MAX ( model_parameters[lineup_tau2] )
+		RETURN IF ( p > 0 && q > 0, DIVIDE ( tau2, tau2 + [K (noise constant)] * ( 1 / p + 1 / q ) ) )
+
+	-- 4 Reliability · Lineups with at least 100 possessions on each end in context.
+	MEASURE '_Measures'[Lineups ≥ 100 Poss] =
+		COUNTROWS ( FILTER ( VALUES ( dim_lineup[lineup_id] ), [Possessions] >= 100 && [Opp Possessions] >= 100 ) )
+
+	-- 4 Reliability · How much of the playing time comes from lineups with a usable sample.
+	MEASURE '_Measures'[Share of Possessions in Lineups ≥ 100] =
+		DIVIDE ( SUMX ( FILTER ( VALUES ( dim_lineup[lineup_id] ), [Possessions] >= 100 && [Opp Possessions] >= 100 ), [Possessions] ), [Possessions] )
+
+	-- 4 Reliability · Spread of lineup net ratings. Compare with Noise SD: most of the spread at small samples is noise.
+	MEASURE '_Measures'[Lineup Net SD (possession-weighted)] =
+		VAR t = FILTER ( ADDCOLUMNS ( VALUES ( dim_lineup[lineup_id] ), "@n", [Net Rating], "@w", [Possessions] ), NOT ISBLANK ( [@n] ) )
+		VAR m = DIVIDE ( SUMX ( t, [@w] * [@n] ), SUMX ( t, [@w] ) )
+		RETURN SQRT ( DIVIDE ( SUMX ( t, [@w] * ( [@n] - m ) ^ 2 ), SUMX ( t, [@w] ) ) )
+
+	-- 4 Reliability · Spread that pure sampling noise would produce for the same lineups.
+	MEASURE '_Measures'[Noise SD (possession-weighted)] =
+		VAR t = FILTER ( ADDCOLUMNS ( VALUES ( dim_lineup[lineup_id] ), "@se", [Net Rating SE], "@w", [Possessions] ), NOT ISBLANK ( [@se] ) )
+		RETURN SQRT ( DIVIDE ( SUMX ( t, [@w] * [@se] ^ 2 ), SUMX ( t, [@w] ) ) )
+
+	-- 5 Team · Team games.
+	MEASURE '_Measures'[Games] =
+		SUM ( fact_team_window[games] )
+
+	-- 5 Team · Team wins.
+	MEASURE '_Measures'[Wins] =
+		SUM ( fact_team_window[wins] )
+
+	-- 5 Team · Team losses.
+	MEASURE '_Measures'[Losses] =
+		SUM ( fact_team_window[losses] )
+
+	-- 5 Team · Wins ÷ games.
+	MEASURE '_Measures'[Win %] =
+		DIVIDE ( [Wins], [Games] )
+
+	-- 5 Team · W–L as text.
+	MEASURE '_Measures'[Record] =
+		IF ( NOT ISBLANK ( [Games] ), FORMAT ( [Wins], "0" ) & "–" & FORMAT ( [Losses], "0" ) )
+
+	-- 6 Model · Lineups in the evaluation sample (≥ 25 post-break possessions per end).
+	MEASURE '_Measures'[Eval Lineups] =
+		COUNTROWS ( FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) ) )
+
+	-- 6 Model · Total post-break possessions of the evaluation sample (the weight).
+	MEASURE '_Measures'[Eval Weight] =
+		SUMX ( FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) ), fact_prediction[post_poss] )
+
+	-- 6 Model · Possession-weighted RMSE of the frozen model.
+	MEASURE '_Measures'[Model RMSE] =
+		SQRT ( VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+		RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * ( fact_prediction[observed_post_net] - fact_prediction[predicted_net] ) ^ 2 ), SUMX ( t, fact_prediction[post_poss] ) ) )
+
+	-- 6 Model · Possession-weighted RMSE of the team-prior baseline.
+	MEASURE '_Measures'[Team Prior RMSE] =
+		SQRT ( VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+		RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * ( fact_prediction[observed_post_net] - fact_prediction[team_prior_net] ) ^ 2 ), SUMX ( t, fact_prediction[post_poss] ) ) )
+
+	-- 6 Model · Possession-weighted RMSE of the league-mean baseline.
+	MEASURE '_Measures'[League Mean RMSE] =
+		SQRT ( VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+		RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * ( fact_prediction[observed_post_net] - fact_prediction[league_mean_net] ) ^ 2 ), SUMX ( t, fact_prediction[post_poss] ) ) )
+
+	-- 6 Model · Possession-weighted mean absolute error of the model.
+	MEASURE '_Measures'[Model MAE] =
+		VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+		RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * ABS ( fact_prediction[observed_post_net] - fact_prediction[predicted_net] ) ), SUMX ( t, fact_prediction[post_poss] ) )
+
+	-- 6 Model · Possession-weighted MAE of the team prior.
+	MEASURE '_Measures'[Team Prior MAE] =
+		VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+		RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * ABS ( fact_prediction[observed_post_net] - fact_prediction[team_prior_net] ) ), SUMX ( t, fact_prediction[post_poss] ) )
+
+	-- 6 Model · Possession-weighted MAE of the league mean.
+	MEASURE '_Measures'[League Mean MAE] =
+		VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+		RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * ABS ( fact_prediction[observed_post_net] - fact_prediction[league_mean_net] ) ), SUMX ( t, fact_prediction[post_poss] ) )
+
+	-- 6 Model · Negative = the model is more accurate than the team prior. Its 95% CI on the held-out seasons includes zero.
+	MEASURE '_Measures'[Model − Team Prior RMSE] =
+		[Model RMSE] - [Team Prior RMSE]
+
+	-- 6 Model · Negative = the model beats the league mean.
+	MEASURE '_Measures'[Model − League Mean RMSE] =
+		[Model RMSE] - [League Mean RMSE]
+
+	-- 6 Model · 1 − MSE(model) ÷ MSE(team prior): share of the baseline's squared error removed.
+	MEASURE '_Measures'[Skill vs Team Prior] =
+		VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+		VAR w = SUMX ( t, fact_prediction[post_poss] )
+		VAR mseModel = DIVIDE ( SUMX ( t, fact_prediction[post_poss] * ( fact_prediction[observed_post_net] - fact_prediction[predicted_net] ) ^ 2 ), w )
+		VAR msePrior = DIVIDE ( SUMX ( t, fact_prediction[post_poss] * ( fact_prediction[observed_post_net] - fact_prediction[team_prior_net] ) ^ 2 ), w )
+		RETURN IF ( msePrior > 0, 1 - DIVIDE ( mseModel, msePrior ) )
+
+	-- 6 Model · Possession-weighted variance of the observed post-break net rating (R² denominator).
+	MEASURE '_Measures'[Observed Variance] =
+		VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+		VAR w = SUMX ( t, fact_prediction[post_poss] )
+		VAR m = DIVIDE ( SUMX ( t, fact_prediction[post_poss] * fact_prediction[observed_post_net] ), w )
+		RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * ( fact_prediction[observed_post_net] - m ) ^ 2 ), w )
+
+	-- 6 Model · 1 − MSE ÷ Var(y), possession-weighted, around the evaluated rows' own mean.
+	MEASURE '_Measures'[Model R²] =
+		VAR v = [Observed Variance]
+		RETURN IF ( v > 0, 1 - DIVIDE ( [Model RMSE] ^ 2, v ) )
+
+	-- 6 Model · RMSE a perfect model would still make: post-break ratings are measured over few possessions.
+	MEASURE '_Measures'[Noise Floor RMSE] =
+		VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+		RETURN SQRT ( DIVIDE ( SUMX ( t, fact_prediction[post_poss] * fact_prediction[noise_var] ), SUMX ( t, fact_prediction[post_poss] ) ) )
+
+	-- 6 Model · Best R² achievable given sampling noise.
+	MEASURE '_Measures'[R² Ceiling] =
+		VAR v = [Observed Variance]
+		RETURN IF ( v > 0, 1 - DIVIDE ( [Noise Floor RMSE] ^ 2, v ) )
+
+	-- 6 Model · Possession-weighted mean prediction (evaluation sample).
+	MEASURE '_Measures'[Mean Predicted] =
+		VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+		RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * fact_prediction[predicted_net] ), SUMX ( t, fact_prediction[post_poss] ) )
+
+	-- 6 Model · Possession-weighted mean team-prior baseline (evaluation sample).
+	MEASURE '_Measures'[Mean Team Prior] =
+		VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+		RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * fact_prediction[team_prior_net] ), SUMX ( t, fact_prediction[post_poss] ) )
+
+	-- 6 Model · Possession-weighted mean observed post-break net rating (evaluation sample).
+	MEASURE '_Measures'[Mean Observed] =
+		VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+		RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * fact_prediction[observed_post_net] ), SUMX ( t, fact_prediction[post_poss] ) )
+
+	-- 6 Model · Observed minus predicted (possession-weighted). Near 0 = unbiased in this slice.
+	MEASURE '_Measures'[Mean Prediction Error] =
+		VAR o = [Mean Observed]
+		VAR p = [Mean Predicted]
+		RETURN IF ( NOT ISBLANK ( o ) && NOT ISBLANK ( p ), o - p )
+
+	-- 7 Selection · Lineups with ≥ 25 pre-break possessions on each end.
+	MEASURE '_Measures'[Population Lineups] =
+		CALCULATE ( DISTINCTCOUNT ( fact_lineup_window[lineup_id] ), dim_lineup[in_continuation_population] = 1, dim_window[window_type] = "pre_asb" )
+
+	-- 7 Selection · Population lineups that played ≥ 25 possessions after the break.
+	MEASURE '_Measures'[Continuing Lineups] =
+		CALCULATE ( DISTINCTCOUNT ( fact_lineup_window[lineup_id] ), dim_lineup[in_continuation_population] = 1, dim_lineup[continues_post_break] = 1, dim_window[window_type] = "pre_asb" )
+
+	-- 7 Selection · Population lineups with any post-break possession.
+	MEASURE '_Measures'[Appearing Lineups] =
+		CALCULATE ( DISTINCTCOUNT ( fact_lineup_window[lineup_id] ), dim_lineup[in_continuation_population] = 1, dim_lineup[appears_post_break] = 1, dim_window[window_type] = "pre_asb" )
+
+	-- 7 Selection · Share of pre-break lineups that keep playing (≥ 25 possessions) after the break.
+	MEASURE '_Measures'[Continuation Rate] =
+		DIVIDE ( [Continuing Lineups], [Population Lineups] )
+
+	-- 7 Selection · Share of pre-break lineups seen at all after the break.
+	MEASURE '_Measures'[Appearance Rate] =
+		DIVIDE ( [Appearing Lineups], [Population Lineups] )
+
+	-- 7 Selection · Pooled pre-break net rating of lineups that continue.
+	MEASURE '_Measures'[Pre Net (continuing)] =
+		CALCULATE ( [Net Rating Pre], dim_lineup[in_continuation_population] = 1, dim_lineup[continues_post_break] = 1 )
+
+	-- 7 Selection · Pooled pre-break net rating of lineups that do not continue.
+	MEASURE '_Measures'[Pre Net (dropped)] =
+		CALCULATE ( [Net Rating Pre], dim_lineup[in_continuation_population] = 1, dim_lineup[continues_post_break] = 0 )
+
+	-- 8 Filters · Visual-level filter (= 1) for AND semantics: keep lineups that contain EVERY selected player. Without it a multi-player slicer means 'contains ANY selected player'.
+	MEASURE '_Measures'[All Selected Players In Lineup] =
+		VAR nSel = COUNTROWS ( ALLSELECTED ( dim_player[player_id] ) )
+		VAR nAll = COUNTROWS ( ALL ( dim_player[player_id] ) )
+		VAR nIn = DISTINCTCOUNT ( bridge_lineup_player[player_id] )
+		RETURN IF ( nSel = nAll || nIn = nSel, 1, 0 )
+
+EVALUATE
+	ROW ( "Net Rating", [Net Rating], "Model RMSE", [Model RMSE] )

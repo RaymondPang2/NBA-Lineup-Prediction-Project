@@ -1,0 +1,482 @@
+/// Home of every measure (no data).
+table _Measures
+	lineageTag: 16656c62-77ab-530c-ac39-03f2ded57e44
+
+	/// Own (offensive) possessions.
+	measure Possessions = SUM ( fact_lineup_window[poss] )
+		formatString: #,0
+		displayFolder: 1 Volume
+		lineageTag: d8f7740e-257d-5ab5-9a38-245d53fac8bb
+
+	/// Opponent possessions (separate denominator for DRtg).
+	measure 'Opp Possessions' = SUM ( fact_lineup_window[opp_poss] )
+		formatString: #,0
+		displayFolder: 1 Volume
+		lineageTag: f69a490e-f931-5f6d-9f11-e148f406ac7d
+
+	/// Points scored.
+	measure Points = SUM ( fact_lineup_window[pts] )
+		formatString: #,0
+		displayFolder: 1 Volume
+		lineageTag: c092eb43-fd3e-549b-a09e-c0f9f7b7a0b4
+
+	/// Points allowed.
+	measure 'Opp Points' = SUM ( fact_lineup_window[opp_pts] )
+		formatString: #,0
+		displayFolder: 1 Volume
+		lineageTag: 8c341cc5-26f3-5e49-89f1-0bb2acf24505
+
+	/// Minutes played by the lineup(s).
+	measure Minutes = SUM ( fact_lineup_window[minutes] )
+		formatString: #,0.0
+		displayFolder: 1 Volume
+		lineageTag: bc412fe5-1bac-5bbd-b113-44312ba25e1d
+
+	/// Distinct lineups with any minutes in the filter context.
+	measure Lineups = DISTINCTCOUNT ( fact_lineup_window[lineup_id] )
+		formatString: #,0
+		displayFolder: 1 Volume
+		lineageTag: 222e4d78-4e9b-5111-99bf-e109fd6b306e
+
+	/// Possessions before the break.
+	measure 'Possessions Pre' = CALCULATE ( [Possessions], dim_window[window_type] = "pre_asb" )
+		formatString: #,0
+		displayFolder: 1 Volume
+		lineageTag: 58808936-ebc9-5f00-8b16-bf752a1ebf45
+
+	/// Possessions after the break.
+	measure 'Possessions Post' = CALCULATE ( [Possessions], dim_window[window_type] = "post_asb" )
+		formatString: #,0
+		displayFolder: 1 Volume
+		lineageTag: 43dfaf08-0bea-5c4b-b094-892d414d18ef
+
+	/// Offensive rating: 100 × Σ points ÷ Σ own possessions.
+	measure ORtg = DIVIDE ( SUM ( fact_lineup_window[pts] ), SUM ( fact_lineup_window[poss] ) ) * 100
+		formatString: 0.0
+		displayFolder: 2 Ratings
+		lineageTag: 00546d65-b342-5a6a-b016-fda8f87e26ba
+
+	/// Defensive rating: 100 × Σ opponent points ÷ Σ opponent possessions (lower is better).
+	measure DRtg = DIVIDE ( SUM ( fact_lineup_window[opp_pts_rated] ), SUM ( fact_lineup_window[opp_poss] ) ) * 100
+		formatString: 0.0
+		displayFolder: 2 Ratings
+		lineageTag: 0ebaf516-4bfc-5de5-a4ff-46d231b0ae63
+
+	/// ORtg − DRtg. Blank unless both are defined.
+	measure 'Net Rating' =
+			VAR o = [ORtg]
+			VAR d = [DRtg]
+			RETURN IF ( NOT ISBLANK ( o ) && NOT ISBLANK ( d ), o - d )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 2 Ratings
+		lineageTag: 1ad6e188-ba49-5d86-921c-586b75da9498
+
+	/// Possession-weighted average of the lineups' own net ratings. Close to, but not identical with, the pooled Net Rating.
+	measure 'Lineup Net Avg (possession-weighted)' =
+			VAR t = FILTER ( ADDCOLUMNS ( VALUES ( dim_lineup[lineup_id] ), "@n", [Net Rating], "@w", [Possessions] ), NOT ISBLANK ( [@n] ) )
+			RETURN DIVIDE ( SUMX ( t, [@w] * [@n] ), SUMX ( t, [@w] ) )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 2 Ratings
+		lineageTag: 7822b3b4-993e-57b3-993e-f7d1fabf302b
+
+	/// Simple mean of lineup net ratings. Shown only to demonstrate why ratings must not be averaged: tiny samples dominate.
+	measure 'Lineup Net Avg (unweighted, misleading)' = AVERAGEX ( FILTER ( ADDCOLUMNS ( VALUES ( dim_lineup[lineup_id] ), "@n", [Net Rating] ), NOT ISBLANK ( [@n] ) ), [@n] )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 2 Ratings
+		lineageTag: 25b71574-b5ff-5dca-ab2c-682740f571e9
+
+	/// Offensive rating before the break.
+	measure 'ORtg Pre' = CALCULATE ( [ORtg], dim_window[window_type] = "pre_asb" )
+		formatString: 0.0
+		displayFolder: 3 Pre vs Post
+		lineageTag: 2d007276-cfe4-5f3e-865b-65e2665f4164
+
+	/// Offensive rating after the break.
+	measure 'ORtg Post' = CALCULATE ( [ORtg], dim_window[window_type] = "post_asb" )
+		formatString: 0.0
+		displayFolder: 3 Pre vs Post
+		lineageTag: 8a023df5-868a-5399-8a85-0fee4b3a7586
+
+	/// Defensive rating before the break.
+	measure 'DRtg Pre' = CALCULATE ( [DRtg], dim_window[window_type] = "pre_asb" )
+		formatString: 0.0
+		displayFolder: 3 Pre vs Post
+		lineageTag: 49ffefed-a4f2-581d-a586-2a924b7ff116
+
+	/// Defensive rating after the break.
+	measure 'DRtg Post' = CALCULATE ( [DRtg], dim_window[window_type] = "post_asb" )
+		formatString: 0.0
+		displayFolder: 3 Pre vs Post
+		lineageTag: e97084a1-2eb3-5cd4-865c-73b368263f04
+
+	/// Net rating before the break.
+	measure 'Net Rating Pre' = CALCULATE ( [Net Rating], dim_window[window_type] = "pre_asb" )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 3 Pre vs Post
+		lineageTag: 487f8f28-0993-51cb-ad09-fd60c6520ce4
+
+	/// Net rating after the break.
+	measure 'Net Rating Post' = CALCULATE ( [Net Rating], dim_window[window_type] = "post_asb" )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 3 Pre vs Post
+		lineageTag: 04f12787-2ef1-589a-97d2-d0a072f90186
+
+	/// Post-break minus pre-break net rating.
+	measure 'Net Change' =
+			VAR a = [Net Rating Pre]
+			VAR b = [Net Rating Post]
+			RETURN IF ( NOT ISBLANK ( a ) && NOT ISBLANK ( b ), b - a )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 3 Pre vs Post
+		lineageTag: f038ad14-71e7-53df-a15d-a8c7123ed733
+
+	/// Post minus pre offensive rating.
+	measure 'ORtg Change' =
+			VAR a = [ORtg Pre]
+			VAR b = [ORtg Post]
+			RETURN IF ( NOT ISBLANK ( a ) && NOT ISBLANK ( b ), b - a )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 3 Pre vs Post
+		lineageTag: a6a91a3f-cb94-5079-b81c-f3d73094d2d2
+
+	/// Post minus pre defensive rating (negative = better defense).
+	measure 'DRtg Change' =
+			VAR a = [DRtg Pre]
+			VAR b = [DRtg Post]
+			RETURN IF ( NOT ISBLANK ( a ) && NOT ISBLANK ( b ), b - a )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 3 Pre vs Post
+		lineageTag: 97d38830-5d9e-5afa-a71e-527af2a1154b
+
+	/// Sampling-noise constant of the frozen model (≈ 14,639).
+	measure 'K (noise constant)' = MAX ( model_parameters[k_noise] )
+		formatString: #,0
+		displayFolder: 4 Reliability
+		lineageTag: 41ad9d59-4e43-5ac0-98a1-dceb12a52a3e
+
+	/// Sampling standard error of the net rating: √(K·(1/poss + 1/opp_poss)).
+	measure 'Net Rating SE' =
+			VAR p = [Possessions]
+			VAR q = [Opp Possessions]
+			RETURN IF ( p > 0 && q > 0, SQRT ( [K (noise constant)] * ( 1 / p + 1 / q ) ) )
+		formatString: 0.0
+		displayFolder: 4 Reliability
+		lineageTag: 56defc4f-9847-5755-9d25-3f3a35a95aa8
+
+	/// Lower end of the 95% sampling interval.
+	measure 'Net Rating 95% Low' =
+			VAR n = [Net Rating]
+			VAR se = [Net Rating SE]
+			RETURN IF ( NOT ISBLANK ( n ) && NOT ISBLANK ( se ), n - 1.959964 * se )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 4 Reliability
+		lineageTag: 2f725bfb-c4ff-584c-8339-082ff00b105e
+
+	/// Upper end of the 95% sampling interval.
+	measure 'Net Rating 95% High' =
+			VAR n = [Net Rating]
+			VAR se = [Net Rating SE]
+			RETURN IF ( NOT ISBLANK ( n ) && NOT ISBLANK ( se ), n + 1.959964 * se )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 4 Reliability
+		lineageTag: eb3b4d21-ee2a-551b-84b6-6bf573b9d5ce
+
+	/// Standard error of the pre→post change (independent windows).
+	measure 'Net Change SE' =
+			VAR a = CALCULATE ( [Net Rating SE], dim_window[window_type] = "pre_asb" )
+			VAR b = CALCULATE ( [Net Rating SE], dim_window[window_type] = "post_asb" )
+			RETURN IF ( NOT ISBLANK ( a ) && NOT ISBLANK ( b ), SQRT ( a ^ 2 + b ^ 2 ) )
+		formatString: 0.0
+		displayFolder: 4 Reliability
+		lineageTag: f0666adf-9688-5798-870f-2df5e0f344f0
+
+	/// 1 if |change| > 1.96 SE (larger than sampling noise alone).
+	measure 'Change Exceeds Noise' =
+			VAR c = [Net Change]
+			VAR se = [Net Change SE]
+			RETURN IF ( NOT ISBLANK ( c ) && NOT ISBLANK ( se ), IF ( ABS ( c ) > 1.959964 * se, 1, 0 ) )
+		formatString: 0
+		displayFolder: 4 Reliability
+		lineageTag: 0a5036e4-5b7d-5331-9d7c-53fb15b2cbc2
+
+	/// Share of the net rating's variance that is signal (vs the team prior): τ² / (τ² + K·h). With the pre-break window in context it equals the model's per-lineup reliability.
+	measure Reliability =
+			VAR p = [Possessions]
+			VAR q = [Opp Possessions]
+			VAR tau2 = MAX ( model_parameters[lineup_tau2] )
+			RETURN IF ( p > 0 && q > 0, DIVIDE ( tau2, tau2 + [K (noise constant)] * ( 1 / p + 1 / q ) ) )
+		formatString: 0%
+		displayFolder: 4 Reliability
+		lineageTag: 620ff066-4d35-5455-8a42-ba41192d8f28
+
+	/// Lineups with at least 100 possessions on each end in context.
+	measure 'Lineups ≥ 100 Poss' = COUNTROWS ( FILTER ( VALUES ( dim_lineup[lineup_id] ), [Possessions] >= 100 && [Opp Possessions] >= 100 ) )
+		formatString: #,0
+		displayFolder: 4 Reliability
+		lineageTag: 9c83a627-e657-5e34-981b-0d5fdb019bc0
+
+	/// How much of the playing time comes from lineups with a usable sample.
+	measure 'Share of Possessions in Lineups ≥ 100' = DIVIDE ( SUMX ( FILTER ( VALUES ( dim_lineup[lineup_id] ), [Possessions] >= 100 && [Opp Possessions] >= 100 ), [Possessions] ), [Possessions] )
+		formatString: 0%
+		displayFolder: 4 Reliability
+		lineageTag: de6af4b8-938f-5d72-833e-97ffd7010ba4
+
+	/// Spread of lineup net ratings. Compare with Noise SD: most of the spread at small samples is noise.
+	measure 'Lineup Net SD (possession-weighted)' =
+			VAR t = FILTER ( ADDCOLUMNS ( VALUES ( dim_lineup[lineup_id] ), "@n", [Net Rating], "@w", [Possessions] ), NOT ISBLANK ( [@n] ) )
+			VAR m = DIVIDE ( SUMX ( t, [@w] * [@n] ), SUMX ( t, [@w] ) )
+			RETURN SQRT ( DIVIDE ( SUMX ( t, [@w] * ( [@n] - m ) ^ 2 ), SUMX ( t, [@w] ) ) )
+		formatString: 0.0
+		displayFolder: 4 Reliability
+		lineageTag: 98fd37c7-470f-5f95-a0c1-24c119a07241
+
+	/// Spread that pure sampling noise would produce for the same lineups.
+	measure 'Noise SD (possession-weighted)' =
+			VAR t = FILTER ( ADDCOLUMNS ( VALUES ( dim_lineup[lineup_id] ), "@se", [Net Rating SE], "@w", [Possessions] ), NOT ISBLANK ( [@se] ) )
+			RETURN SQRT ( DIVIDE ( SUMX ( t, [@w] * [@se] ^ 2 ), SUMX ( t, [@w] ) ) )
+		formatString: 0.0
+		displayFolder: 4 Reliability
+		lineageTag: ac6107bd-9f7a-53bd-8d6b-d628a0b64ac8
+
+	/// Team games.
+	measure Games = SUM ( fact_team_window[games] )
+		formatString: #,0
+		displayFolder: 5 Team
+		lineageTag: 4ecb0140-19a2-55a2-897f-ffafb0ae8c68
+
+	/// Team wins.
+	measure Wins = SUM ( fact_team_window[wins] )
+		formatString: #,0
+		displayFolder: 5 Team
+		lineageTag: e8b6ddbf-a770-5877-81f0-7211d084ee5f
+
+	/// Team losses.
+	measure Losses = SUM ( fact_team_window[losses] )
+		formatString: #,0
+		displayFolder: 5 Team
+		lineageTag: edf11035-3fc4-5e59-b13e-cdcb1df4f55d
+
+	/// Wins ÷ games.
+	measure 'Win %' = DIVIDE ( [Wins], [Games] )
+		formatString: 0.0%
+		displayFolder: 5 Team
+		lineageTag: 358afb48-4afb-56b1-9f57-362733305f76
+
+	/// W–L as text.
+	measure Record = IF ( NOT ISBLANK ( [Games] ), FORMAT ( [Wins], "0" ) & "–" & FORMAT ( [Losses], "0" ) )
+		formatString: General
+		displayFolder: 5 Team
+		lineageTag: 360423f9-7680-5de7-a740-fd62317d892d
+
+	/// Lineups in the evaluation sample (≥ 25 post-break possessions per end).
+	measure 'Eval Lineups' = COUNTROWS ( FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) ) )
+		formatString: #,0
+		displayFolder: 6 Model
+		lineageTag: bdfdb431-b5b6-5b09-b975-160b4cddedea
+
+	/// Total post-break possessions of the evaluation sample (the weight).
+	measure 'Eval Weight' = SUMX ( FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) ), fact_prediction[post_poss] )
+		formatString: #,0
+		displayFolder: 6 Model
+		lineageTag: d32f6bff-c34a-5352-bbc2-10331490896b
+
+	/// Possession-weighted RMSE of the frozen model.
+	measure 'Model RMSE' =
+			SQRT ( VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+			RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * ( fact_prediction[observed_post_net] - fact_prediction[predicted_net] ) ^ 2 ), SUMX ( t, fact_prediction[post_poss] ) ) )
+		formatString: 0.00
+		displayFolder: 6 Model
+		lineageTag: 4fd11a42-a547-5429-8d9c-c6270874e2c1
+
+	/// Possession-weighted RMSE of the team-prior baseline.
+	measure 'Team Prior RMSE' =
+			SQRT ( VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+			RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * ( fact_prediction[observed_post_net] - fact_prediction[team_prior_net] ) ^ 2 ), SUMX ( t, fact_prediction[post_poss] ) ) )
+		formatString: 0.00
+		displayFolder: 6 Model
+		lineageTag: f1bf0035-45b5-5b6b-9b5c-16e157407ff0
+
+	/// Possession-weighted RMSE of the league-mean baseline.
+	measure 'League Mean RMSE' =
+			SQRT ( VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+			RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * ( fact_prediction[observed_post_net] - fact_prediction[league_mean_net] ) ^ 2 ), SUMX ( t, fact_prediction[post_poss] ) ) )
+		formatString: 0.00
+		displayFolder: 6 Model
+		lineageTag: 5316f66e-ed68-5735-aa1d-295be3dc8573
+
+	/// Possession-weighted mean absolute error of the model.
+	measure 'Model MAE' =
+			VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+			RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * ABS ( fact_prediction[observed_post_net] - fact_prediction[predicted_net] ) ), SUMX ( t, fact_prediction[post_poss] ) )
+		formatString: 0.00
+		displayFolder: 6 Model
+		lineageTag: d5e7f29d-1f79-53dc-a0ea-d8e655d014db
+
+	/// Possession-weighted MAE of the team prior.
+	measure 'Team Prior MAE' =
+			VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+			RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * ABS ( fact_prediction[observed_post_net] - fact_prediction[team_prior_net] ) ), SUMX ( t, fact_prediction[post_poss] ) )
+		formatString: 0.00
+		displayFolder: 6 Model
+		lineageTag: b252ca61-2636-52f7-a564-ede6f366affc
+
+	/// Possession-weighted MAE of the league mean.
+	measure 'League Mean MAE' =
+			VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+			RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * ABS ( fact_prediction[observed_post_net] - fact_prediction[league_mean_net] ) ), SUMX ( t, fact_prediction[post_poss] ) )
+		formatString: 0.00
+		displayFolder: 6 Model
+		lineageTag: e28f5516-b255-5dfa-9c7e-dc23a9c4fd5d
+
+	/// Negative = the model is more accurate than the team prior. Its 95% CI on the held-out seasons includes zero.
+	measure 'Model − Team Prior RMSE' = [Model RMSE] - [Team Prior RMSE]
+		formatString: +0.00;-0.00;0.00
+		displayFolder: 6 Model
+		lineageTag: f25d0897-fd9f-5ed1-9841-cbdf737e7392
+
+	/// Negative = the model beats the league mean.
+	measure 'Model − League Mean RMSE' = [Model RMSE] - [League Mean RMSE]
+		formatString: +0.00;-0.00;0.00
+		displayFolder: 6 Model
+		lineageTag: 73f20542-3420-5ee5-8ddc-0ede6c5e4eef
+
+	/// 1 − MSE(model) ÷ MSE(team prior): share of the baseline's squared error removed.
+	measure 'Skill vs Team Prior' =
+			VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+			VAR w = SUMX ( t, fact_prediction[post_poss] )
+			VAR mseModel = DIVIDE ( SUMX ( t, fact_prediction[post_poss] * ( fact_prediction[observed_post_net] - fact_prediction[predicted_net] ) ^ 2 ), w )
+			VAR msePrior = DIVIDE ( SUMX ( t, fact_prediction[post_poss] * ( fact_prediction[observed_post_net] - fact_prediction[team_prior_net] ) ^ 2 ), w )
+			RETURN IF ( msePrior > 0, 1 - DIVIDE ( mseModel, msePrior ) )
+		formatString: 0.0%
+		displayFolder: 6 Model
+		lineageTag: afb76d14-092b-5190-8785-b7723f2f2b09
+
+	/// Possession-weighted variance of the observed post-break net rating (R² denominator).
+	measure 'Observed Variance' =
+			VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+			VAR w = SUMX ( t, fact_prediction[post_poss] )
+			VAR m = DIVIDE ( SUMX ( t, fact_prediction[post_poss] * fact_prediction[observed_post_net] ), w )
+			RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * ( fact_prediction[observed_post_net] - m ) ^ 2 ), w )
+		formatString: 0.0
+		displayFolder: 6 Model
+		lineageTag: f1a72c59-d411-51f6-9d4e-4b99693c93b0
+
+	/// 1 − MSE ÷ Var(y), possession-weighted, around the evaluated rows' own mean.
+	measure 'Model R²' =
+			VAR v = [Observed Variance]
+			RETURN IF ( v > 0, 1 - DIVIDE ( [Model RMSE] ^ 2, v ) )
+		formatString: 0.000
+		displayFolder: 6 Model
+		lineageTag: b51761c1-2fe9-5191-b4e7-8a29c7af9e75
+
+	/// RMSE a perfect model would still make: post-break ratings are measured over few possessions.
+	measure 'Noise Floor RMSE' =
+			VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+			RETURN SQRT ( DIVIDE ( SUMX ( t, fact_prediction[post_poss] * fact_prediction[noise_var] ), SUMX ( t, fact_prediction[post_poss] ) ) )
+		formatString: 0.00
+		displayFolder: 6 Model
+		lineageTag: c15f538d-75f1-535a-8682-528c65e01ecd
+
+	/// Best R² achievable given sampling noise.
+	measure 'R² Ceiling' =
+			VAR v = [Observed Variance]
+			RETURN IF ( v > 0, 1 - DIVIDE ( [Noise Floor RMSE] ^ 2, v ) )
+		formatString: 0.000
+		displayFolder: 6 Model
+		lineageTag: 73274135-b55b-54af-aecc-399507ec464e
+
+	/// Possession-weighted mean prediction (evaluation sample).
+	measure 'Mean Predicted' =
+			VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+			RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * fact_prediction[predicted_net] ), SUMX ( t, fact_prediction[post_poss] ) )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 6 Model
+		lineageTag: d07985f4-5833-59e3-9040-5062c12fb715
+
+	/// Possession-weighted mean team-prior baseline (evaluation sample).
+	measure 'Mean Team Prior' =
+			VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+			RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * fact_prediction[team_prior_net] ), SUMX ( t, fact_prediction[post_poss] ) )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 6 Model
+		lineageTag: cc819d46-2844-5615-84ed-44f1ebf4a0a8
+
+	/// Possession-weighted mean observed post-break net rating (evaluation sample).
+	measure 'Mean Observed' =
+			VAR t = FILTER ( fact_prediction, fact_prediction[in_evaluation_sample] = 1 && NOT ISBLANK ( fact_prediction[observed_post_net] ) )
+			RETURN DIVIDE ( SUMX ( t, fact_prediction[post_poss] * fact_prediction[observed_post_net] ), SUMX ( t, fact_prediction[post_poss] ) )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 6 Model
+		lineageTag: e6abafd9-b76f-5d8f-a946-61c844384739
+
+	/// Observed minus predicted (possession-weighted). Near 0 = unbiased in this slice.
+	measure 'Mean Prediction Error' =
+			VAR o = [Mean Observed]
+			VAR p = [Mean Predicted]
+			RETURN IF ( NOT ISBLANK ( o ) && NOT ISBLANK ( p ), o - p )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 6 Model
+		lineageTag: dbdf9cef-0589-54c7-9bc2-dbed950f680b
+
+	/// Lineups with ≥ 25 pre-break possessions on each end.
+	measure 'Population Lineups' = CALCULATE ( DISTINCTCOUNT ( fact_lineup_window[lineup_id] ), dim_lineup[in_continuation_population] = 1, dim_window[window_type] = "pre_asb" )
+		formatString: #,0
+		displayFolder: 7 Selection
+		lineageTag: f68c1942-dc9a-58af-a6e1-64390bf7d6be
+
+	/// Population lineups that played ≥ 25 possessions after the break.
+	measure 'Continuing Lineups' = CALCULATE ( DISTINCTCOUNT ( fact_lineup_window[lineup_id] ), dim_lineup[in_continuation_population] = 1, dim_lineup[continues_post_break] = 1, dim_window[window_type] = "pre_asb" )
+		formatString: #,0
+		displayFolder: 7 Selection
+		lineageTag: d8ee9316-7cf3-5314-8774-ac311becffad
+
+	/// Population lineups with any post-break possession.
+	measure 'Appearing Lineups' = CALCULATE ( DISTINCTCOUNT ( fact_lineup_window[lineup_id] ), dim_lineup[in_continuation_population] = 1, dim_lineup[appears_post_break] = 1, dim_window[window_type] = "pre_asb" )
+		formatString: #,0
+		displayFolder: 7 Selection
+		lineageTag: fc1aa959-8164-5085-b95b-6a97836d17ae
+
+	/// Share of pre-break lineups that keep playing (≥ 25 possessions) after the break.
+	measure 'Continuation Rate' = DIVIDE ( [Continuing Lineups], [Population Lineups] )
+		formatString: 0.0%
+		displayFolder: 7 Selection
+		lineageTag: bbd0726d-62d5-5234-b08b-8baa33fc9dd8
+
+	/// Share of pre-break lineups seen at all after the break.
+	measure 'Appearance Rate' = DIVIDE ( [Appearing Lineups], [Population Lineups] )
+		formatString: 0.0%
+		displayFolder: 7 Selection
+		lineageTag: 5a22e81c-9ce0-555a-a439-0bdc52fb0d1d
+
+	/// Pooled pre-break net rating of lineups that continue.
+	measure 'Pre Net (continuing)' = CALCULATE ( [Net Rating Pre], dim_lineup[in_continuation_population] = 1, dim_lineup[continues_post_break] = 1 )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 7 Selection
+		lineageTag: 593fd89f-d17d-5abf-932b-6eed3d7fe3d6
+
+	/// Pooled pre-break net rating of lineups that do not continue.
+	measure 'Pre Net (dropped)' = CALCULATE ( [Net Rating Pre], dim_lineup[in_continuation_population] = 1, dim_lineup[continues_post_break] = 0 )
+		formatString: +0.0;-0.0;0.0
+		displayFolder: 7 Selection
+		lineageTag: b3b35b18-5774-557e-bdc3-a254fe3f5e70
+
+	/// Visual-level filter (= 1) for AND semantics: keep lineups that contain EVERY selected player. Without it a multi-player slicer means 'contains ANY selected player'.
+	measure 'All Selected Players In Lineup' =
+			VAR nSel = COUNTROWS ( ALLSELECTED ( dim_player[player_id] ) )
+			VAR nAll = COUNTROWS ( ALL ( dim_player[player_id] ) )
+			VAR nIn = DISTINCTCOUNT ( bridge_lineup_player[player_id] )
+			RETURN IF ( nSel = nAll || nIn = nSel, 1, 0 )
+		formatString: 0
+		displayFolder: 8 Filters
+		lineageTag: c6b877e8-822e-53a5-af02-4c07caf17aeb
+
+	column _
+		dataType: string
+		isHidden
+		lineageTag: 9779cccf-7d8e-5c57-9098-a852e964ac9d
+		summarizeBy: none
+		sourceColumn: _
+
+	partition _Measures = m
+		mode: import
+		source = #table(type table [_ = text], {{"measures"}})

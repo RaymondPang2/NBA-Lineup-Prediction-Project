@@ -1,0 +1,29 @@
+/// Players who appear in at least one lineup.
+table dim_player
+	lineageTag: 32c23f4c-ea64-54f2-8aed-1eefe62c11d0
+
+	/// NBA player id
+	column player_id
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: f282b0ca-5b29-5c8a-9efe-4f2af2f9de2b
+		summarizeBy: none
+		sourceColumn: player_id
+
+	/// Player name
+	column player_name
+		dataType: string
+		lineageTag: eee79768-fc62-5588-bb65-be82cbacd983
+		summarizeBy: none
+		sourceColumn: player_name
+
+	partition dim_player = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "dim_player.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Headers, {{"player_id", Int64.Type}, {"player_name", type text}}, "en-US")
+				in
+				    Typed

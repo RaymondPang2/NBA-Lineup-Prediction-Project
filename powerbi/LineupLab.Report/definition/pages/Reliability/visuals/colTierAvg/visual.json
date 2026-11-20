@@ -1,0 +1,91 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "colTierAvg",
+  "position": {
+    "x": 24,
+    "y": 450,
+    "z": 10000,
+    "width": 610,
+    "height": 254,
+    "tabOrder": 10000
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_lineup"
+                    }
+                  },
+                  "Property": "pre_sample_tier"
+                }
+              },
+              "queryRef": "dim_lineup.pre_sample_tier",
+              "nativeQueryRef": "pre_sample_tier"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Lineup Net Avg (unweighted, misleading)"
+                }
+              },
+              "queryRef": "_Measures.Lineup Net Avg (unweighted, misleading)",
+              "nativeQueryRef": "Lineup Net Avg (unweighted, misleading)"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Lineup Net Avg (possession-weighted)"
+                }
+              },
+              "queryRef": "_Measures.Lineup Net Avg (possession-weighted)",
+              "nativeQueryRef": "Lineup Net Avg (possession-weighted)"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Why ratings must not be averaged: small-sample bias'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

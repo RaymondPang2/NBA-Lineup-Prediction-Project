@@ -1,0 +1,95 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "scatterPredObs",
+  "position": {
+    "x": 24,
+    "y": 460,
+    "z": 11000,
+    "width": 610,
+    "height": 244,
+    "tabOrder": 11000
+  },
+  "visual": {
+    "visualType": "scatterChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_lineup"
+                    }
+                  },
+                  "Property": "lineup_label"
+                }
+              },
+              "queryRef": "dim_lineup.lineup_label",
+              "nativeQueryRef": "lineup_label"
+            }
+          ]
+        },
+        "X": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Mean Predicted"
+                }
+              },
+              "queryRef": "_Measures.Mean Predicted",
+              "nativeQueryRef": "Mean Predicted"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Mean Observed"
+                }
+              },
+              "queryRef": "_Measures.Mean Observed",
+              "nativeQueryRef": "Mean Observed"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Predicted vs observed (each dot a lineup)'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

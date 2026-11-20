@@ -1,0 +1,95 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "scatterFunnel",
+  "position": {
+    "x": 646,
+    "y": 450,
+    "z": 11000,
+    "width": 610,
+    "height": 254,
+    "tabOrder": 11000
+  },
+  "visual": {
+    "visualType": "scatterChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_lineup"
+                    }
+                  },
+                  "Property": "lineup_label"
+                }
+              },
+              "queryRef": "dim_lineup.lineup_label",
+              "nativeQueryRef": "lineup_label"
+            }
+          ]
+        },
+        "X": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Possessions"
+                }
+              },
+              "queryRef": "_Measures.Possessions",
+              "nativeQueryRef": "Possessions"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Net Rating SE"
+                }
+              },
+              "queryRef": "_Measures.Net Rating SE",
+              "nativeQueryRef": "Net Rating SE"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Sampling error falls with possessions'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

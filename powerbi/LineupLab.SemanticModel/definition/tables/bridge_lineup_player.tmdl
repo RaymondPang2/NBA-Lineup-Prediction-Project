@@ -1,0 +1,29 @@
+/// Lineup ↔ player (five rows per lineup). Resolves the many-to-many relationship.
+table bridge_lineup_player
+	lineageTag: ffb89ac1-f378-5492-803a-36eae423fe24
+
+	column lineup_id
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: a64f8b68-4288-51f5-945d-26a1a0a7e46a
+		summarizeBy: none
+		sourceColumn: lineup_id
+
+	column player_id
+		dataType: int64
+		formatString: 0
+		isHidden
+		lineageTag: e2ef8c13-7c72-5fb8-baac-570ad1c63aa1
+		summarizeBy: none
+		sourceColumn: player_id
+
+	partition bridge_lineup_player = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents(DataFolder & "bridge_lineup_player.csv"), [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Headers, {{"lineup_id", Int64.Type}, {"player_id", Int64.Type}}, "en-US")
+				in
+				    Typed

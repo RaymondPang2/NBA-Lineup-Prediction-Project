@@ -1,0 +1,5 @@
+/// Folder holding the exported CSVs (data/powerbi/csv/ from scripts/phase9/export_powerbi.py), with a trailing backslash.
+expression DataFolder = "C:\LineupLab\csv\" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	lineageTag: 1c5c6cca-c2d4-5090-a962-0c3a23c1c24b
+
+	annotation PBI_ResultType = Text

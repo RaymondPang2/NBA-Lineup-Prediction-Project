@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "LineupLab"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "d803e4bd-e015-56e3-b429-243bbc469001"
+  }
+}

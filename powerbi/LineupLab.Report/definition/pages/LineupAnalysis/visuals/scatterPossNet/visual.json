@@ -1,0 +1,95 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "scatterPossNet",
+  "position": {
+    "x": 256,
+    "y": 516,
+    "z": 11000,
+    "width": 1000,
+    "height": 188,
+    "tabOrder": 11000
+  },
+  "visual": {
+    "visualType": "scatterChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "dim_lineup"
+                    }
+                  },
+                  "Property": "lineup_label"
+                }
+              },
+              "queryRef": "dim_lineup.lineup_label",
+              "nativeQueryRef": "lineup_label"
+            }
+          ]
+        },
+        "X": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Possessions"
+                }
+              },
+              "queryRef": "_Measures.Possessions",
+              "nativeQueryRef": "Possessions"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Net Rating"
+                }
+              },
+              "queryRef": "_Measures.Net Rating",
+              "nativeQueryRef": "Net Rating"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Net rating vs possessions: small samples fan out'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
