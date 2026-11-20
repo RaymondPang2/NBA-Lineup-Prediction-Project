@@ -2,6 +2,7 @@ import { Link } from 'react-router'
 import type { LineupSort, LineupSummary } from '../api/types'
 import { fmtInt, fmtRating, fmtSigned, lastName } from '../lib/format'
 import { Badge, Delta } from './ui/Card'
+import { TeamLogo } from './ui/TeamLogo'
 import { SortTh, TableWrap, Td, Th, type SortOrder } from './ui/Table'
 
 interface Column {
@@ -85,7 +86,10 @@ export function LineupTable({
             </Td>
             {showTeam && (
               <Td align="left">
-                <Badge>{l.team_abbreviation}</Badge>
+                <span className="inline-flex items-center gap-1.5">
+                  <TeamLogo teamId={l.team_id} abbreviation={l.team_abbreviation} size="xs" whenUnavailable="hide" decorative />
+                  <Badge>{l.team_abbreviation}</Badge>
+                </span>
               </Td>
             )}
             {cols.map((c) => (

@@ -4,6 +4,7 @@ import type { LineupDetail, WindowStats } from '../api/types'
 import { ChartFrame } from '../components/charts/ChartFrame'
 import { DotWhisker } from '../components/charts/DotWhisker'
 import { Badge, Callout, Card, CardBody, CardHeader, Delta, PageHeader, Stat } from '../components/ui/Card'
+import { TeamLogo } from '../components/ui/TeamLogo'
 import { EmptyState, ErrorState, LoadingBlock } from '../components/ui/States'
 import { TableWrap, Td, Th } from '../components/ui/Table'
 import { fmtInt, fmtNum, fmtRating, fmtSigned } from '../lib/format'
@@ -89,6 +90,7 @@ export default function LineupDetailPage() {
       </nav>
       <PageHeader
         title={l.players.map((p) => p.player_name).join(' · ')}
+        leading={<TeamLogo teamId={l.team_id} abbreviation={l.team_abbreviation} size="md" decorative />}
         description={
           <span className="flex flex-wrap items-center gap-2">
             <Badge>{l.team_abbreviation}</Badge>

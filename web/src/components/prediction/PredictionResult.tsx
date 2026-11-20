@@ -3,6 +3,7 @@ import type { Prediction } from '../../api/types'
 import { fmtInt, fmtInterval, fmtPct, fmtSigned, isNum } from '../../lib/format'
 import { ChartFrame } from '../charts/ChartFrame'
 import { Badge, Callout, Card, CardBody, CardHeader, Stat } from '../ui/Card'
+import { TeamLogo } from '../ui/TeamLogo'
 import { ContributionsChart, ContributionsTable } from './ContributionsChart'
 import { EstimandNotice } from './EstimandNotice'
 import { IntervalChart } from './IntervalChart'
@@ -55,6 +56,7 @@ export function PredictionResult({ prediction }: { prediction: Prediction }) {
   return (
     <div className="space-y-5" data-testid="prediction-result">
       <div className="flex flex-wrap items-center gap-2">
+        <TeamLogo teamId={p.team_id} abbreviation={p.team_abbreviation} size="md" decorative />
         <h2 className="text-lg font-semibold text-ink">
           {p.team_abbreviation} · {p.season_id}
         </h2>

@@ -6,6 +6,7 @@ import type { TeamSeason } from '../api/types'
 import { ChartFrame } from '../components/charts/ChartFrame'
 import { SeasonHistoryChart, TeamNetScatter } from '../components/charts/TeamCharts'
 import { SeasonSelect, TeamSelect } from '../components/filters/Filters'
+import { TeamLogo } from '../components/ui/TeamLogo'
 import { LineupTable } from '../components/LineupTable'
 import { Badge, Card, CardBody, CardHeader, Delta, FilterBar, PageHeader, Stat } from '../components/ui/Card'
 import { EmptyState, ErrorState, LoadingBlock, QueryState, Skeleton } from '../components/ui/States'
@@ -64,7 +65,10 @@ function TeamTable({ teams, selected, onSelect }: { teams: TeamSeason[]; selecte
           <tr key={t.team_id} className={t.team_id === selected ? 'bg-accent-soft' : 'hover:bg-surface-2'}>
             <Td align="left">
               <button type="button" onClick={() => onSelect(t.team_id)} className="text-left font-medium text-ink hover:text-accent">
-                <span className="mr-2 inline-block w-9 text-xs text-muted">{t.abbreviation}</span>
+                <span className="inline-flex items-center gap-2">
+                  <TeamLogo teamId={t.team_id} abbreviation={t.abbreviation} size="xs" whenUnavailable="hide" decorative />
+                  <span className="inline-block w-9 text-xs text-muted">{t.abbreviation}</span>
+                </span>
                 {t.team_name}
               </button>
             </Td>
@@ -112,6 +116,7 @@ export default function OverviewPage() {
     <div>
       <PageHeader
         title={team ? `${team.team_name} · ${season}` : `League overview · ${season ?? ''}`}
+        leading={team ? <TeamLogo teamId={team.team_id} abbreviation={team.abbreviation} size="lg" decorative /> : undefined}
         description="Five-man lineup performance split at the All-Star break. Every rating is points per 100 possessions, computed from summed totals across lineups."
       >
         {seasonInfo && (

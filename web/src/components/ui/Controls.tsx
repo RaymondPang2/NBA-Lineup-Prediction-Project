@@ -39,10 +39,11 @@ export function Field({ label, children, hint, className }: { label: string; chi
 const controlClass =
   'h-10 w-full min-w-0 rounded-md border border-line-strong bg-surface px-3 text-sm text-ink shadow-xs focus:border-accent focus:outline-none disabled:opacity-50'
 
-export function Select({ className, ...rest }: SelectHTMLAttributes<HTMLSelectElement>) {
+export function Select({ className, leading, ...rest }: SelectHTMLAttributes<HTMLSelectElement> & { leading?: ReactNode }) {
   return (
     <div className="relative">
-      <select {...rest} className={clsx(controlClass, 'appearance-none pr-9', className)} />
+      {leading && <span className="pointer-events-none absolute top-1/2 left-2.5 flex -translate-y-1/2 items-center">{leading}</span>}
+      <select {...rest} className={clsx(controlClass, 'appearance-none pr-9', leading && 'pl-9', className)} />
       <svg aria-hidden viewBox="0 0 20 20" className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted" fill="currentColor">
         <path d="M5.2 7.5 10 12.3l4.8-4.8 1.1 1.1-5.9 5.9-5.9-5.9z" />
       </svg>
@@ -63,6 +64,7 @@ export function SelectField<T extends string | number>({
   hint,
   className,
   disabled,
+  leading,
 }: {
   label: string
   value: T
@@ -71,6 +73,8 @@ export function SelectField<T extends string | number>({
   hint?: string
   className?: string
   disabled?: boolean
+  /** Shown inside the control, before the text (e.g. the selected team's logo). */
+  leading?: ReactNode
 }) {
   return (
     <Field label={label} hint={hint} className={className}>
@@ -79,6 +83,7 @@ export function SelectField<T extends string | number>({
           id={id}
           value={String(value)}
           disabled={disabled}
+          leading={leading}
           onChange={(e) => {
             const raw = e.target.value
             const match = options.find((o) => String(o.value) === raw)

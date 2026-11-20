@@ -23,10 +23,13 @@ export function CardBody({ children, className }: { children: ReactNode; classNa
   return <div className={clsx('px-4 pt-3 pb-4 sm:px-5 sm:pb-5', className)}>{children}</div>
 }
 
-export function PageHeader({ title, description, children }: { title: string; description?: ReactNode; children?: ReactNode }) {
+export function PageHeader({ title, description, children, leading }: { title: string; description?: ReactNode; children?: ReactNode; leading?: ReactNode }) {
   return (
     <header className="mb-6">
-      <h1 className="text-2xl font-semibold tracking-tight text-ink sm:text-[28px]">{title}</h1>
+      <div className="flex min-w-0 items-center gap-3">
+        {leading}
+        <h1 className="min-w-0 text-2xl font-semibold tracking-tight text-ink sm:text-[28px]">{title}</h1>
+      </div>
       {description && <div className="mt-1.5 max-w-3xl text-[15px] text-ink-2">{description}</div>}
       {children && <div className="mt-4">{children}</div>}
     </header>

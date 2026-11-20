@@ -2,7 +2,9 @@ import clsx from 'clsx'
 import { useEffect, useId, useRef, useState } from 'react'
 import { usePlayer, usePlayers, useTeams } from '../../api/hooks'
 import type { Season } from '../../api/types'
+import { logosEnabled } from '../../lib/teamLogo'
 import { Field, SelectField, TextInput } from '../ui/Controls'
+import { TeamLogo } from '../ui/TeamLogo'
 
 export function seasonLabel(s: Season): string {
   const tags = [s.role === 'held_out' ? 'held-out' : null, s.is_irregular ? 'irregular' : null].filter(Boolean)
@@ -41,11 +43,13 @@ export function TeamSelect({
     ...(allowAll ? [{ value: 0, label: 'All teams' }] : value === undefined ? [{ value: 0, label: 'Select a team…' }] : []),
     ...list.map((t) => ({ value: t.team_id, label: `${t.team_name} (${t.abbreviation})` })),
   ]
+  const current = list.find((t) => t.team_id === value)
   return (
     <SelectField
       label={label}
       value={value ?? 0}
       disabled={teams.isPending}
+      leading={current && logosEnabled() ? <TeamLogo teamId={current.team_id} abbreviation={current.abbreviation} size="sm" whenUnavailable="hide" decorative /> : undefined}
       options={teams.isPending ? [{ value: 0, label: 'Loading teams…' }] : options}
       onChange={(v) => onChange(v === 0 ? undefined : v)}
     />

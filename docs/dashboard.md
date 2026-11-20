@@ -21,6 +21,7 @@ The app must be served on port 5173. That is the origin the API allows by defaul
 | Variable | Default | Meaning |
 |---|---|---|
 | `VITE_API_BASE_URL` | `http://127.0.0.1:8000/api/v1` | The API's versioned base URL. It is read at build time. A trailing `/api/v1` is optional, because the client derives the origin from it. For a public deployment, point it at the deployed API and add the site's origin to the API's `NBA_API_CORS_ORIGINS`. |
+| `VITE_TEAM_LOGO_URL` | *(unset)* | Opt-in team logo images; leave it unset for any public build. It is a URL template with `{team_id}` (the NBA team ID the API returns) and an optional `{variant}` (`L` for the light theme, `D` for the dark theme). See [Team logos and licensing](#team-logos-and-licensing). |
 
 ## Pages
 
@@ -44,6 +45,36 @@ Filters are kept in the URL, so every view can be linked to, survives a reload, 
 - **Realized results stay separate.** The realized post-break result is fetched only on request (`include_observed`) and is shown in its own section, labelled *never a model input*.
 - **Possession denominators.** Pooled ratings in the UI (league ORtg, history) sum totals and then divide (`lib/stats.ts pooledRatings`). Ratings are never averaged. A test checks this against the API's team ratings.
 - **Noise model.** The funnel band uses the backend's own K, recovered from the API's per-lineup sampling SDs (median of SD² ÷ (1/poss + 1/opp_poss) = 14,639). Nothing is re-estimated.
+
+
+## Team logos and licensing
+
+Teams are shown with one component, `TeamLogo` (`src/components/ui/TeamLogo.tsx`). Its URL logic is in `src/lib/teamLogo.ts`.
+
+**Licensing.** NBA and team logos are trademarks owned by NBA Properties, Inc. and the teams. The nba.com terms of use grant no licence to use them without written permission, and this project has none. So:
+
+- **The public build ships no logos.** No logo file is bundled and no logo URL is built in. By default `TeamLogo` draws a neutral monogram: the team abbreviation in theme colours, with no team colours or artwork. Wherever the abbreviation or name already appears next to it (selectors, tables), it draws nothing, so those places look as they did before.
+- **Logo images are opt-in, for private or local builds only.** Set `VITE_TEAM_LOGO_URL` to a source you are entitled to use. For example, `https://cdn.nba.com/logos/nba/{team_id}/global/{variant}/logo.svg` points at the league's own CDN. Use it for personal or local viewing only, never in a public deployment unless permission has been obtained. The CDN also refused requests from automated headless browsers when this was tested; that case shows the fallback below.
+
+**Where marks appear.**
+
+| Place | Size | When logos are off |
+|---|---|---|
+| Overview header, with a team selected | lg (44 px) | monogram |
+| Lineup detail header | md (32 px) | monogram |
+| Prediction result header | md (32 px) | monogram |
+| Team selector: the selected team's logo, inside the control | sm (20 px) | hidden |
+| Team ratings table: next to the team name | xs (16 px) | hidden |
+| Lineup table: Team column, all-teams view | xs (16 px) | hidden |
+
+Marks are left out of charts on purpose: the team scatter, history lines and the chart table views. There, 30 logos would clutter the plot.
+
+**Behaviour.**
+- Every size is a fixed square with `object-contain`, so marks line up whatever the image's shape.
+- The `{variant}` follows the theme actually on screen: the viewer's choice, or else the OS setting.
+- If an image fails to load, it is replaced by the monogram (headers) or a generic ball icon (inline, so rows stay aligned). A URL that failed is not tried again during the session.
+- Only the 30 NBA franchise IDs (1610612737–1610612766) are mapped.
+- Next to a name, a mark is marked decorative and hidden from screen readers. On its own, it is labelled "<Team> logo".
 
 ## Architecture
 
@@ -87,11 +118,11 @@ web/
 
 | Command | What it runs | Needs |
 |---|---|---|
-| `npm test` | 35 unit and component tests (Vitest, Testing Library, MSW): formatting; pooled-rating arithmetic; K recovery; the API client's error handling; the prediction guarantees (baseline, intervals, estimand, withholding, in-sample flag); and every page — filters, server-side sort and pagination, player search, empty, error and not-found states, the build-a-five flow | Fixtures recorded by `npm run fixtures` |
+| `npm test` | 43 unit and component tests (Vitest, Testing Library, MSW): formatting; team logos (licensing-safe default, theme variant, load-failure fallback); pooled-rating arithmetic; K recovery; the API client's error handling; the prediction guarantees (baseline, intervals, estimand, withholding, in-sample flag); and every page — filters, server-side sort and pagination, player search, empty, error and not-found states, the build-a-five flow | Fixtures recorded by `npm run fixtures` |
 | `npm run test:integration` | 16 tests that run the app's own client against the **live** API: OpenAPI drift, health and the verified artifact, CORS for the app's origin, error shape, filter, sort and paging semantics, every-row paging for charts, prediction invariants (intervals = ŷ ± 1.96·SD, contributions sum to ŷ, estimand in the notes), the documented example (lineup 281112), hypothetical and recorded fives, consistency of the verdict with its CI | API + PostgreSQL |
 | `npm run test:e2e` | 14 Playwright tests in a real browser against the live stack: each page's rendered values equal the API's; sorting, paging and player filtering; the prediction flow and the realized-result toggle; the build-a-five flow; chart and table views; no horizontal scroll at phone width on every page; mobile navigation | API + PostgreSQL; starts Vite itself |
 
-All three suites pass (35 + 16 + 14).
+All three suites pass (43 + 16 + 14).
 
 **Fixtures are real API responses, and they are not committed.** `npm run fixtures` records 25 responses from the running API into `web/src/test/fixtures/`, with a manifest of each request. They are NBA-derived processed data, which the project never commits (see `.gitignore`), so the folder is git-ignored. If a fixture is missing, the tests fail with an instruction to record them. Phase 10's CI will need a way to provide them, for example by recording them from the API inside CI.
 
