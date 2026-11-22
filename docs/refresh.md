@@ -159,6 +159,14 @@ The frozen linear model (SHA-256 `a15b0c7f…`) is used **as is**: it is not ret
 
 **Why provisional:** the model was developed and evaluated on *completed* pre-break windows, about 55 games per team. Early in a season the inputs are far noisier. The predictions, and the intervals calibrated on completed windows, are therefore not independently validated at this point and are likely too narrow.
 
+Recorded lineups and hypothetical fives are both supported, in the Prediction Lab and on the Rankings page. Each response carries `season_progress`, the pre-break games played per team against a typical full window.
+
+How the frozen model behaves on a partial window was audited in [partial_window_audit.md](partial_window_audit.md). The summary:
+- predictions run about 2 points low on average, while the rank order is largely kept;
+- at about 28% of a window, the model no longer beats the team-prior baseline in a held-out backtest.
+
+Both facts are shown with every 2026-27 prediction.
+
 2026-27 is not part of the modeling universe. `ALL_SEASONS`, the development and held-out splits, and every reported metric are unchanged. The season is listed separately as `CURRENT_SEASON` / `LIVE_SEASONS` in `src/nba_lineups/config.py`. The Power BI export stays on the eight evaluated seasons.
 
 ## Troubleshooting

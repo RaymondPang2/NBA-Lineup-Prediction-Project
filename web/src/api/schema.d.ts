@@ -905,6 +905,8 @@ export interface components {
             provisional: boolean;
             /** Season Id */
             season_id: string;
+            /** @description season in progress only */
+            season_progress?: components["schemas"]["SeasonProgress"] | null;
             /**
              * Season Used For Training
              * @description true: this season's post-break results were training labels, so the prediction is in-sample
@@ -968,6 +970,7 @@ export interface components {
             provisional: boolean;
             /** Season Id */
             season_id: string;
+            season_progress?: components["schemas"]["SeasonProgress"] | null;
             /** Season Used For Training */
             season_used_for_training: boolean;
             /** Team Id */
@@ -1181,6 +1184,24 @@ export interface components {
             start_year: number;
             /** Windows */
             windows: components["schemas"]["Window"][];
+        };
+        /** SeasonProgress */
+        SeasonProgress: {
+            /**
+             * Fraction
+             * @description team_games_mean / typical_full_window, capped at 1
+             */
+            fraction: number | null;
+            /**
+             * Team Games Mean
+             * @description pre-break games per team played so far
+             */
+            team_games_mean: number;
+            /**
+             * Typical Full Window
+             * @description mean pre-break games per team in completed regular seasons (null if none are loaded)
+             */
+            typical_full_window: number | null;
         };
         /** Team */
         Team: {

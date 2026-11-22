@@ -5,6 +5,7 @@ import { useLineupRanking, usePredictionRanking } from '../api/hooks'
 import type { LineupRanking, PredictionRanking, RankedLineup, RankedPrediction } from '../api/types'
 import { SeasonSelect, TeamSelect } from '../components/filters/Filters'
 import { EstimandNotice } from '../components/prediction/EstimandNotice'
+import { ProvisionalNotice } from '../components/prediction/ProvisionalNotice'
 import { Badge, Callout, Card, CardBody, FilterBar, PageHeader } from '../components/ui/Card'
 import { Field, PossessionSelect, Segmented } from '../components/ui/Controls'
 import { EmptyState, ErrorState, LoadingBlock, Spinner } from '../components/ui/States'
@@ -210,14 +211,7 @@ function PredictionCaveats({ data }: { data: PredictionRanking }) {
   return (
     <div className="mb-4 space-y-3">
       <EstimandNotice />
-      {data.provisional && (
-        <Callout tone="warn" title="Provisional: season in progress">
-          <span data-testid="provisional-notice">
-            {data.season_id} inputs are its pre-All-Star-break games through {data.data_cutoff ? fmtDate(data.data_cutoff) : 'the data cutoff'}. The model was evaluated on completed pre-break
-            windows, so these rankings are not independently validated and the intervals are likely too narrow.
-          </span>
-        </Callout>
-      )}
+      {data.provisional && <ProvisionalNotice seasonId={data.season_id} cutoff={data.data_cutoff} progress={data.season_progress} ranking />}
       {data.season_used_for_training && (
         <Callout tone="warn" title="In-sample season">
           {data.season_id} was a training season, so these are fitted values, not tests. Judge accuracy on the held-out seasons.

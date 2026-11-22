@@ -1,11 +1,12 @@
 import { Link } from 'react-router'
 import type { Prediction } from '../../api/types'
-import { fmtDate, fmtInt, fmtInterval, fmtPct, fmtSigned, isNum } from '../../lib/format'
+import { fmtInt, fmtInterval, fmtPct, fmtSigned, isNum } from '../../lib/format'
 import { ChartFrame } from '../charts/ChartFrame'
 import { Badge, Callout, Card, CardBody, CardHeader, Stat } from '../ui/Card'
 import { TeamLogo } from '../ui/TeamLogo'
 import { ContributionsChart, ContributionsTable } from './ContributionsChart'
 import { EstimandNotice } from './EstimandNotice'
+import { ProvisionalNotice } from './ProvisionalNotice'
 import { IntervalChart } from './IntervalChart'
 
 /**
@@ -94,17 +95,7 @@ export function PredictionResult({ prediction }: { prediction: Prediction }) {
 
       <EstimandNotice />
 
-      {p.provisional && (
-        <Callout tone="warn" title="Provisional prediction">
-          <span data-testid="provisional-notice">
-            {p.season_id} is in progress. The inputs are its pre-All-Star-break games played so far
-            {p.data_cutoff ? ` (through ${fmtDate(p.data_cutoff)})` : ''}; nothing after that date is used and no future statistics are
-            estimated. The frozen model was developed and evaluated on <strong>completed</strong> pre-break windows, so at this point of a season its
-            predictions are not independently validated and the 95% intervals below are likely too narrow. The target is unchanged: the expected
-            post-All-Star-break net rating if the lineup plays after the break.
-          </span>
-        </Callout>
-      )}
+      {p.provisional && <ProvisionalNotice seasonId={p.season_id} cutoff={p.data_cutoff} progress={p.season_progress} />}
 
       {p.season_used_for_training && (
         <Callout tone="warn" title="Fitted value, not a test">

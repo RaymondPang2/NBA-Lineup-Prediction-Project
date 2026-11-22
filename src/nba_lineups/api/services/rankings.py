@@ -21,7 +21,7 @@ from ..errors import NotFound
 from .catalog import require_season, require_team
 from .common import PageParams, h, page
 from .lineups import players_of
-from .predictions import FrozenPredictor
+from .predictions import FrozenPredictor, provisional_notes
 
 WINDOWS = {"season": None, "pre": "pre_asb", "post": "post_asb"}
 METRICS = {   # public name -> (SQL column, direction, label)
@@ -160,13 +160,14 @@ def predicted(conn: psycopg.Connection, predictor: FrozenPredictor, *, season: s
     return out | {
         "season_id": season, "team_id": team_id, "min_pre_poss": min_pre_poss, "possessions": possessions,
         "provisional": season in LIVE_SEASONS, "data_cutoff": sd.data_cutoff if sd is not None else None,
+        "season_progress": sd.progress if sd is not None else None,
         "season_used_for_training": season in predictor.trained_seasons,
         "model_sd": predictor.model_sd, "interval_half_width": 1.959963984540054 * predictor.model_sd,
         "prediction_spread": float(np.percentile(preds, 90) - np.percentile(preds, 10)) if len(preds) >= 2 else None,
-        "notes": predictor_notes(predictor, season)}
+        "notes": predictor_notes(predictor, season, sd.progress if sd is not None else None)}
 
 
-def predictor_notes(predictor: FrozenPredictor, season: str) -> list[str]:
+def predictor_notes(predictor: FrozenPredictor, season: str, progress: dict | None = None) -> list[str]:
     from .model_info import ESTIMAND
     notes = [ESTIMAND, predictor.reports.team_prior_note(),
              "Ranked: recorded five-man units that played together before the break. Hypothetical combinations "
@@ -176,8 +177,8 @@ def predictor_notes(predictor: FrozenPredictor, season: str) -> list[str]:
              "Each prediction has the same 95% interval width; neighbouring ranks are far closer together than that "
              "width, so the order is weak evidence."]
     if season in LIVE_SEASONS:
-        notes.append("PROVISIONAL: the season is in progress; inputs are pre-break games up to the data cutoff, "
-                     "and accuracy at this point of a season has not been validated.")
+        notes.append("PROVISIONAL: the season is in progress; inputs are pre-break games up to the data cutoff.")
+        notes.extend(provisional_notes(progress))
     if season in predictor.trained_seasons:
         notes.append(f"In-sample: {season} was a training season.")
     return notes

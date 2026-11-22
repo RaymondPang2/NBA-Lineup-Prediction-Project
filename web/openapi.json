@@ -1511,6 +1511,17 @@
             "title": "Season Id",
             "type": "string"
           },
+          "season_progress": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SeasonProgress"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "season in progress only"
+          },
           "season_used_for_training": {
             "description": "true: this season's post-break results were training labels, so the prediction is in-sample",
             "title": "Season Used For Training",
@@ -1650,6 +1661,16 @@
           "season_id": {
             "title": "Season Id",
             "type": "string"
+          },
+          "season_progress": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SeasonProgress"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "season_used_for_training": {
             "title": "Season Used For Training",
@@ -2193,6 +2214,46 @@
           "n_lineups"
         ],
         "title": "Season",
+        "type": "object"
+      },
+      "SeasonProgress": {
+        "properties": {
+          "fraction": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "team_games_mean / typical_full_window, capped at 1",
+            "title": "Fraction"
+          },
+          "team_games_mean": {
+            "description": "pre-break games per team played so far",
+            "title": "Team Games Mean",
+            "type": "number"
+          },
+          "typical_full_window": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "mean pre-break games per team in completed regular seasons (null if none are loaded)",
+            "title": "Typical Full Window"
+          }
+        },
+        "required": [
+          "team_games_mean",
+          "typical_full_window",
+          "fraction"
+        ],
+        "title": "SeasonProgress",
         "type": "object"
       },
       "Team": {

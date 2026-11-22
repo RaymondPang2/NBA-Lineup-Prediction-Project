@@ -147,3 +147,16 @@ test('rankings: predictions keep the baseline, intervals and the provisional lab
   await expect(page.getByTestId('provisional-notice')).toBeVisible()
   await expect(page.getByTestId('estimand-notice')).toContainText('not statistically better than the team-prior baseline')
 })
+
+test('predict: provisional 2026-27 prediction for a hypothetical five, with cutoff and accuracy caveat', async ({ page, request }) => {
+  const status = await apiGet<{ season_id: string; data_cutoff: string }>(request, '/data-status')
+  await page.goto(`/predict?season=${status.season_id}&team=1610612744&mode=build`)
+  const boxes = page.getByRole('list', { name: 'Players' }).getByRole('checkbox')
+  for (const i of [0, 2, 4, 6, 8]) await boxes.nth(i).check()
+  await expect(page.getByTestId('predicted-net')).toBeVisible()
+  await expect(page.getByTestId('team-prior')).toBeVisible()
+  const notice = page.getByTestId('provisional-notice')
+  await expect(notice).toContainText('Incomplete pre-break information reduces accuracy')
+  await expect(notice).toContainText('pre-break games per team')
+  await expect(page.getByText(/^PROVISIONAL · /)).toBeVisible()
+})

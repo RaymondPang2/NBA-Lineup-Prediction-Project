@@ -31,7 +31,7 @@ import psycopg
 
 from ...config import HELDOUT_SEASONS, LIVE_SEASONS
 from ...refresh.freshness import data_version
-from ...modeling import final, holdout, raw
+from ...modeling import final, holdout, partial, raw
 from ...modeling.models import FEATURES
 from .. import db
 from ..errors import BadRequest, ModelUnavailable, NotFound
@@ -51,6 +51,7 @@ class SeasonData:
     frame: pd.DataFrame                    # index lineup_id: features, auxiliaries, prediction, baselines
     by_key: dict[tuple[int, tuple[int, ...]], int]   # (team_id, sorted player ids) -> lineup_id
     data_cutoff: object = None             # season in progress: last game date in its inputs
+    progress: dict | None = None           # season in progress: pre-break games per team so far vs a full window
 
 
 def _f(x) -> float | None:
@@ -122,13 +123,16 @@ class FrozenPredictor:
                 keys = tables.members.sort_values("player_id").groupby("lineup_id").agg(
                     team_id=("team_id", "first"), players=("player_id", tuple))
                 by_key = {(int(r.team_id), tuple(int(p) for p in r.players)): int(lid) for lid, r in keys.iterrows()}
-                cutoff = None
+                cutoff, progress = None, None
                 if season_id in LIVE_SEASONS:
                     cutoff = conn.execute("SELECT date_to FROM stat_windows WHERE season_id = %s AND "
                                           "window_type = 'pre_asb'", (season_id,)).fetchone()[0]
+                    pg = partial.season_progress(conn, season_id)
+                    progress = {"team_games_mean": pg.team_games_mean, "typical_full_window": pg.typical_full_window,
+                                "fraction": pg.fraction}
                 for old in [k for k in self._cache if k[0] == season_id]:     # superseded refreshes
                     del self._cache[old]
-                self._cache[key] = SeasonData(tables, frame, by_key, cutoff)
+                self._cache[key] = SeasonData(tables, frame, by_key, cutoff, progress)
         return self._cache[key]
 
     def _custom_row(self, sd: SeasonData, season_id: str, team_id: int, players: list[int]) -> pd.Series:
@@ -229,11 +233,7 @@ class FrozenPredictor:
             notes.append(
                 f"PROVISIONAL: {season_id} is in progress. The inputs are its pre-All-Star-break games played so far "
                 f"(through {sd.data_cutoff}); nothing after that date is used and nothing is extrapolated.")
-            notes.append(
-                "The frozen model was developed and evaluated on COMPLETED pre-break windows (about 55 games per team). "
-                "Applied to a partial window it has not been independently validated: early-season inputs are far "
-                "noisier, so the prediction and its 95% intervals (calibrated on completed windows) are optimistic. "
-                "The team-prior baseline is computed from the same season-to-date data.")
+            notes.extend(provisional_notes(sd.progress))
         if r["lu_no_history"] == 1:
             notes.append("No pre-break minutes together: the prediction relies on team and player information only; "
                          "for such lineups the model adds nothing measurable over the team prior.")
@@ -252,7 +252,27 @@ class FrozenPredictor:
                           "team_net_rating_excluding_lineup": _f(r["team_net_loo"])},
             "intercept": intercept, "contributions": contrib,
             "season_used_for_training": in_sample, "provisional": provisional,
-            "data_cutoff": sd.data_cutoff if provisional else None, "notes": notes}
+            "data_cutoff": sd.data_cutoff if provisional else None,
+            "season_progress": sd.progress if provisional else None, "notes": notes}
+
+
+def provisional_notes(progress: dict | None) -> list[str]:
+    """What incomplete pre-break information does to the frozen model (measured in docs/partial_window_audit.md)."""
+    if progress and progress.get("fraction") is not None:
+        done = (f"About {progress['team_games_mean']:.0f} of a typical {progress['typical_full_window']:.0f} "
+                f"pre-break games per team have been played ({100 * progress['fraction']:.0f}%). ")
+    elif progress:
+        done = f"About {progress['team_games_mean']:.0f} pre-break games per team have been played so far. "
+    else:
+        done = ""
+    return [
+        done + "The frozen model was developed and evaluated on COMPLETED pre-break windows; on a partial window it is "
+        "not independently validated, and its 95% intervals (calibrated on completed windows) are optimistic.",
+        "Incomplete pre-break information reduces accuracy. The model reads players' smaller season-to-date "
+        "possession counts partly as a weaker role, so these predictions run about 2 points lower on average than "
+        "the same rates over a full window would give (rank order is largely unaffected). In a held-out backtest at "
+        "this volume the model no longer beat the team-prior baseline: treat the baseline as at least as good.",
+    ]
 
 
 def observed_post_break(conn: psycopg.Connection, lineup_id: int) -> dict | None:

@@ -74,6 +74,11 @@ describe('Rankings: model predictions', () => {
 
   it('labels the season in progress provisional', async () => {
     renderApp('/rankings?mode=predicted')
-    expect(await screen.findByTestId('provisional-notice')).toHaveTextContent('not independently validated')
+    const r = fixture<PredictionRanking>('rank-predictions-current')
+    const notice = await screen.findByTestId('provisional-notice')
+    expect(notice).toHaveTextContent('Incomplete pre-break information reduces accuracy')
+    expect(notice).toHaveTextContent('rank order is largely unaffected')
+    expect(notice).toHaveTextContent(`about ${Math.round(r.season_progress!.team_games_mean)} of a typical`)
+    expect(screen.getByText(/^PROVISIONAL · /)).toBeInTheDocument()
   })
 })

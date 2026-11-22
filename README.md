@@ -16,6 +16,7 @@ Analyzes historical NBA five-player lineup performance and predicts post-All-Sta
 | [docs/model_card.md](docs/model_card.md) | Model card: estimand, performance, appropriate use, limitations |
 | [docs/api.md](docs/api.md) | REST API: endpoints, examples, prediction uncertainty, architecture, tests, frontend setup |
 | [docs/dashboard.md](docs/dashboard.md) | Web dashboard: pages, how the analytical contract is kept in the UI, architecture, tests |
+| [docs/partial_window_audit.md](docs/partial_window_audit.md) | Audit of the frozen model on a partial pre-break window (2026-27): feature drift, volume bias, held-out backtest, decision |
 | [docs/refresh.md](docs/refresh.md) | Season in progress (2026-27): daily 07:00 refresh with launchd, manual refresh, freshness, provisional predictions, troubleshooting |
 | [docs/powerbi.md](docs/powerbi.md) | Power BI: macOS workflow, star schema, DAX measures, five report pages, validation, interview notes ([reference](docs/powerbi_reference.md)) |
 

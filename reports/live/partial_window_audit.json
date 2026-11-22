@@ -1,0 +1,80 @@
+{
+ "season": "2026-27",
+ "data_cutoff": "2026-11-20",
+ "progress": {
+  "team_games_mean": 15.666666666666666,
+  "typical_full_window": 56.51111111111111,
+  "fraction": 0.27723161620133696
+ },
+ "model_artifact_sha256": "a15b0c7f4c66de20ef9d708ceca6976e6a072f611979949cfdac40eaab12667f",
+ "model_unchanged": true,
+ "eligible_lineups_current": 352,
+ "min_pre_poss": 25,
+ "feature_drift_z": {
+  "team_off_rating_loo": {
+   "current_z": 0.2566438021004528,
+   "reference_z": 0.6155780423520806
+  },
+  "team_def_rating_loo": {
+   "current_z": 0.0925871889646465,
+   "reference_z": 0.6715749420277716
+  },
+  "p_def_rating_eb_mean": {
+   "current_z": -0.10620853485537927,
+   "reference_z": 0.8289269623655716
+  },
+  "p_on_off_eb_mean": {
+   "current_z": -1.1275714243345982,
+   "reference_z": 0.3763274214537033
+  },
+  "p_usage_eb_mean": {
+   "current_z": 0.23060453600955497,
+   "reference_z": 0.1971852688452688
+  },
+  "p_usage_eb_max": {
+   "current_z": 0.2892446522869867,
+   "reference_z": 0.11832465951740817
+  },
+  "p_team_share_min": {
+   "current_z": 1.2511565059807501,
+   "reference_z": 0.813479719932786
+  },
+  "p_n_new_to_team": {
+   "current_z": -0.45064839939132184,
+   "reference_z": -0.45064839939132184
+  },
+  "p_n_no_history": {
+   "current_z": -0.23123297394608042,
+   "reference_z": -0.23123297394608042
+  },
+  "lu_log_poss": {
+   "current_z": 1.2363493526959923,
+   "reference_z": 1.2570781416178392
+  },
+  "lu_no_history": {
+   "current_z": -1.1053608198079152,
+   "reference_z": -1.1053608198079152
+  }
+ },
+ "volume_counterfactual": {
+  "n": 352,
+  "mean_shift": 1.8786145482993732,
+  "sd_shift": 1.9493885252960332,
+  "p10_shift": -0.7100360850431683,
+  "p90_shift": 4.333334373416958,
+  "spearman_league": 0.9803402845187549,
+  "spearman_within_team_median": 0.9077838827838827,
+  "top25_overlap": 20
+ },
+ "heldout_volume_backtest": {
+  "season": "2025-26",
+  "volume_fraction": 0.27723161620133696,
+  "n": 695,
+  "rmse_full_window": 25.183822701566214,
+  "rmse_volume_shrunk": 25.412348299478793,
+  "rmse_team_prior_full_window": 25.29652155775493,
+  "mean_shift_shrunk_minus_full": -1.6443100616727435,
+  "spearman_shrunk_vs_full": 0.9867733899979314
+ },
+ "interval_half_width": 18.71457366283638
+}

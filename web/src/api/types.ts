@@ -35,3 +35,4 @@ export type PredictionRanking = S['PredictionRanking']
 export type RankedPrediction = S['RankedPrediction']
 export type RankingQuery = NonNullable<operations['rank_lineups_api_v1_rankings_lineups_get']['parameters']['query']>
 export type PredictionRankingQuery = NonNullable<operations['rank_predictions_api_v1_rankings_predictions_get']['parameters']['query']>
+export type SeasonProgress = S['SeasonProgress']

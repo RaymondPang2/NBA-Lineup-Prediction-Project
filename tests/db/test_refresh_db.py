@@ -249,3 +249,30 @@ def test_frozen_model_scores_the_season_without_future_data(env):
         assert later.data_cutoff == date(2026, 10, 30)
         assert not later.frame.predicted.equals(first)          # picked up without restarting
     assert pred.parameters_fingerprint() == fingerprint and pred.verify()
+
+
+def test_hypothetical_five_uses_only_data_up_to_the_cutoff(env):
+    """A five that never played together (players from two different recorded lineups) is scored from the same
+    pre-cutoff inputs: unchanged when games after the cutoff appear, updated after the next refresh."""
+    from nba_lineups.api.services.predictions import FrozenPredictor
+    from tests.refresh.fake_league import roster
+
+    pred = FrozenPredictor(PROJECT_ROOT / "models" / "final", PROJECT_ROOT / "reports" / "phase6")
+    team = TEAM_IDS[0]
+    five = sorted(roster(team)[i] for i in (0, 1, 3, 5, 6))      # not one of the three recorded combinations
+    assert env.run(date(2026, 10, 29)).ok
+    with env.connect() as c:
+        first = pred.predict_custom(c, CURRENT_SEASON, team, five, 100)
+    assert first["lineup_id"] is None and first["provisional"] and first["data_cutoff"] == date(2026, 10, 27)
+    # no completed season in this throwaway database: games so far are known, the typical full window is not
+    assert first["season_progress"]["team_games_mean"] == 8 and first["season_progress"]["fraction"] is None
+    env.league.add_days(date(2026, 10, 29), 2)                  # future games published at the source
+    assert env.run(date(2026, 10, 29)).status == runner.NO_CHANGE
+    with env.connect() as c:
+        again = pred.predict_custom(c, CURRENT_SEASON, team, five, 100)
+    assert again["predicted_net_rating"] == first["predicted_net_rating"]
+    assert again["baselines"] == first["baselines"]
+    assert env.run(date(2026, 10, 31)).status == runner.SUCCESS
+    with env.connect() as c:
+        later = pred.predict_custom(c, CURRENT_SEASON, team, five, 100)
+    assert later["data_cutoff"] == date(2026, 10, 30) and later["predicted_net_rating"] != first["predicted_net_rating"]

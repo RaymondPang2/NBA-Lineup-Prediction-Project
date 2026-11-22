@@ -272,6 +272,13 @@ class ObservedPostBreak(BaseModel):
     in_evaluation_sample: bool = Field(description="≥ 25 possessions on each end (the model's target sample)")
 
 
+class SeasonProgress(BaseModel):
+    team_games_mean: float = Field(description="pre-break games per team played so far")
+    typical_full_window: float | None = Field(description="mean pre-break games per team in completed regular "
+                                                          "seasons (null if none are loaded)")
+    fraction: float | None = Field(description="team_games_mean / typical_full_window, capped at 1")
+
+
 class Prediction(BaseModel):
     lineup_id: int | None = Field(description="null for a combination that never played together this season")
     season_id: str
@@ -291,6 +298,7 @@ class Prediction(BaseModel):
                                                  "pre-break data up to data_cutoff, and accuracy at this point of "
                                                  "a season has not been validated")
     data_cutoff: date | None = Field(None, description="season in progress only: last game date the inputs include")
+    season_progress: SeasonProgress | None = Field(None, description="season in progress only")
     observed_post_break: ObservedPostBreak | None = None
     notes: list[str]
 
@@ -382,6 +390,7 @@ class PredictionRanking(BaseModel):
     possessions: int = Field(description="post-break possessions per end the observed-rating interval assumes")
     provisional: bool
     data_cutoff: date | None
+    season_progress: SeasonProgress | None = None
     season_used_for_training: bool
     model_sd: float
     interval_half_width: float = Field(description="1.96 x model_sd: every prediction's 95% true-quality half-width")

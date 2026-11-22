@@ -77,3 +77,15 @@ To load the model in Python: `nba_lineups.modeling.final.load("models/final")` r
 Full evaluation, interpretability and the leakage audit: `docs/modeling.md`.
 
 **Serving:** the REST API (`docs/api.md`) serves this exact artifact read-only. Each prediction comes with the team-prior baseline, model and sampling uncertainty, and the notes above. `GET /api/v1/model` re-verifies the SHA-256.
+
+## Season in progress (2026-27): provisional use
+
+The model is also applied, unchanged, to the 2026-27 season while it is in progress, with pre-break games up to the daily data cutoff as inputs.
+
+This use was not part of the frozen evaluation plan, so every such prediction is labelled **PROVISIONAL**.
+
+[partial_window_audit.md](partial_window_audit.md) quantifies the effect at about 28% of the pre-break window:
+- predictions run about 2 points low;
+- the rank order is largely kept;
+- the model no longer beats the team-prior baseline in a held-out backtest.
+
