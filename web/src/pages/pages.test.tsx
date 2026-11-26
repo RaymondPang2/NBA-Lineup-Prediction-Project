@@ -22,6 +22,7 @@ describe('Landing introduction', () => {
     const perf = fixture<ModelPerformance>('model-performance')
     const pooled = perf.held_out.find((e) => e.evaluation === 'pooled')!
     expect(await within(hero).findByText(new RegExp(`RMSE ${pooled.rmse_model.estimate.toFixed(2)}`))).toBeInTheDocument()
+    expect(hero).toHaveTextContent('A machine-learning model built with linear regression')
     expect(screen.getByTestId('cta-lineups')).toHaveAttribute('href', '/lineups')
     expect(screen.getByTestId('cta-rankings')).toHaveAttribute('href', '/rankings')
     expect(screen.getByTestId('cta-predict')).toHaveAttribute('href', '/predict')
