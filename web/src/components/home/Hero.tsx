@@ -60,7 +60,7 @@ export function Hero() {
           and allowed per 100 possessions, before and after the All-Star break, and shows how much of each number is real signal versus small-sample luck.
         </p>
         <p>
-          A machine-learning model built with <strong className="font-semibold text-ink">linear regression</strong> (chosen over ridge regression and a random forest, and frozen before testing) predicts how a lineup would perform after the All-Star break from what it did before. Every prediction is shown next to a
+          A machine-learning model built with <strong className="font-semibold text-ink">linear regression</strong> predicts how a lineup would perform after the All-Star break from what it did before. Every prediction is shown next to a
           simple team baseline and an honest uncertainty range.
         </p>
       </div>
