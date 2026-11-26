@@ -2,6 +2,7 @@ import clsx from 'clsx'
 import { useEffect, useState } from 'react'
 import { NavLink, Outlet, useLocation, useSearchParams } from 'react-router'
 import { useHealth } from '../../api/hooks'
+import { isDemo, REPO_URL } from '../../lib/demo'
 import { DataFreshness, StaleBanner } from './DataFreshness'
 
 const NAV = [
@@ -138,7 +139,7 @@ export function AppShell() {
             ))}
           </nav>
           <div className="ml-auto flex min-w-0 items-center gap-3">
-            <DataFreshness />
+            {!isDemo() && <DataFreshness />}
             <HealthDot />
             <ThemeToggle />
             <button
@@ -167,7 +168,20 @@ export function AppShell() {
           </nav>
         )}
       </header>
-      <StaleBanner />
+      {isDemo() ? (
+        <div role="note" className="border-b border-line bg-warn-bg text-warn" data-testid="demo-banner">
+          <p className="mx-auto max-w-7xl px-4 py-2 text-xs sm:px-6">
+            <strong className="font-semibold">Synthetic demo data.</strong> Teams, players and statistics on this public site are fictional, generated to mirror NBA lineup
+            data, because NBA statistics may only be used privately. The pipeline, frozen model and dashboard are the real ones.{' '}
+            <a href={REPO_URL} className="underline underline-offset-2" target="_blank" rel="noreferrer">
+              Source and real-data results on GitHub
+            </a>
+            .
+          </p>
+        </div>
+      ) : (
+        <StaleBanner />
+      )}
 
       <main id="main" className="mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 sm:py-8">
         <Outlet />
@@ -175,14 +189,21 @@ export function AppShell() {
 
       <footer className="border-t border-line">
         <div className="mx-auto max-w-7xl space-y-1 px-4 py-6 text-xs text-muted sm:px-6">
+          {isDemo() ? (
+            <p data-testid="demo-footer">
+              Public demo on synthetic data: every team, player and statistic is fictional. Ratings are points per 100 possessions, computed from summed totals. The
+              model-performance results were measured on real NBA data (NBA.com/stats) during private, non-commercial development. Not affiliated with the NBA.
+            </p>
+          ) : (
           <p>
             Statistics from <a className="underline-offset-2 hover:underline" href="https://www.nba.com/stats" target="_blank" rel="noreferrer">NBA.com/stats</a> via the
             open-source nba_api client: regular seasons 2018-19 to 2025-26, plus 2026-27 season to date (refreshed daily on this machine). Ratings are points per 100 possessions, computed from summed totals. Personal, non-commercial
             educational project; NBA data is owned by the NBA.
           </p>
+          )}
           <p>
             Predictions are conditional on a lineup playing after the All-Star break and are always shown with the team-prior baseline and 95% intervals.
-            Predictions for the season in progress are provisional.
+            {!isDemo() && ' Predictions for the season in progress are provisional.'}
           </p>
         </div>
       </footer>

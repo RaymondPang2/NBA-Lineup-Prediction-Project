@@ -49,9 +49,10 @@ class Season(BaseModel):
     is_irregular: bool = Field(description="2019-20 (bubble) and 2020-21 (72 games)")
     first_game_date: date
     last_game_date: date
-    role: Literal["development", "held_out", "current"] = Field(
+    role: Literal["development", "held_out", "current", "demo"] = Field(
         description="development: used to train the frozen model; held_out: its final test seasons; "
-                    "current: the season in progress, season to date (provisional; refreshed daily)")
+                    "current: the season in progress, season to date (provisional; refreshed daily); "
+                    "demo: SYNTHETIC data of the public demo (fictional teams, players and statistics)")
     windows: list[Window]
     n_lineups: int
 
@@ -463,6 +464,7 @@ class ModelCard(BaseModel):
 
 class Health(BaseModel):
     status: Literal["ok", "degraded"]
-    database: Literal["ok", "unavailable", "not_configured"]
+    mode: Literal["full", "demo"] = Field("full", description="demo: the public deployment's SYNTHETIC data")
+    database: Literal["ok", "unavailable", "not_configured", "seeding"]
     model: Literal["ok", "unavailable"]
     model_artifact_sha256: str | None = None

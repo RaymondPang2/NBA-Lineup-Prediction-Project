@@ -4,6 +4,7 @@ import { fmtDate, fmtInt, fmtInterval, fmtPct, fmtSigned, isNum } from '../../li
 import { useSeasons, useTeams } from '../../api/hooks'
 import { ChartFrame } from '../charts/ChartFrame'
 import { Badge, Callout, Card, CardBody, CardHeader, Stat } from '../ui/Card'
+import { isDemo } from '../../lib/demo'
 import { InfoTip } from '../ui/InfoTip'
 import { TeamLogo } from '../ui/TeamLogo'
 import { ContributionsChart, ContributionsTable } from './ContributionsChart'
@@ -68,7 +69,11 @@ export function PredictionResult({ prediction }: { prediction: Prediction }) {
         <h2 className="text-lg font-semibold text-ink" data-testid="prediction-team">
           {teamName ? `${teamName} (${p.team_abbreviation})` : p.team_abbreviation} · {p.season_id}
         </h2>
-        {p.provisional ? (
+        {isDemo() ? (
+          <Badge tone="warn" title="Fictional teams and players: the public demo's synthetic data">
+            Synthetic demo data
+          </Badge>
+        ) : p.provisional ? (
           <Badge tone="warn" title="Season in progress: season-to-date inputs, not independently validated">
             Provisional · season in progress
           </Badge>

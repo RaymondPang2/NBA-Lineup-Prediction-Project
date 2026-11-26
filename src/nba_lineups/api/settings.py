@@ -13,6 +13,9 @@ the ETL. Every other setting has a safe local default.
   NBA_API_POOL_MIN / _MAX       connection-pool size (default 1 / 10)
   NBA_API_POOL_TIMEOUT_S        seconds to wait for a free connection before answering 503 (default 5)
   NBA_API_STATEMENT_TIMEOUT_MS  server-side limit per SQL statement (default 10000)
+  NBA_DEMO_MODE                 1: the database holds the SYNTHETIC demo league (public deployment, docs/deployment.md);
+                                seasons are labelled "demo" and every prediction carries a synthetic-data note
+  NBA_API_STATIC_DIR            directory of the built dashboard (web/dist) to serve from the same origin (optional)
 """
 from __future__ import annotations
 
@@ -39,6 +42,8 @@ class Settings:
     pool_max: int
     pool_timeout_s: float
     statement_timeout_ms: int
+    demo_mode: bool = False
+    static_dir: Path | None = None
 
     @classmethod
     def from_env(cls) -> Settings:
@@ -53,4 +58,6 @@ class Settings:
             pool_max=int(_get("NBA_API_POOL_MAX", "10")),
             pool_timeout_s=float(_get("NBA_API_POOL_TIMEOUT_S", "5")),
             statement_timeout_ms=int(_get("NBA_API_STATEMENT_TIMEOUT_MS", "10000")),
+            demo_mode=_get("NBA_DEMO_MODE", "0") in ("1", "true", "True"),
+            static_dir=Path(d) if (d := _get("NBA_API_STATIC_DIR", "")) else None,
         )

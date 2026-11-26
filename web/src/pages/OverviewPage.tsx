@@ -127,7 +127,11 @@ export default function OverviewPage() {
       >
         {seasonInfo && (
           <div className="flex flex-wrap items-center gap-2 text-sm text-ink-2">
-            {seasonInfo.role === 'current' ? (
+            {seasonInfo.role === 'demo' ? (
+              <Badge tone="warn" title="Fictional data for the public demo">
+                Synthetic demo season
+              </Badge>
+            ) : seasonInfo.role === 'current' ? (
               <Badge tone="warn" title="Season to date, refreshed daily. Model predictions for it are provisional.">
                 Season in progress · provisional
               </Badge>

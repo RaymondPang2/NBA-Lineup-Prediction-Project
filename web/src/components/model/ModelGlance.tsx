@@ -3,6 +3,7 @@ import type { ModelCard, ModelPerformance } from '../../api/types'
 import { featureLabel } from '../../lib/features'
 import { fmtInterval, fmtNum, fmtSigned } from '../../lib/format'
 import { Badge, Card, CardBody, CardHeader } from '../ui/Card'
+import { isDemo } from '../../lib/demo'
 import { Explainer } from '../ui/Explainer'
 import { InfoTip } from '../ui/InfoTip'
 
@@ -80,6 +81,12 @@ export function ModelGlance({ perf, card, liveSeason }: { perf: ModelPerformance
 
   return (
     <div className="space-y-6" data-testid="model-glance">
+      {isDemo() && (
+        <p className="rounded-lg border border-warn/40 bg-warn-bg px-4 py-3 text-sm text-warn" data-testid="model-demo-note">
+          The results on this page are <strong className="font-semibold">real</strong>: they were measured on actual NBA seasons during private development. The rest of
+          this public demo runs on synthetic data, whose season labels match but whose teams and players are fictional.
+        </p>
+      )}
       <div className="grid gap-6 lg:grid-cols-3">
         <Card>
           <CardHeader title="What the model predicts" />

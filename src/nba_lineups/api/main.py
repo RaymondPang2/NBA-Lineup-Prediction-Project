@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import logging
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -66,6 +67,7 @@ def create_app(settings: Settings | None = None, *, load_model: bool = True) -> 
             try:
                 app.state.predictor = FrozenPredictor(settings.model_dir, settings.reports_dir,
                                                       settings.require_git_freeze)
+                app.state.predictor.demo = settings.demo_mode
             except Exception:
                 log.exception("frozen model NOT loaded; prediction endpoints will return 503")
         yield
@@ -82,7 +84,44 @@ def create_app(settings: Settings | None = None, *, load_model: bool = True) -> 
     app.include_router(health.router)
     for r in (catalog, lineups, players, teams, predictions, rankings, model):
         app.include_router(r.router, prefix=API_PREFIX)
+    if settings.static_dir is not None:
+        mount_dashboard(app, settings.static_dir)
     return app
+
+
+def mount_dashboard(app: FastAPI, dist: Path) -> None:
+    """Serve the built React dashboard from the same origin as the API (one service, no CORS, one HTTPS URL).
+
+    Hashed assets are cached for a year; every other non-API path returns index.html so client-side routes such as
+    /rankings work on reload. API, docs and health routes are registered first and always win."""
+    from fastapi.responses import FileResponse, JSONResponse
+    from fastapi.staticfiles import StaticFiles
+
+    index = dist / "index.html"
+    if not index.exists():
+        log.error("NBA_API_STATIC_DIR=%s has no index.html; dashboard not served", dist)
+        return
+    app.mount("/assets", StaticFiles(directory=dist / "assets"), name="assets")
+
+    @app.middleware("http")
+    async def cache_headers(request, call_next):
+        response = await call_next(request)
+        path = request.url.path
+        if path.startswith("/assets/"):
+            response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        response.headers.setdefault("X-Content-Type-Options", "nosniff")
+        response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+        return response
+
+    @app.get("/{path:path}", include_in_schema=False)
+    def spa(path: str):
+        if path.startswith(("api/", "docs", "redoc", "openapi.json", "health")):
+            return JSONResponse({"error": {"code": "not_found", "message": f"/{path} not found", "details": None}},
+                                status_code=404)
+        f = (dist / path).resolve()
+        if path and f.is_file() and dist.resolve() in f.parents:
+            return FileResponse(f)
+        return FileResponse(index, headers={"Cache-Control": "no-cache"})
 
 
 app = create_app()

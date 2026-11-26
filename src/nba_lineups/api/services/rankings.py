@@ -176,6 +176,9 @@ def predictor_notes(predictor: FrozenPredictor, season: str, progress: dict | No
              "will get.",
              "Each prediction has the same 95% interval width; neighbouring ranks are far closer together than that "
              "width, so the order is weak evidence."]
+    if predictor.demo:
+        from .predictions import DEMO_NOTE
+        notes.insert(0, DEMO_NOTE)
     if season in LIVE_SEASONS:
         notes.append("PROVISIONAL: the season is in progress; inputs are pre-break games up to the data cutoff.")
         notes.extend(provisional_notes(progress))

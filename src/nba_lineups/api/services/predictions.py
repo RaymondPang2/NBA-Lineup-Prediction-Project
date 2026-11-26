@@ -38,6 +38,8 @@ from ..errors import BadRequest, ModelUnavailable, NotFound
 from .model_info import DESCRIPTIONS, ESTIMAND, ModelReports
 
 Z95 = 1.959963984540054
+DEMO_NOTE = ("SYNTHETIC DEMO DATA: the teams, players and statistics in this public demo are fictional, generated to "
+             "mirror NBA lineup data. The model and its evaluation are real; these predictions are not about real lineups.")
 CUSTOM_ID = -1            # placeholder id for a five-man combination that never played together
 
 
@@ -81,6 +83,7 @@ class FrozenPredictor:
         self.model_sd, self.model_sd_source = self.reports.model_error_sd()
         self._parameters_fingerprint = self.parameters_fingerprint()
         self._cache: dict[tuple[str, int], SeasonData] = {}
+        self.demo = False                       # set by the app in the public synthetic-data demo
         self._lock = threading.Lock()
 
     # ------------------------------------------------------------------ integrity
@@ -224,6 +227,8 @@ class FrozenPredictor:
         plist = self._players(conn, sd, team_id, players)
         in_sample = season_id in self.trained_seasons
         notes = [ESTIMAND, f"Inputs: pre-All-Star-break data of {season_id} only.", self.reports.team_prior_note()]
+        if self.demo:
+            notes.insert(0, DEMO_NOTE)
         if in_sample:
             notes.append(f"In-sample: {season_id} is a training season, so lineups with ≥ 25 post-break possessions "
                          "per end were training labels. Use the held-out seasons "

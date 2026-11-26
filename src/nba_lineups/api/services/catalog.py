@@ -8,7 +8,7 @@ from .. import db
 from ..errors import NotFound
 
 
-def seasons(conn: psycopg.Connection) -> list[dict]:
+def seasons(conn: psycopg.Connection, demo: bool = False) -> list[dict]:
     rows = db.fetch_all(conn, """
         SELECT s.season_id, s.start_year, s.is_irregular, s.first_game_date, s.last_game_date,
                coalesce(json_agg(json_build_object('window_type', w.window_type, 'date_from', w.date_from,
@@ -18,7 +18,7 @@ def seasons(conn: psycopg.Connection) -> list[dict]:
         FROM seasons s LEFT JOIN stat_windows w USING (season_id)
         GROUP BY s.season_id ORDER BY s.season_id""")
     for r in rows:
-        r["role"] = ("held_out" if r["season_id"] in HELDOUT_SEASONS
+        r["role"] = ("demo" if demo else "held_out" if r["season_id"] in HELDOUT_SEASONS
                      else "current" if r["season_id"] in LIVE_SEASONS else "development")
     return rows
 

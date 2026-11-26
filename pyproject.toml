@@ -22,7 +22,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest==8.4.2", "httpx2==2.16.0", "jsonschema==4.26.0"]   # httpx2: FastAPI TestClient; jsonschema: PBIR schema tests
+dev = ["pytest==8.4.2", "httpx2==2.16.0", "jsonschema==4.26.0", "pyyaml==6.0.4"]   # httpx2: FastAPI TestClient; jsonschema: PBIR schema tests; pyyaml: render.yaml test
 
 [tool.setuptools.packages.find]
 where = ["src"]

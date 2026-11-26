@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 
 from ...refresh import freshness
 from ..deps import Conn, OptSeasonQ
@@ -13,11 +13,11 @@ router = APIRouter(tags=["catalog"])
 
 
 @router.get("/seasons", response_model=list[Season], summary="Seasons in the database")
-def list_seasons(conn: Conn):
+def list_seasons(conn: Conn, request: Request):
     """Every loaded season with its pre/post All-Star-break windows, whether it is irregular, and its role:
     `development` (used to train the frozen model), `held_out` (its final test seasons) or `current` (the season
     in progress, season to date, refreshed daily on the local machine)."""
-    return catalog.seasons(conn)
+    return catalog.seasons(conn, demo=request.app.state.settings.demo_mode)
 
 
 @router.get("/teams", response_model=list[Team], summary="Teams")

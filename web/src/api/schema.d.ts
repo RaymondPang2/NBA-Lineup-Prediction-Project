@@ -542,7 +542,14 @@ export interface components {
              * Database
              * @enum {string}
              */
-            database: "ok" | "unavailable" | "not_configured";
+            database: "ok" | "unavailable" | "not_configured" | "seeding";
+            /**
+             * Mode
+             * @description demo: the public deployment's SYNTHETIC data
+             * @default full
+             * @enum {string}
+             */
+            mode: "full" | "demo";
             /**
              * Model
              * @enum {string}
@@ -1171,10 +1178,10 @@ export interface components {
             n_lineups: number;
             /**
              * Role
-             * @description development: used to train the frozen model; held_out: its final test seasons; current: the season in progress, season to date (provisional; refreshed daily)
+             * @description development: used to train the frozen model; held_out: its final test seasons; current: the season in progress, season to date (provisional; refreshed daily); demo: SYNTHETIC data of the public demo (fictional teams, players and statistics)
              * @enum {string}
              */
-            role: "development" | "held_out" | "current";
+            role: "development" | "held_out" | "current" | "demo";
             /**
              * Season Id
              * @example 2025-26

@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 import { useDataStatus, useModelPerformance, useSeasons } from '../../api/hooks'
+import { isDemo } from '../../lib/demo'
 import { fmtDate, fmtNum } from '../../lib/format'
 
 function Action({ to, title, text, icon, testId }: { to: string; title: string; text: string; icon: ReactNode; testId: string }) {
@@ -44,9 +45,9 @@ export function Hero() {
   const facts: { value: string; label: string }[] = []
   if (completed.length)
     facts.push({ value: `${completed.length} seasons`, label: `${completed[0].season_id} to ${completed[completed.length - 1].season_id}${current ? `, plus ${current.season_id} to date` : ''}` })
-  if (lineups) facts.push({ value: lineups.toLocaleString('en-US'), label: 'five-man lineups with pre- and post-All-Star-break stats' })
+  if (lineups) facts.push({ value: lineups.toLocaleString('en-US'), label: isDemo() ? 'synthetic five-man lineups (fictional demo data)' : 'five-man lineups with pre- and post-All-Star-break stats' })
   if (pooled) facts.push({ value: `${pooled.n_lineups.toLocaleString('en-US')} lineups`, label: `held-out test of a frozen ML model (RMSE ${fmtNum(pooled.rmse_model.estimate, 2)})` })
-  if (status.data?.data_cutoff) facts.push({ value: fmtDate(status.data.data_cutoff), label: `latest ${status.data.season_id} game included (${status.data.freshness === "current" ? "up to date" : "update pending"})` })
+  if (!isDemo() && status.data?.data_cutoff) facts.push({ value: fmtDate(status.data.data_cutoff), label: `latest ${status.data.season_id} game included (${status.data.freshness === "current" ? "up to date" : "update pending"})` })
 
   return (
     <section aria-labelledby="hero-title" className="mb-8 rounded-2xl border border-line bg-surface p-5 sm:p-8" data-testid="hero">
@@ -55,6 +56,12 @@ export function Hero() {
         Which NBA lineups actually work, and what to expect from them next?
       </h1>
       <div className="mt-4 max-w-3xl space-y-3 text-[15px] leading-relaxed text-ink-2">
+        {isDemo() && (
+          <p className="rounded-lg bg-warn-bg px-3 py-2 text-sm text-warn" data-testid="hero-demo-note">
+            You are viewing the public demo: the lineups below are <strong className="font-semibold">synthetic</strong> (fictional teams and players). The real-data version,
+            covering every NBA lineup since 2018-19, runs privately because NBA statistics may not be republished.
+          </p>
+        )}
         <p>
           Coaches choose which five players share the floor, and those combinations win or lose games together. Lineup Lab measures every five-man lineup in the NBA on points scored
           and allowed per 100 possessions, before and after the All-Star break, and shows how much of each number is real signal versus small-sample luck.

@@ -8,6 +8,9 @@ It is an end-to-end project:
 - a read-only FastAPI service;
 - a React + TypeScript dashboard.
 
+**Public demo:** ready to deploy on Render, but not live yet. It is waiting for Render account authorization ([docs/deployment.md](docs/deployment.md)). The public version runs on **synthetic data** with fictional teams and players, because NBA statistics may only be used privately. The pipeline, frozen model and dashboard are the real ones.
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/RaymondPang2/NBA-Lineup-Prediction-Project)
+
 ![Overview page: what Lineup Lab does, data facts, and the three main actions](docs/screenshots/overview.png)
 
 | Lineup rankings | Prediction Lab | Model performance |
@@ -54,6 +57,7 @@ A 60-second interview version of this project is in [docs/interview.md](docs/int
 | Frontend | React 19, TypeScript, Vite, Tailwind CSS v4, Recharts, TanStack Query, types generated from OpenAPI |
 | Testing | pytest, Vitest + Testing Library + MSW, Playwright (desktop and mobile) |
 | Scheduling | macOS launchd (local only) |
+| Deployment | Render Blueprint (`render.yaml`), multi-stage Docker image, Render Postgres; synthetic-data demo |
 | BI | Power BI project (TMDL semantic model, PBIR report) generated in code. Not yet opened in Power BI; see Limitations |
 
 ## Architecture
@@ -161,7 +165,7 @@ TypeScript type-checking, the production build and lint run with `npm run build`
 
 - **The model ties the team-prior baseline.** The target is dominated by sampling noise. Play-by-play data (opponent quality, garbage time) could add signal; that is future work.
 - **2026-27 predictions are provisional.** They use a partial pre-break window, run about 2 points low early in the season, and don't beat the team prior at this stage ([audit](docs/partial_window_audit.md)).
-- **Local only.** The app isn't deployed. NBA.com's terms allow private, non-commercial use with attribution, but not a public, regularly updated statistics database without consent, so any public version would need a different data arrangement.
+- **The real data stays local.** NBA.com's terms allow private, non-commercial use with attribution, but not a public, regularly updated statistics database without consent. So the public deployment, a Render Blueprint (`render.yaml`, free plans, one Docker service plus Postgres), shows a clearly labelled synthetic league instead ([docs/deployment.md](docs/deployment.md)). The free database expires after 30 days; the demo re-seeds itself into a fresh one.
 - **Power BI:** the star schema, semantic model (65 DAX measures) and 5-page report are generated and validated against Microsoft's schemas and the warehouse. They haven't been opened in Power BI yet, because Power BI Desktop is Windows-only and the Service needs a work or school account ([docs/powerbi.md](docs/powerbi.md)).
 - **The daily refresh runs only while the Mac is awake.** It catches up after sleep or shutdown.
 
@@ -180,4 +184,5 @@ Statistics come from [NBA.com/stats](https://www.nba.com/stats) through the open
 | [docs/api.md](docs/api.md) · [docs/dashboard.md](docs/dashboard.md) | API and dashboard |
 | [docs/refresh.md](docs/refresh.md) · [docs/partial_window_audit.md](docs/partial_window_audit.md) | 2026-27 daily refresh, and the provisional-prediction audit |
 | [docs/powerbi.md](docs/powerbi.md) | Power BI workflow and validation |
+| [docs/deployment.md](docs/deployment.md) | Render deployment of the synthetic-data public demo |
 | [docs/interview.md](docs/interview.md) | 60-second explanation and likely interview questions |

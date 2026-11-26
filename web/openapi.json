@@ -466,9 +466,20 @@
             "enum": [
               "ok",
               "unavailable",
-              "not_configured"
+              "not_configured",
+              "seeding"
             ],
             "title": "Database",
+            "type": "string"
+          },
+          "mode": {
+            "default": "full",
+            "description": "demo: the public deployment's SYNTHETIC data",
+            "enum": [
+              "full",
+              "demo"
+            ],
+            "title": "Mode",
             "type": "string"
           },
           "model": {
@@ -2175,11 +2186,12 @@
             "type": "integer"
           },
           "role": {
-            "description": "development: used to train the frozen model; held_out: its final test seasons; current: the season in progress, season to date (provisional; refreshed daily)",
+            "description": "development: used to train the frozen model; held_out: its final test seasons; current: the season in progress, season to date (provisional; refreshed daily); demo: SYNTHETIC data of the public demo (fictional teams, players and statistics)",
             "enum": [
               "development",
               "held_out",
-              "current"
+              "current",
+              "demo"
             ],
             "title": "Role",
             "type": "string"

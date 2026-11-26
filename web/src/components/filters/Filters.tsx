@@ -7,7 +7,7 @@ import { Field, SelectField, TextInput } from '../ui/Controls'
 import { TeamLogo } from '../ui/TeamLogo'
 
 export function seasonLabel(s: Season): string {
-  const tags = [s.role === 'held_out' ? 'held-out' : s.role === 'current' ? 'in progress' : null, s.is_irregular ? 'irregular' : null].filter(Boolean)
+  const tags = [s.role === 'held_out' ? 'held-out' : s.role === 'current' ? 'in progress' : s.role === 'demo' ? 'synthetic' : null, s.is_irregular ? 'irregular' : null].filter(Boolean)
   return tags.length ? `${s.season_id} (${tags.join(', ')})` : s.season_id
 }
 

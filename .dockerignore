@@ -1,0 +1,22 @@
+# Never ship real NBA data, secrets, caches or local tooling in the image.
+data/
+.env
+.env.*
+**/.env.local
+.git
+.venv
+**/__pycache__
+**/*.pyc
+.pytest_cache
+web/node_modules
+web/dist
+web/test-results
+web/playwright-report
+web/src/test/fixtures
+reports/phase4
+reports/phase5
+reports/phase9
+reports/live
+powerbi
+docs/screenshots
+tests

@@ -323,6 +323,6 @@ def test_api_database_sessions_are_read_only(client):
 
 def test_health_ok_and_model_unchanged(client, predictor):
     h = client.get("/health")
-    assert h.status_code == 200 and h.json() == {"status": "ok", "database": "ok", "model": "ok",
+    assert h.status_code == 200 and h.json() == {"status": "ok", "mode": "full", "database": "ok", "model": "ok",
                                                  "model_artifact_sha256": predictor.spec["artifact"]["sha256"]}
     assert predictor.verify() and final.sha256(predictor.artifact_path) == predictor.spec["artifact"]["sha256"]
