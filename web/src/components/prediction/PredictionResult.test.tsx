@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { describe, expect, it } from 'vitest'
@@ -9,9 +10,11 @@ import { isDisplayablePrediction, PredictionResult } from './PredictionResult'
 
 const show = (p: Prediction) =>
   render(
-    <MemoryRouter>
-      <PredictionResult prediction={p} />
-    </MemoryRouter>,
+    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+      <MemoryRouter>
+        <PredictionResult prediction={p} />
+      </MemoryRouter>
+    </QueryClientProvider>,
   )
 
 describe('PredictionResult (real API response, lineup 281112)', () => {
@@ -25,7 +28,11 @@ describe('PredictionResult (real API response, lineup 281112)', () => {
     const u = p.uncertainty
     expect(screen.getAllByText(fmtInterval(u.true_rating_interval_95.lo, u.true_rating_interval_95.hi)).length).toBeGreaterThan(0)
     expect(screen.getAllByText(fmtInterval(u.observed_rating_interval_95.lo, u.observed_rating_interval_95.hi)).length).toBeGreaterThan(0)
-    expect(screen.getByText(`Model − baseline ${fmtSigned(p.model_minus_team_prior, 2)}`)).toBeInTheDocument()
+    expect(screen.getByTestId('model-vs-prior')).toHaveTextContent(fmtSigned(p.model_minus_team_prior, 1))
+    // plain-English reading uses the same numbers
+    const plain = screen.getByTestId('plain-english')
+    expect(plain).toHaveTextContent(`about ${Math.abs(p.predicted_net_rating).toFixed(1)} points per 100 possessions`)
+    expect(plain).toHaveTextContent('Not predicted: who wins a game, whether this lineup will be used, or how many minutes it will get')
   })
 
   it('states the conditional estimand next to the prediction', () => {
@@ -49,12 +56,12 @@ describe('PredictionResult (real API response, lineup 281112)', () => {
   it('flags a hypothetical lineup and a held-out season', () => {
     show(fixture<Prediction>('prediction-five'))
     expect(screen.getByText(/Hypothetical lineup/)).toBeInTheDocument()
-    expect(screen.getByText('Held-out season')).toBeInTheDocument()
+    expect(screen.getByText('Historical · held-out season')).toBeInTheDocument()
   })
 
   it('warns that a training-season prediction is a fitted value', () => {
     show({ ...p, season_used_for_training: true })
-    expect(screen.getByText('In-sample season')).toBeInTheDocument()
+    expect(screen.getByText('Historical · in-sample season')).toBeInTheDocument()
     expect(screen.getByText('Fitted value, not a test')).toBeInTheDocument()
   })
 

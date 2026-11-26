@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { Bar, BarChart, Cell, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import { useModelCard, useModelPerformance } from '../api/hooks'
+import { useModelCard, useModelPerformance, useSeasons } from '../api/hooks'
 import type { Coefficient, EvaluationSummary, ModelCard, ModelPerformance } from '../api/types'
 import { C, ChartFrame, TooltipBox } from '../components/charts/ChartFrame'
 import { DotWhisker } from '../components/charts/DotWhisker'
+import { ModelGlance } from '../components/model/ModelGlance'
 import { EstimandNotice } from '../components/prediction/EstimandNotice'
-import { Badge, Callout, Card, CardBody, CardHeader, PageHeader, Stat } from '../components/ui/Card'
+import { InfoTip } from '../components/ui/InfoTip'
+import { Badge, Card, CardBody, CardHeader, PageHeader, Stat } from '../components/ui/Card'
 import { Segmented } from '../components/ui/Controls'
 import { ErrorState, LoadingBlock } from '../components/ui/States'
 import { TableWrap, Td, Th } from '../components/ui/Table'
@@ -68,10 +70,10 @@ function MetricsTable({ evals }: { evals: EvaluationSummary[] }) {
     ['Lineups', (e) => fmtInt(e.n_lineups)],
     ['RMSE · model', (e) => est(e.rmse_model)],
     ['RMSE · team prior', (e) => est(e.rmse_team_prior)],
-    ['RMSE · league mean', (e) => est(e.rmse_league_mean)],
+    ['RMSE · league average', (e) => est(e.rmse_league_mean)],
     ['RMSE · noise floor', (e) => est(e.rmse_noise_floor)],
     ['Model − team prior', (e) => est(e.model_minus_team_prior, 2, true)],
-    ['Model − league mean', (e) => est(e.model_minus_league_mean, 2, true)],
+    ['Model − league average', (e) => est(e.model_minus_league_mean, 2, true)],
     ['R² · model', (e) => est(e.r2_model, 3)],
     ['R² · ceiling', (e) => est(e.r2_ceiling, 3)],
     ['Calibration slope', (e) => est(e.calibration_slope)],
@@ -110,10 +112,18 @@ function CoefficientChart({ coefficients }: { coefficients: Coefficient[] }) {
   const { ref, width } = useWidth<HTMLDivElement>()
   const narrow = width < 520
   return (
-    <div ref={ref} className="min-w-0" style={{ height: 36 + data.length * 30 }}>
+    <div ref={ref} className="min-w-0" style={{ height: 60 + data.length * 30 }}>
       <ResponsiveContainer width="100%" height="100%">
-        <BarChart data={data} layout="vertical" margin={{ top: 4, right: 16, bottom: 4, left: 4 }} barCategoryGap={6}>
-          <XAxis type="number" domain={[-lim, lim]} ticks={axisTicks(lim, narrow)} tickFormatter={(v: number) => fmtSigned(v, 0)} tickLine={false} />
+        <BarChart data={data} layout="vertical" margin={{ top: 4, right: 16, bottom: 18, left: 4 }} barCategoryGap={6}>
+          <XAxis
+            type="number"
+            domain={[-lim, lim]}
+            ticks={axisTicks(lim, narrow)}
+            tickFormatter={(v: number) => fmtSigned(v, 0)}
+            tickLine={false}
+            label={{ value: 'Change in prediction per 1 SD of the input (net-rating points)', position: 'insideBottom', offset: -12, fontSize: 11 }}
+            height={44}
+          />
           <YAxis type="category" dataKey="label" width={narrow ? 128 : 200} tickLine={false} axisLine={false} interval={0} tick={{ fontSize: narrow ? 11 : 12 }} />
           <ReferenceLine x={0} stroke={C.axis} />
           <Tooltip
@@ -290,13 +300,15 @@ function UseLists({ card }: { card: ModelCard }) {
 export default function ModelPage() {
   const perf = useModelPerformance()
   const card = useModelCard()
+  const seasons = useSeasons()
+  const liveSeason = seasons.data?.find((x) => x.role === 'current')?.season_id
   const [evalKey, setEvalKey] = useState('pooled')
 
   return (
     <div>
       <PageHeader
         title="Model performance"
-        description="How the frozen model compares with simple baselines, measured once on seasons it never saw. Errors are possession-weighted RMSE in net-rating points; intervals are 95% team-season cluster bootstrap CIs."
+        description="What the machine-learning model predicts, how it was tested on seasons it never saw, and how it compares with simple baselines. Open any section below for the details."
       />
 
       {perf.error ? (
@@ -311,15 +323,20 @@ export default function ModelPage() {
           const methodRows = [
             { label: 'Model', e: sel.rmse_model },
             { label: 'Team prior', e: sel.rmse_team_prior },
-            { label: 'League mean', e: sel.rmse_league_mean },
+            { label: 'League average', e: sel.rmse_league_mean },
             { label: 'Noise floor', e: sel.rmse_noise_floor },
           ]
           return (
             <div className="space-y-6">
-              <Verdict p={p} />
+              {card.data ? <ModelGlance perf={p} card={card.data} liveSeason={liveSeason} /> : <Verdict p={p} />}
 
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <h2 className="text-lg font-semibold text-ink">{evalLabel(sel.evaluation)}</h2>
+              <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-6">
+                <div>
+                  <h2 className="text-lg font-semibold text-ink">Detailed evaluation · {evalLabel(sel.evaluation)}</h2>
+                  <p className="text-sm text-ink-2">
+                    Possession-weighted <InfoTip term="rmse">RMSE</InfoTip> in net-rating points; 95% intervals from a team-season cluster bootstrap.
+                  </p>
+                </div>
                 <Segmented
                   label="Evaluation"
                   value={sel.evaluation}
@@ -336,7 +353,7 @@ export default function ModelPage() {
                   detail={`95% CI ${fmtInterval(sel.model_minus_team_prior.lo, sel.model_minus_team_prior.hi, 2)} · negative = model better`}
                 />
                 <Stat
-                  label="Model − league mean"
+                  label="Model − league average"
                   value={fmtSigned(sel.model_minus_league_mean?.estimate, 2)}
                   detail={sel.model_minus_league_mean ? `95% CI ${fmtInterval(sel.model_minus_league_mean.lo, sel.model_minus_league_mean.hi, 2)}` : undefined}
                 />
@@ -369,6 +386,7 @@ export default function ModelPage() {
                   }
                 >
                   <DotWhisker
+                    axisLabel="RMSE, net-rating points (lower is better)"
                     format={(v) => fmtNum(v, 1)}
                     series={[{ key: 'rmse', label: 'RMSE', color: 'var(--series-1)' }]}
                     rows={methodRows.map((m) => ({ label: m.label, values: { rmse: { v: m.e.estimate, lo: m.e.lo, hi: m.e.hi } } }))}
@@ -380,7 +398,7 @@ export default function ModelPage() {
                   subtitle="Model RMSE minus baseline RMSE, with 95% CI. Left of zero: the model is better. An interval crossing zero is a tie."
                   legend={[
                     { label: 'vs team prior', color: 'var(--series-1)' },
-                    { label: 'vs league mean', color: 'var(--series-2)' },
+                    { label: 'vs league average', color: 'var(--series-2)' },
                   ]}
                   table={
                     <TableWrap label="Paired differences">
@@ -388,7 +406,7 @@ export default function ModelPage() {
                         <tr>
                           <Th align="left">Evaluation</Th>
                           <Th>vs team prior</Th>
-                          <Th>vs league mean</Th>
+                          <Th>vs league average</Th>
                         </tr>
                       </thead>
                       <tbody>
@@ -405,10 +423,11 @@ export default function ModelPage() {
                 >
                   <DotWhisker
                     zeroLine
+                    axisLabel="Model RMSE minus baseline RMSE (negative = model better)"
                     format={(v) => fmtSigned(v, 1)}
                     series={[
                       { key: 'prior', label: 'vs team prior', color: 'var(--series-1)' },
-                      { key: 'league', label: 'vs league mean', color: 'var(--series-2)' },
+                      { key: 'league', label: 'vs league average', color: 'var(--series-2)' },
                     ]}
                     rows={evals.map((e) => ({
                       label: e.evaluation === 'pooled' ? 'Pooled' : /^\d/.test(e.evaluation) ? e.evaluation : 'Dev CV',
@@ -436,6 +455,7 @@ export default function ModelPage() {
                   <div>
                   <h3 className="mb-2 text-sm font-medium text-ink">R²: model vs ceiling</h3>
                   <DotWhisker
+                    axisLabel="R² (share of variance explained)"
                     format={(v) => fmtNum(v, 2)}
                     series={[
                       { key: 'model', label: 'Model R²', color: 'var(--series-1)' },
@@ -453,6 +473,7 @@ export default function ModelPage() {
                   <div>
                   <h3 className="mb-2 text-sm font-medium text-ink">Calibration slope (line at 1 = perfect)</h3>
                   <DotWhisker
+                    axisLabel="Calibration slope (1 = perfect)"
                     format={(v) => fmtNum(v, 1)}
                     reference={{ value: 1, label: 'perfect calibration' }}
                     series={[{ key: 'slope', label: 'Calibration slope', color: 'var(--series-1)' }]}
@@ -479,11 +500,6 @@ export default function ModelPage() {
       )}
 
       <div className="mt-6 space-y-6">
-        <Callout title="Why a tie with the team prior is the honest result">
-          Post-break lineup ratings are measured over a few dozen to a few hundred possessions, so most of their variation is sampling noise (compare each RMSE with the noise
-          floor). Once a team’s overall strength is known, there is little lineup-specific signal left to predict. The model is still useful for ranking lineups within a team and for
-          giving a noise-aware expectation, but not for claims that a lineup “is” +X.
-        </Callout>
         <EstimandNotice compact />
         {card.error ? (
           <ErrorState error={card.error} onRetry={() => card.refetch()} />

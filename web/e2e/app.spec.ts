@@ -108,7 +108,7 @@ test('season in progress: default season, last-updated status and a provisional 
   const status = await apiGet<{ season_id: string; data_cutoff: string; freshness: string }>(request, '/data-status')
   const top = await apiGet<{ items: { lineup_id: number; team_id: number }[] }>(request, `/lineups?season=${status.season_id}&sort=pre_poss&order=desc&page_size=1`)
   await page.goto('/')
-  await expect(page.getByRole('heading', { level: 1 })).toContainText(status.season_id)
+  await expect(page.getByRole('heading', { level: 2, name: /League overview/ })).toContainText(status.season_id)
   await expect(page.getByTestId('data-freshness')).toHaveAttribute('data-state', status.freshness)
   await expect(page.getByText('Season in progress · provisional')).toBeVisible()
   const l = top.items[0]
@@ -126,7 +126,7 @@ test('rankings: global ranking from the live API, re-rank, and navigate to a lin
   const rows = page.getByRole('region', { name: 'Lineup ranking' }).getByTestId('rank-row')
   await expect(rows).toHaveCount(25)
   await expect(rows.first()).toContainText(signed(net.items[0].net_rating))
-  await page.getByRole('radio', { name: 'Defense' }).click()
+  await page.getByRole('radio', { name: /Best defense/ }).click()
   await expect(page).toHaveURL(/metric=def/)
   await expect(rows.first()).toContainText(def.items[0].def_rating.toFixed(1))
   await page.getByRole('button', { name: 'Next page' }).click()
@@ -159,4 +159,33 @@ test('predict: provisional 2026-27 prediction for a hypothetical five, with cuto
   await expect(notice).toContainText('Incomplete pre-break information reduces accuracy')
   await expect(notice).toContainText('pre-break games per team')
   await expect(page.getByText(/^PROVISIONAL · /)).toBeVisible()
+})
+
+test('landing page: the three main actions navigate, and the facts come from the API', async ({ page, request }) => {
+  const seasons = await apiGet<{ n_lineups: number }[]>(request, '/seasons')
+  await page.goto('/')
+  await expect(page.getByTestId('hero-facts')).toContainText(seasons.reduce((a, s) => a + s.n_lineups, 0).toLocaleString('en-US'))
+  for (const [cta, url, heading] of [
+    ['cta-lineups', /\/lineups$/, 'Lineup explorer'],
+    ['cta-rankings', /\/rankings$/, 'Lineup rankings'],
+    ['cta-predict', /\/predict$/, 'Predict a lineup'],
+  ] as const) {
+    await page.goto('/')
+    await page.getByTestId(cta).click()
+    await expect(page).toHaveURL(url)
+    await expect(page.getByRole('heading', { level: 1 })).toContainText(heading)
+  }
+})
+
+test('model page: headline RMSE comparison equals the verified held-out results', async ({ page, request }) => {
+  type E = { estimate: number }
+  const perf = await apiGet<{ held_out: { evaluation: string; rmse_model: E; rmse_team_prior: E; rmse_league_mean: E }[] }>(request, '/model/performance')
+  const pooled = perf.held_out.find((e) => e.evaluation === 'pooled')!
+  await page.goto('/model')
+  await expect(page.getByTestId('rmse-Linear regression')).toHaveText(pooled.rmse_model.estimate.toFixed(2))
+  await expect(page.getByTestId('rmse-Team-prior baseline')).toHaveText(pooled.rmse_team_prior.estimate.toFixed(2))
+  await expect(page.getByTestId('rmse-League-average baseline')).toHaveText(pooled.rmse_league_mean.estimate.toFixed(2))
+  await expect(page.getByTestId('verdict-team-prior')).toContainText('not statistically significantly outperform')
+  await page.getByTestId('explain-selection').locator('summary').click()
+  await expect(page.getByTestId('explain-selection')).toContainText('simplest')
 })

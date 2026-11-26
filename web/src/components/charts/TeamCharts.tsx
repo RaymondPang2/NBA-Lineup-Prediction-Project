@@ -25,7 +25,7 @@ export function TeamNetScatter({ teams, selectedTeamId, onSelect }: { teams: Tea
             tickFormatter={(v: number) => fmtSigned(v, 0)}
             label={{ value: 'Pre-break net rating', position: 'insideBottom', offset: -16 }}
           />
-          <YAxis type="number" dataKey="y" domain={[-lim, lim]} ticks={ticks} tickFormatter={(v: number) => fmtSigned(v, 0)} width={44} label={{ value: 'Post-break', angle: -90, position: 'insideLeft', offset: 10 }} />
+          <YAxis type="number" dataKey="y" domain={[-lim, lim]} ticks={ticks} tickFormatter={(v: number) => fmtSigned(v, 0)} width={44} label={{ value: 'Post-break net rating', angle: -90, position: 'insideLeft', offset: 10, style: { textAnchor: 'middle' } }} />
           <ZAxis range={[70, 70]} />
           <ReferenceLine segment={[{ x: -lim, y: -lim }, { x: lim, y: lim }]} stroke={C.axis} strokeWidth={1.5} ifOverflow="hidden" />
           <ReferenceLine x={0} stroke={C.axis} />
@@ -84,10 +84,15 @@ export function SeasonHistoryChart({ data, metric, signed = true }: { data: Hist
   return (
     <div className="h-[300px]">
       <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data} margin={{ top: 12, right: 44, bottom: 4, left: 4 }}>
+        <LineChart data={data} margin={{ top: 12, right: 44, bottom: 4, left: 12 }}>
           <CartesianGrid vertical={false} />
           <XAxis dataKey="season" tickLine={false} interval="preserveStartEnd" />
-          <YAxis domain={['auto', 'auto']} tickFormatter={(v: number) => fmt(v, 0)} width={48} />
+          <YAxis
+            domain={['auto', 'auto']}
+            tickFormatter={(v: number) => fmt(v, 0)}
+            width={56}
+            label={{ value: signed ? 'Net rating (pts / 100 poss.)' : 'ORtg (pts / 100 poss.)', angle: -90, position: 'insideLeft', offset: 0, fontSize: 11, style: { textAnchor: 'middle' } }}
+          />
           {signed && <ReferenceLine y={0} stroke={C.axis} />}
           <Tooltip
             content={({ active, payload, label }) => {

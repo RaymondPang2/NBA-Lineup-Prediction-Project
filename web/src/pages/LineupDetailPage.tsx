@@ -154,6 +154,7 @@ export default function LineupDetailPage() {
           {available.length ? (
             <DotWhisker
               zeroLine
+              axisLabel="Net rating, points per 100 possessions"
               format={(v) => fmtSigned(v, 0)}
               series={[{ key: 'net', label: 'Net rating', color: 'var(--series-1)' }]}
               rows={available.map((w) => {
@@ -187,6 +188,7 @@ export default function LineupDetailPage() {
           table={<WindowTable lineup={l} />}
         >
           <DotWhisker
+            axisLabel="Points per 100 possessions"
             format={(v) => fmtRating(v, 0)}
             series={[
               { key: 'off', label: 'ORtg', color: 'var(--series-1)' },

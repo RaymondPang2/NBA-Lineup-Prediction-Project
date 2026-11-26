@@ -4,7 +4,9 @@ import { Link } from 'react-router'
 import { useLineupRanking, usePredictionRanking } from '../api/hooks'
 import type { LineupRanking, PredictionRanking, RankedLineup, RankedPrediction } from '../api/types'
 import { SeasonSelect, TeamSelect } from '../components/filters/Filters'
+import { Explainer } from '../components/ui/Explainer'
 import { EstimandNotice } from '../components/prediction/EstimandNotice'
+import { InfoTip } from '../components/ui/InfoTip'
 import { ProvisionalNotice } from '../components/prediction/ProvisionalNotice'
 import { Badge, Callout, Card, CardBody, FilterBar, PageHeader } from '../components/ui/Card'
 import { Field, PossessionSelect, Segmented } from '../components/ui/Controls'
@@ -19,6 +21,13 @@ type Metric = 'net' | 'off' | 'def' | 'poss'
 type Win = 'season' | 'pre' | 'post'
 
 const TOPS = [10, 25, 50]
+const VIEWS: { key: string; label: string; hint: string; mode: Mode; metric?: Metric }[] = [
+  { key: 'net', label: 'Best net rating', hint: 'Outscored opponents by the most', mode: 'actual', metric: 'net' },
+  { key: 'off', label: 'Best offense', hint: 'Most points per 100 possessions', mode: 'actual', metric: 'off' },
+  { key: 'def', label: 'Best defense', hint: 'Fewest points allowed', mode: 'actual', metric: 'def' },
+  { key: 'poss', label: 'Most used', hint: 'Most possessions played', mode: 'actual', metric: 'poss' },
+  { key: 'predicted', label: 'Highest predicted', hint: 'ML model, post-break net rating', mode: 'predicted' },
+]
 const POSS_PRESETS = [0, 25, 50, 100, 200, 300, 500]
 const DEFAULT_MIN: Record<Mode, number> = { actual: 100, predicted: 50 }
 const METRICS: { value: Metric; label: string; long: string }[] = [
@@ -92,6 +101,29 @@ function Reliability({ r }: { r: RankedLineup }) {
 }
 
 // ---------------------------------------------------------------- actual
+
+/** Why a huge rating over a tiny sample is less trustworthy, with the noise constant recovered from this ranking's own rows. */
+function SampleSizeNote({ data }: { data: LineupRanking }) {
+  const r = data.items.find((i) => isNum(i.net_rating_sampling_sd) && i.opp_poss)
+  if (!r) return null
+  const k = r.net_rating_sampling_sd! ** 2 / (1 / r.poss + 1 / r.opp_poss!)
+  const sd = (n: number) => Math.sqrt((k * 2) / n)
+  return (
+    <div className="mb-4">
+      <Explainer title="Why sample size matters: +40 over 20 possessions vs +10 over 500" testId="sample-size-note">
+        <p>
+          A lineup’s rating is measured over a limited number of possessions, so part of it is luck. With the league’s observed scoring variance, a net rating over{' '}
+          <strong className="text-ink">20 possessions</strong> has a chance-alone standard deviation of about <strong className="text-ink">±{sd(20).toFixed(0)} points</strong>; over{' '}
+          <strong className="text-ink">500 possessions</strong> it is about <strong className="text-ink">±{sd(500).toFixed(0)}</strong>.
+        </p>
+        <p>
+          So +40 over 20 possessions is well within what luck alone produces, while +10 over 500 possessions is much harder to explain away. That is why rankings require a minimum
+          number of possessions, list larger samples first within ties, and show each lineup’s reliability.
+        </p>
+      </Explainer>
+    </div>
+  )
+}
 
 function ActualTable({ data, onMetric }: { data: LineupRanking; onMetric: (m: Metric) => void }) {
   const metric = data.metric as Metric
@@ -289,19 +321,6 @@ export default function RankingsPage() {
       <FilterBar>
         <SeasonSelect seasons={seasons} value={season} onChange={(v) => set({ season: v, page: undefined, window: undefined })} />
         <TeamSelect season={season} value={teamId} onChange={(v) => set({ team: v, page: undefined })} />
-        <Field label="Rank by" className="col-span-2 sm:!w-auto">
-          {() => (
-            <Segmented
-              label="Rank by"
-              value={mode}
-              options={[
-                { value: 'actual', label: 'Actual results' },
-                { value: 'predicted', label: 'Model prediction' },
-              ]}
-              onChange={(v) => set({ mode: v === 'actual' ? undefined : v, page: undefined, min: undefined })}
-            />
-          )}
-        </Field>
         <PossessionSelect
           label={mode === 'actual' ? 'Min possessions' : 'Min pre-break poss.'}
           value={minPoss}
@@ -316,12 +335,39 @@ export default function RankingsPage() {
         </Field>
       </FilterBar>
 
+      <div role="radiogroup" aria-label="Ranking" className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5" data-testid="ranking-views">
+        {VIEWS.map((v) => {
+          const active = v.mode === mode && (v.mode === 'predicted' || v.metric === metric)
+          return (
+            <button
+              key={v.key}
+              type="button"
+              role="radio"
+              aria-checked={active}
+              onClick={() =>
+                set({
+                  mode: v.mode === 'actual' ? undefined : 'predicted',
+                  metric: v.mode === 'actual' && v.metric !== 'net' ? v.metric : undefined,
+                  min: v.mode !== mode ? undefined : getNum('min'),
+                  page: undefined,
+                })
+              }
+              className={clsx(
+                'flex min-w-0 flex-col items-start rounded-lg border px-3 py-2.5 text-left transition-colors',
+                active ? 'border-accent bg-accent-soft' : 'border-line bg-surface hover:bg-surface-2',
+                v.key === 'predicted' && 'col-span-2 sm:col-span-1',
+              )}
+            >
+              <span className={clsx('text-sm font-semibold', active ? 'text-accent' : 'text-ink')}>{v.label}</span>
+              <span className="mt-0.5 text-xs text-ink-2">{v.hint}</span>
+            </button>
+          )
+        })}
+      </div>
+
       {mode === 'actual' && (
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end">
-          <Field label="Category" className="min-w-0">
-            {() => <Segmented label="Category" value={metric} options={METRICS.map((m) => ({ value: m.value, label: m.label }))} onChange={(v) => set({ metric: v === 'net' ? undefined : v, page: undefined })} />}
-          </Field>
-          <Field label="Window" className="min-w-0">
+        <div className="mb-4">
+          <Field label="Statistical window" className="min-w-0">
             {() => <Segmented label="Window" value={win} options={windowOptions} onChange={(v) => set({ window: v === 'season' ? undefined : v, page: undefined })} />}
           </Field>
         </div>
@@ -349,6 +395,28 @@ export default function RankingsPage() {
             </p>
             {q.isFetching && q.data && <Spinner label="Updating" />}
           </div>
+
+          <p className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-2" data-testid="column-help">
+            <span className="text-muted">Terms:</span>
+            {mode === 'actual' ? (
+              <>
+                <InfoTip term="poss">Possessions</InfoTip>
+                <InfoTip term="ortg">ORtg</InfoTip>
+                <InfoTip term="drtg">DRtg</InfoTip>
+                <InfoTip term="net">Net rating</InfoTip>
+                <InfoTip term="reliability">Reliability</InfoTip>
+              </>
+            ) : (
+              <>
+                <InfoTip term="net">Net rating</InfoTip>
+                <InfoTip term="baseline">Team prior</InfoTip>
+                <InfoTip term="interval">95% interval</InfoTip>
+                <InfoTip term="provisional">Provisional</InfoTip>
+              </>
+            )}
+          </p>
+
+          {mode === 'actual' && actual.data && <SampleSizeNote data={actual.data} />}
 
           {mode === 'actual' && minPoss < 100 && (
             <div className="mb-4">

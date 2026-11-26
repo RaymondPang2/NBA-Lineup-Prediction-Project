@@ -1,8 +1,10 @@
 import { Link } from 'react-router'
 import type { Prediction } from '../../api/types'
-import { fmtInt, fmtInterval, fmtPct, fmtSigned, isNum } from '../../lib/format'
+import { fmtDate, fmtInt, fmtInterval, fmtPct, fmtSigned, isNum } from '../../lib/format'
+import { useSeasons, useTeams } from '../../api/hooks'
 import { ChartFrame } from '../charts/ChartFrame'
 import { Badge, Callout, Card, CardBody, CardHeader, Stat } from '../ui/Card'
+import { InfoTip } from '../ui/InfoTip'
 import { TeamLogo } from '../ui/TeamLogo'
 import { ContributionsChart, ContributionsTable } from './ContributionsChart'
 import { EstimandNotice } from './EstimandNotice'
@@ -42,6 +44,8 @@ function Dl({ rows }: { rows: [string, React.ReactNode][] }) {
 }
 
 export function PredictionResult({ prediction }: { prediction: Prediction }) {
+  const teams = useTeams(prediction.season_id)
+  const seasons = useSeasons()
   if (!isDisplayablePrediction(prediction)) {
     return (
       <Callout tone="warn" title="Prediction withheld">
@@ -51,6 +55,9 @@ export function PredictionResult({ prediction }: { prediction: Prediction }) {
   }
   const p = prediction
   const u = p.uncertainty
+  const teamName = teams.data?.find((t) => t.team_id === p.team_id)?.team_name
+  const preWindow = seasons.data?.find((x) => x.season_id === p.season_id)?.windows.find((w) => w.window_type === 'pre_asb')
+  const inputsThrough = p.provisional ? (p.data_cutoff ?? preWindow?.date_to) : preWindow?.date_to
   const obs = p.observed_post_break
   const observedNet = obs && isNum(obs.net_rating) ? obs.net_rating : null
 
@@ -58,30 +65,36 @@ export function PredictionResult({ prediction }: { prediction: Prediction }) {
     <div className="space-y-5" data-testid="prediction-result">
       <div className="flex flex-wrap items-center gap-2">
         <TeamLogo teamId={p.team_id} abbreviation={p.team_abbreviation} size="md" decorative />
-        <h2 className="text-lg font-semibold text-ink">
-          {p.team_abbreviation} · {p.season_id}
+        <h2 className="text-lg font-semibold text-ink" data-testid="prediction-team">
+          {teamName ? `${teamName} (${p.team_abbreviation})` : p.team_abbreviation} · {p.season_id}
         </h2>
-        {p.lineup_id !== null && p.lineup_id !== undefined ? (
-          <Link to={`/lineups/${p.lineup_id}`} className="text-sm text-accent hover:underline">
-            Recorded lineup #{p.lineup_id} ›
-          </Link>
-        ) : (
-          <Badge>Hypothetical lineup (no shared history)</Badge>
-        )}
         {p.provisional ? (
           <Badge tone="warn" title="Season in progress: season-to-date inputs, not independently validated">
             Provisional · season in progress
           </Badge>
         ) : p.season_used_for_training ? (
           <Badge tone="warn" title="This season's post-break results were training labels">
-            In-sample season
+            Historical · in-sample season
           </Badge>
         ) : (
           <Badge tone="accent" title="Never used for training or tuning">
-            Held-out season
+            Historical · held-out season
           </Badge>
         )}
+        {p.lineup_id !== null && p.lineup_id !== undefined ? (
+          <Link to={`/lineups/${p.lineup_id}`} className="text-sm text-accent hover:underline">
+            Recorded lineup #{p.lineup_id} ›
+          </Link>
+        ) : (
+          <Badge>Hypothetical lineup (never played together)</Badge>
+        )}
       </div>
+      {inputsThrough && (
+        <p className="-mt-3 text-sm text-ink-2" data-testid="inputs-through">
+          Inputs: {p.season_id} pre-All-Star-break games through <span className="font-medium text-ink">{fmtDate(inputsThrough)}</span>
+          {p.provisional ? ' (latest data cutoff)' : ''}. Nothing after that date is used.
+        </p>
+      )}
 
       <ul className="flex flex-wrap gap-1.5" aria-label="Players">
         {p.players.map((pl) => (
@@ -103,21 +116,39 @@ export function PredictionResult({ prediction }: { prediction: Prediction }) {
         </Callout>
       )}
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Stat
           emphasis
-          label="Model prediction"
+          label="Predicted net rating"
           testId="predicted-net"
           value={fmtSigned(p.predicted_net_rating)}
-          detail={`95% true-quality interval ${fmtInterval(u.true_rating_interval_95.lo, u.true_rating_interval_95.hi)}`}
+          detail={`95% interval ${fmtInterval(u.true_rating_interval_95.lo, u.true_rating_interval_95.hi)}`}
         />
-        <Stat
-          label="Team-prior baseline"
-          testId="team-prior"
-          value={fmtSigned(p.baselines.team_prior)}
-          detail={`Model − baseline ${fmtSigned(p.model_minus_team_prior, 2)}`}
-        />
-        <Stat label="League mean" testId="league-mean" value={fmtSigned(p.baselines.league_mean)} detail="Weighted mean post-break net of training lineups" />
+        <Stat label="Team-prior baseline" testId="team-prior" value={fmtSigned(p.baselines.team_prior)} detail="The team’s rating from its other lineups" />
+        <Stat label="Prediction − baseline" testId="model-vs-prior" value={fmtSigned(p.model_minus_team_prior, 1)} detail="What the model adds to the team’s strength" />
+        <Stat label="League average" testId="league-mean" value={fmtSigned(p.baselines.league_mean)} detail="Average post-break net of training lineups" />
+      </div>
+
+      <div className="rounded-lg border border-line bg-surface-2 px-4 py-3 text-sm leading-relaxed text-ink-2" data-testid="plain-english">
+        <p className="font-medium text-ink">In plain English</p>
+        <p className="mt-1">
+          A predicted net rating of <strong className="font-semibold text-ink">{fmtSigned(p.predicted_net_rating)}</strong> means this lineup is expected to{' '}
+          {p.predicted_net_rating >= 0 ? 'outscore opponents' : 'be outscored'} by about {Math.abs(p.predicted_net_rating).toFixed(1)} points per 100 possessions if it plays after the
+          All-Star break. From the team’s overall strength alone you would expect {fmtSigned(p.baselines.team_prior)}; the model adjusts that by {fmtSigned(p.model_minus_team_prior)}.
+          Its true quality most likely lies between {fmtSigned(u.true_rating_interval_95.lo)} and {fmtSigned(u.true_rating_interval_95.hi)} (95%), so treat small differences between
+          lineups as noise.
+        </p>
+        <p className="mt-2 text-xs text-muted">
+          Not predicted: who wins a game, whether this lineup will be used, or how many minutes it will get.
+        </p>
+        <p className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink-2">
+          <span className="text-muted">Terms:</span>
+          <InfoTip term="net">Net rating</InfoTip>
+          <InfoTip term="baseline">Team-prior baseline</InfoTip>
+          <InfoTip term="interval">95% interval</InfoTip>
+          <InfoTip term="noise">Sampling noise</InfoTip>
+          {p.provisional && <InfoTip term="provisional">Provisional</InfoTip>}
+        </p>
       </div>
 
       <Card>

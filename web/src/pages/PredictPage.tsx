@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from 'react'
 import { useLineupPrediction, useLineups, usePlayers, usePredictFive } from '../api/hooks'
 import type { Prediction } from '../api/types'
 import { SeasonSelect, TeamSelect } from '../components/filters/Filters'
-import { EstimandNotice } from '../components/prediction/EstimandNotice'
 import { PredictionResult } from '../components/prediction/PredictionResult'
 import { Card, CardBody, CardHeader, FilterBar, PageHeader } from '../components/ui/Card'
 import { Button, Field, PossessionSelect, Segmented, Switch, TextInput } from '../components/ui/Controls'
@@ -209,12 +208,8 @@ export default function PredictPage() {
     <div>
       <PageHeader
         title="Predict a lineup’s post-break net rating"
-        description="The frozen linear-regression model, trained on 2018-19 to 2023-24 and evaluated once on the held-out 2024-25 and 2025-26 seasons. Every prediction comes with the team-prior baseline and two 95% intervals. Predictions for the 2026-27 season in progress are provisional."
+        description="Choose a team and five of its players, either a lineup that has played together or any new combination, to see how the machine-learning model expects them to perform after the All-Star break, next to the team baseline and a 95% uncertainty range. Predictions for 2026-27, still in progress, are provisional."
       />
-
-      <div className="mb-6">
-        <EstimandNotice compact />
-      </div>
 
       <FilterBar>
         <SeasonSelect seasons={seasons} value={season} onChange={(v) => set({ season: v, team: undefined, lineup: undefined, five: [] })} />

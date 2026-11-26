@@ -27,7 +27,7 @@ The app must be served on port 5173. That is the origin the API allows by defaul
 
 | Route | What it shows | Endpoints |
 |---|---|---|
-| `/` Overview | Season and team filters; season KPIs, with league ORtg pooled from summed team totals; team pre- vs post-break scatter; season history; sortable team table; a team's most-used lineups | `/seasons`, `/teams`, `/teams/stats` (every season, for history), `/lineups` |
+| `/` Overview | **Landing introduction** (what Lineup Lab does, why lineups matter, live data facts, three main actions: explore lineups, best lineups, ML predictions), then season and team filters; season KPIs, with league ORtg pooled from summed team totals; team pre- vs post-break scatter; season history; sortable team table; a team's most-used lineups | `/seasons`, `/teams`, `/teams/stats` (every season, for history), `/lineups` |
 | `/lineups` Explorer | Server-side sorting on every rating column; pagination (25–200 rows); team filter; player search (up to 5 players, combobox over `/players?search=`); pre- and post-break possession thresholds (applied to both ends); ✱ marks changes larger than sampling noise | `/lineups`, `/players`, `/players/{id}` |
 | `/rankings` Rankings | Top 10/25/50 lineups by actual net, offensive or defensive rating or possessions (most used), in the full-season (season-to-date), pre- or post-break window, with a possession threshold on both ends; or recorded lineups ranked by the frozen model's prediction with baseline, difference and 95% interval. Ranks are global (computed server-side over every qualifying lineup), ties share a rank, column headers re-rank, rows link to the lineup and its prediction. Small-sample warning below 100 possessions; per-row reliability; the verdict, conditional estimand, uncertainty and provisional notices in prediction mode | `/rankings/lineups`, `/rankings/predictions` |
 | `/lineups/:id` Detail | ORtg, DRtg and net for pre-break, post-break and the full season; net rating with 95% sampling intervals; noise test on the pre→post change; links to the prediction and to each player's lineups | `/lineups/{id}`, `/seasons` |
@@ -128,12 +128,27 @@ web/
 
 | Command | What it runs | Needs |
 |---|---|---|
-| `npm test` | 57 unit and component tests (Vitest, Testing Library, MSW): formatting; team logos (licensing-safe default, theme variant, load-failure fallback); pooled-rating arithmetic; K recovery; the API client's error handling; the prediction guarantees (baseline, intervals, estimand, withholding, in-sample flag); and every page — filters, server-side sort and pagination, player search, empty, error and not-found states, the build-a-five flow | Fixtures recorded by `npm run fixtures` |
+| `npm test` | 63 unit and component tests (Vitest, Testing Library, MSW): formatting; team logos (licensing-safe default, theme variant, load-failure fallback); pooled-rating arithmetic; K recovery; the API client's error handling; the prediction guarantees (baseline, intervals, estimand, withholding, in-sample flag); and every page — filters, server-side sort and pagination, player search, empty, error and not-found states, the build-a-five flow | Fixtures recorded by `npm run fixtures` |
 | `npm run test:integration` | 18 tests that run the app's own client against the **live** API: OpenAPI drift, health and the verified artifact, CORS for the app's origin, error shape, filter, sort and paging semantics, every-row paging for charts, prediction invariants (intervals = ŷ ± 1.96·SD, contributions sum to ŷ, estimand in the notes), the documented example (lineup 281112), hypothetical and recorded fives, consistency of the verdict with its CI, data status of the season in progress | API + PostgreSQL |
-| `npm run test:e2e` | 19 Playwright tests in a real browser against the live stack: each page's rendered values equal the API's; sorting, paging and player filtering; the prediction flow and the realized-result toggle; the build-a-five flow; chart and table views; no horizontal scroll at phone width on every page; mobile navigation; the season in progress (status, provisional prediction) | API + PostgreSQL; starts Vite itself |
+| `npm run test:e2e` | 22 Playwright tests in a real browser against the live stack: each page's rendered values equal the API's; sorting, paging and player filtering; the prediction flow and the realized-result toggle; the build-a-five flow; chart and table views; no horizontal scroll at phone width on every page; mobile navigation; the season in progress (status, provisional prediction) | API + PostgreSQL; starts Vite itself |
 
-All three suites pass (57 + 18 + 19).
+All three suites pass (63 + 18 + 22).
 
 **Fixtures are real API responses, and they are not committed.** `npm run fixtures` records 25 responses from the running API into `web/src/test/fixtures/`, with a manifest of each request. They are NBA-derived processed data, which the project never commits (see `.gitignore`), so the folder is git-ignored. If a fixture is missing, the tests fail with an instruction to record them. Phase 10's CI will need a way to provide them, for example by recording them from the API inside CI.
 
 Other checks: `npm run typecheck` (strict TypeScript across the app, tests and e2e) and `npm run lint` (oxlint: 0 errors, 10 Fast Refresh and state-sync warnings).
+
+## Plain-English layer (recruiter and newcomer friendly)
+
+- **Glossary tooltips** (`components/ui/InfoTip.tsx`, `lib/glossary.ts`): ORtg, DRtg, net rating, possessions, RMSE, R², held-out seasons, baselines, 95% intervals, sampling noise, feature engineering, provisional predictions and reliability. Each opens on hover, tap or keyboard focus and closes with Escape.
+- **Model page:**
+  - an "at a glance" section: what is predicted, how it was tested (season timeline), and the verdicts against both baselines in plain words;
+  - a held-out RMSE comparison on an axis that starts at 0;
+  - expandable explainers;
+  - the full statistical detail below.
+- **Prediction Lab:** each result shows the team name, whether it is historical or provisional, the input cutoff date, the prediction, the baseline, the difference and the interval, plus an "In plain English" reading built from the same numbers and a list of what is *not* predicted.
+- **Rankings:**
+  - five ranking types: best net rating, best offense, best defense, most used, highest predicted;
+  - a sample-size explainer that computes the noise at 20 and at 500 possessions from the ranking's own rows.
+- **Charts:** every axis carries a title and units.
+

@@ -12,7 +12,7 @@ export function HistogramChart({ bins, xLabel, mean, meanLabel }: { bins: Bin[];
         <BarChart data={bins} margin={{ top: 16, right: 8, bottom: 24, left: 0 }} barCategoryGap={2}>
           <CartesianGrid vertical={false} />
           <XAxis dataKey="label" tickLine={false} interval="preserveStartEnd" minTickGap={18} label={{ value: xLabel, position: 'insideBottom', offset: -14 }} />
-          <YAxis allowDecimals={false} width={44} />
+          <YAxis allowDecimals={false} width={52} label={{ value: 'Lineups', angle: -90, position: 'insideLeft', offset: 6, fontSize: 11, style: { textAnchor: 'middle' } }} />
           <Tooltip
             cursor={{ fill: 'var(--surface-2)' }}
             content={({ active, payload }) => {
@@ -62,7 +62,15 @@ export function FunnelChart({ points, band, yLim }: { points: FunnelPoint[]; ban
             allowDataOverflow
             label={{ value: 'Possessions (log scale)', position: 'insideBottom', offset: -16 }}
           />
-          <YAxis type="number" dataKey="y" domain={[-yLim, yLim]} tickFormatter={(v: number) => fmtSigned(v, 0)} width={44} allowDataOverflow />
+          <YAxis
+            type="number"
+            dataKey="y"
+            domain={[-yLim, yLim]}
+            tickFormatter={(v: number) => fmtSigned(v, 0)}
+            width={52}
+            allowDataOverflow
+            label={{ value: 'Net rating (pts / 100 poss.)', angle: -90, position: 'insideLeft', offset: 6, fontSize: 11, style: { textAnchor: 'middle' } }}
+          />
           <ZAxis range={[18, 18]} />
           <ReferenceLine y={0} stroke={C.axis} />
           <Tooltip
@@ -110,7 +118,7 @@ export function RegressionChart({ points, fit, lim }: { points: PairPoint[]; fit
         <ScatterChart margin={{ top: 12, right: 16, bottom: 28, left: 4 }}>
           <CartesianGrid />
           <XAxis type="number" dataKey="cx" domain={[-lim, lim]} tickFormatter={(v: number) => fmtSigned(v, 0)} allowDataOverflow label={{ value: 'Pre-break net rating', position: 'insideBottom', offset: -16 }} />
-          <YAxis type="number" dataKey="cy" domain={[-lim, lim]} tickFormatter={(v: number) => fmtSigned(v, 0)} width={44} allowDataOverflow label={{ value: 'Post-break', angle: -90, position: 'insideLeft', offset: 10 }} />
+          <YAxis type="number" dataKey="cy" domain={[-lim, lim]} tickFormatter={(v: number) => fmtSigned(v, 0)} width={44} allowDataOverflow label={{ value: 'Post-break net rating', angle: -90, position: 'insideLeft', offset: 10, style: { textAnchor: 'middle' } }} />
           <ZAxis range={[22, 22]} />
           <ReferenceLine segment={[{ x: -lim, y: -lim }, { x: lim, y: lim }]} stroke={C.axis} strokeWidth={1.5} />
           <ReferenceLine
@@ -173,7 +181,14 @@ export function ReliabilityChart({ points }: { points: ReliabilityPoint[] }) {
             allowDataOverflow
             label={{ value: 'Pre-break possessions (log scale)', position: 'insideBottom', offset: -16 }}
           />
-          <YAxis type="number" dataKey="reliability" domain={[0, 1]} tickFormatter={(v: number) => fmtPct(v)} width={48} />
+          <YAxis
+            type="number"
+            dataKey="reliability"
+            domain={[0, 1]}
+            tickFormatter={(v: number) => fmtPct(v)}
+            width={56}
+            label={{ value: 'Reliability (signal share)', angle: -90, position: 'insideLeft', offset: 6, fontSize: 11, style: { textAnchor: 'middle' } }}
+          />
           <ZAxis range={[26, 26]} />
           <ReferenceLine y={0.5} stroke={C.axis} label={{ value: '50% signal', position: 'insideTopLeft', fill: 'var(--muted)', fontSize: 11 }} />
           <Tooltip

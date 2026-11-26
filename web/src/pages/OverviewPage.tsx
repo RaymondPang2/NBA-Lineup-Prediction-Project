@@ -7,6 +7,7 @@ import { ChartFrame } from '../components/charts/ChartFrame'
 import { SeasonHistoryChart, TeamNetScatter } from '../components/charts/TeamCharts'
 import { SeasonSelect, TeamSelect } from '../components/filters/Filters'
 import { TeamLogo } from '../components/ui/TeamLogo'
+import { Hero } from '../components/home/Hero'
 import { LineupTable } from '../components/LineupTable'
 import { Badge, Card, CardBody, CardHeader, Delta, FilterBar, PageHeader, Stat } from '../components/ui/Card'
 import { EmptyState, ErrorState, LoadingBlock, QueryState, Skeleton } from '../components/ui/States'
@@ -117,10 +118,12 @@ export default function OverviewPage() {
 
   return (
     <div>
+      {!team && <Hero />}
       <PageHeader
+        level={team ? 1 : 2}
         title={team ? `${team.team_name} · ${season}` : `League overview · ${season ?? ''}`}
         leading={team ? <TeamLogo teamId={team.team_id} abbreviation={team.abbreviation} size="lg" decorative /> : undefined}
-        description="Five-man lineup performance split at the All-Star break. Every rating is points per 100 possessions, computed from summed totals across lineups."
+        description="Team and league ratings for the selected season, split at the All-Star break. Ratings are points per 100 possessions, summed over every lineup."
       >
         {seasonInfo && (
           <div className="flex flex-wrap items-center gap-2 text-sm text-ink-2">

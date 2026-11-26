@@ -34,7 +34,30 @@ describe('Rankings: actual results', () => {
     const table = await screen.findByRole('region', { name: 'Lineup ranking' })
     await userEvent.click(within(table).getByRole('button', { name: /DRtg/ }))
     await waitFor(() => expect(screen.getByTestId('ranking-summary')).toHaveTextContent('Best defensive rating'))
-    expect(screen.getByRole('radio', { name: 'Defense' })).toHaveAttribute('aria-checked', 'true')
+    expect(screen.getByRole('radio', { name: /Best defense/ })).toHaveAttribute('aria-checked', 'true')
+  })
+
+  it('offers five ranking types and switches to model predictions', async () => {
+    renderApp('/rankings?season=2025-26')
+    const group = await screen.findByRole('radiogroup', { name: 'Ranking' })
+    expect(within(group).getAllByRole('radio').map((r) => r.textContent)).toEqual([
+      expect.stringContaining('Best net rating'),
+      expect.stringContaining('Best offense'),
+      expect.stringContaining('Best defense'),
+      expect.stringContaining('Most used'),
+      expect.stringContaining('Highest predicted'),
+    ])
+    await userEvent.click(within(group).getByRole('radio', { name: /Highest predicted/ }))
+    expect(await screen.findByRole('region', { name: 'Prediction ranking' })).toBeInTheDocument()
+  })
+
+  it('explains sample size with the noise of 20 vs 500 possessions computed from the rows', async () => {
+    renderApp('/rankings?season=2025-26')
+    const note = await screen.findByTestId('sample-size-note')
+    const r = fixture<LineupRanking>('rank-lineups').items.find((i) => i.net_rating_sampling_sd && i.opp_poss)!
+    const k = r.net_rating_sampling_sd! ** 2 / (1 / r.poss + 1 / r.opp_poss!)
+    expect(note).toHaveTextContent(`±${Math.sqrt((k * 2) / 20).toFixed(0)} points`)
+    expect(note).toHaveTextContent(`±${Math.sqrt((k * 2) / 500).toFixed(0)}`)
   })
 
   it('warns about small samples below 100 possessions', async () => {

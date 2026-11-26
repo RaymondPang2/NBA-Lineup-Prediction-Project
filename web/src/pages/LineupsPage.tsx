@@ -4,6 +4,7 @@ import { PlayerPicker, SeasonSelect, TeamSelect } from '../components/filters/Fi
 import { LineupTable } from '../components/LineupTable'
 import { Card, CardBody, FilterBar, PageHeader } from '../components/ui/Card'
 import { Button, PossessionSelect } from '../components/ui/Controls'
+import { InfoTip } from '../components/ui/InfoTip'
 import { EmptyState, ErrorState, LoadingBlock, Spinner } from '../components/ui/States'
 import { Pagination, type SortOrder } from '../components/ui/Table'
 import { useSeasonParam, useUrlState } from '../lib/urlState'
@@ -62,7 +63,14 @@ export default function LineupsPage() {
                 ' '
               )}
             </p>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-2">
+                <InfoTip term="poss">Poss</InfoTip>
+                <InfoTip term="ortg">ORtg</InfoTip>
+                <InfoTip term="drtg">DRtg</InfoTip>
+                <InfoTip term="net">Net</InfoTip>
+                <InfoTip term="noise">✱ noise</InfoTip>
+              </span>
               {query.isFetching && query.data && <Spinner label="Updating" />}
               {filtersActive && (
                 <Button

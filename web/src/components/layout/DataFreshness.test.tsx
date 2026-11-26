@@ -89,9 +89,11 @@ describe('Season in progress', () => {
     const { PredictionResult } = await import('../prediction/PredictionResult')
     const { MemoryRouter } = await import('react-router')
     render(
-      <MemoryRouter>
-        <PredictionResult prediction={p} />
-      </MemoryRouter>,
+      <QueryClientProvider client={new QueryClient()}>
+        <MemoryRouter>
+          <PredictionResult prediction={p} />
+        </MemoryRouter>
+      </QueryClientProvider>,
     )
     expect(screen.getByText(/Provisional · season in progress/)).toBeInTheDocument()
     const notice = screen.getByTestId('provisional-notice')
@@ -102,6 +104,6 @@ describe('Season in progress', () => {
     expect(screen.getByText(/^PROVISIONAL · /)).toBeInTheDocument()
     expect(screen.getByTestId('team-prior')).toBeInTheDocument()
     expect(screen.getByTestId('predicted-net')).toBeInTheDocument()
-    expect(screen.getByText(/95% true-quality interval/)).toBeInTheDocument()
+    expect(screen.getByTestId('predicted-net').parentElement).toHaveTextContent('95% interval')
   })
 })

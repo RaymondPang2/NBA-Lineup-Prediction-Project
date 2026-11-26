@@ -11,6 +11,29 @@ import { ORIGIN, server } from '../test/server'
 const V1 = `${ORIGIN}/api/v1`
 const label = (l: LineupSummary) => l.players.map((p) => lastName(p.player_name)).join(' · ')
 
+describe('Landing introduction', () => {
+  it('explains the product, shows real data facts and links to the three main actions', async () => {
+    renderApp('/')
+    const hero = await screen.findByTestId('hero')
+    expect(within(hero).getByRole('heading', { level: 1 })).toBeInTheDocument()
+    const seasons = fixture<{ n_lineups: number; role: string }[]>('seasons')
+    const total = seasons.reduce((a, x) => a + x.n_lineups, 0)
+    expect(await within(hero).findByText(total.toLocaleString('en-US'))).toBeInTheDocument()
+    const perf = fixture<ModelPerformance>('model-performance')
+    const pooled = perf.held_out.find((e) => e.evaluation === 'pooled')!
+    expect(await within(hero).findByText(new RegExp(`RMSE ${pooled.rmse_model.estimate.toFixed(2)}`))).toBeInTheDocument()
+    expect(screen.getByTestId('cta-lineups')).toHaveAttribute('href', '/lineups')
+    expect(screen.getByTestId('cta-rankings')).toHaveAttribute('href', '/rankings')
+    expect(screen.getByTestId('cta-predict')).toHaveAttribute('href', '/predict')
+  })
+
+  it('is hidden when a team is in focus', async () => {
+    renderApp('/?season=2025-26&team=1610612750')
+    await screen.findByRole('heading', { level: 1, name: /Minnesota Timberwolves/ })
+    expect(screen.queryByTestId('hero')).toBeNull()
+  })
+})
+
 describe('Overview', () => {
   it('shows every team of the season from the API, sortable, and reports API health', async () => {
     renderApp('/?season=2025-26')
@@ -159,7 +182,14 @@ describe('Model performance', () => {
     const card = fixture<ModelCard>('model')
     renderApp('/model')
     expect(await screen.findByTestId('conclusion')).toHaveTextContent(perf.conclusion)
-    expect(screen.getByText(perf.beats_team_prior ? '✓ Beats' : '≈ Ties')).toBeInTheDocument()
+    // plain-English verdicts follow the API's flags and intervals
+    const pooled = perf.held_out.find((e) => e.evaluation === 'pooled')!
+    expect(screen.getByTestId('verdict-team-prior')).toHaveTextContent(perf.beats_team_prior ? 'Statistically significantly better' : 'Did not statistically significantly outperform')
+    expect(screen.getByTestId('verdict-league')).toHaveTextContent(perf.beats_league_mean ? 'Statistically significantly better' : 'Not significantly better')
+    expect(screen.getByTestId('rmse-Linear regression')).toHaveTextContent(pooled.rmse_model.estimate.toFixed(2))
+    expect(screen.getByTestId('rmse-Team-prior baseline')).toHaveTextContent(pooled.rmse_team_prior.estimate.toFixed(2))
+    expect(screen.getByTestId('rmse-League-average baseline')).toHaveTextContent(pooled.rmse_league_mean.estimate.toFixed(2))
+    for (const id of ['explain-metrics', 'explain-chronological', 'explain-selection', 'explain-uncertainty', 'explain-features']) expect(screen.getByTestId(id)).toBeInTheDocument()
     expect(await screen.findByTestId('artifact-sha')).toHaveTextContent(card.artifact_sha256)
     for (const l of card.limitations) expect(screen.getByText(l)).toBeInTheDocument()
   })

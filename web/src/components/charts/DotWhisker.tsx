@@ -25,19 +25,22 @@ export function DotWhisker({
   format,
   zeroLine = false,
   reference,
+  axisLabel,
 }: {
   rows: DotRow[]
   series: DotSeries[]
   format: (x: number) => string
   zeroLine?: boolean
   reference?: { value: number; label: string }
+  /** Title of the horizontal axis, with units. */
+  axisLabel?: string
 }) {
   const { ref, width } = useWidth<HTMLDivElement>()
   const [hover, setHover] = useState<string | null>(null)
   const labelW = width < 480 ? 92 : 132
   const rowH = 22 + series.length * 16
   const top = 6
-  const height = top + rows.length * rowH + 26
+  const height = top + rows.length * rowH + (axisLabel ? 44 : 26)
   const vals = rows.flatMap((r) => series.flatMap((s) => [r.values[s.key]?.v, r.values[s.key]?.lo, r.values[s.key]?.hi])).filter((x): x is number => typeof x === 'number' && Number.isFinite(x))
   if (zeroLine) vals.push(0)
   if (reference) vals.push(reference.value)
@@ -65,6 +68,11 @@ export function DotWhisker({
             </text>
           </g>
         ))}
+        {axisLabel && (
+          <text x={labelW + (width - labelW - 14) / 2} y={plotBottom + 36} textAnchor="middle" fontSize={11} fill={C.ink2}>
+            {axisLabel}
+          </text>
+        )}
         {reference && <line x1={x(reference.value)} x2={x(reference.value)} y1={top} y2={plotBottom} stroke={C.ink2} strokeWidth={1.5} />}
         {rows.map((r, i) => {
           const y0 = top + i * rowH
